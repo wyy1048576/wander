@@ -10,6 +10,7 @@ RUN npm run build
 
 FROM node:24-alpine
 WORKDIR /app
+# Hosts like Railway inject their own PORT; `next start` honours it. 3000 is only the default.
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 DB_PATH=/data/app.db PORT=3000
 RUN mkdir -p /data
 COPY --from=build /app/package.json /app/package-lock.json ./

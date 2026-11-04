@@ -4,6 +4,7 @@
 
 Built for the Meta Global AI Developer Hackathon 2026 (Oct 26 – Nov 4). Everything in this repository was written during the hackathon window.
 
+**Try it:** https://wander-production-bd23.up.railway.app (hosted on Railway, free to use, no account)
 **Showcase site:** https://wyy1048576.github.io/wander/ (the demo room, swipes, agent log and itinerary, rendered statically from `seed/`).
 
 ## The problem
@@ -52,6 +53,8 @@ Every external call goes through a per-API daily budget ([`src/lib/budget.ts`](s
 Next.js 16 (App Router, TypeScript, Tailwind v4) · SQLite via Node's built-in `node:sqlite` (single file, no native build) · OpenAI SDK pointed at `api.meta.ai` · zod for plan validation. No hosting required; it runs locally. Needs **Node 22.13 or newer** (built on Node 24).
 
 ## Run it
+
+The hosted version above is the same code, deployed from `main` with the included `Dockerfile` (SQLite on a mounted volume at `/data`). To run it yourself:
 
 ```bash
 git clone https://github.com/wyy1048576/wander

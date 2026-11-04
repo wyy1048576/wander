@@ -37,6 +37,13 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes pop {
   0% {
     transform: scale(1);

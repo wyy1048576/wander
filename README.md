@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wander
 
-## Getting Started
+**Friends swipe on places. One agent turns everyone's picks into a single, bookable trip.**
 
-First, run the development server:
+Built for the Meta Global AI Developer Hackathon 2026 (Oct 26 – Nov 4). Everything in this repository was written during the hackathon window.
+
+## The problem
+
+Planning a trip with friends is a negotiation nobody wins. One person wants temples, another wants nightlife, and the group chat dies under 200 messages and three half-finished spreadsheets.
+
+## What Wander does
+
+1. **Start a trip, share a 4-letter code.** Friends join from their phones.
+2. **Everyone swipes.** Each person sees the same 12 pairs of place cards and picks one from each pair. Pairwise choices give a much stronger preference signal than like/dislike.
+3. **See where you disagree.** Before planning, the app shows each person's lean ("leans temples + nature, skips nightlife") and the clashes between them.
+4. **The agent builds one plan.** Muse Spark reads everyone's picks and runs a tool loop against live data: real trains, real hotels with live prices, real restaurants. It returns a day-by-day itinerary where every item says whose pick it was, why, and has a Book button.
+5. **Book.** Hotels book through liteAPI's sandbox (real inventory, simulated payment). Trains link to the operator. Flights link to a search.
+
+The itinerary opens with a "How this balances the group" banner, which is the point of the product: a plan that is visibly fair.
+
+## Meta models
+
+| Model | Role |
+|---|---|
+| **Muse Spark 1.3** (Meta Model API, chat completions with function calling) | The planning agent. It reads both travellers' swipe histories, decides the city split, calls `get_transit_route`, `search_hotels`, `search_restaurants` and `flight_link`, then calls `finalize_plan` with a structured itinerary. ~15–20 tool calls per plan, about two minutes end to end. |
+| **Muse Image 1.0** (Meta Model API, image generation) | All 24 swipe cards in `public/cards/` were generated with Muse Image from the prompts in `src/data/cards.json`. This keeps the app free of third-party photo rights. |
+
+The agent loop lives in [`src/lib/agent.ts`](src/lib/agent.ts). The Meta client is [`src/lib/muse.ts`](src/lib/muse.ts).
+
+## Live data tools
+
+| Tool | Source |
+|---|---|
+| `get_transit_route` | Google Routes API, transit mode. Real train/bus legs with departure and arrival times and the operator's site. Shinkansen legs link to SmartEX. |
+| `search_restaurants` | Google Places API (New) text search. Real restaurants with rating, review count, price level and a Maps link. |
+| `search_hotels` | liteAPI (Nuitée) sandbox. Real hotels with live rates; `/book` runs prebook → book with liteAPI's simulated payment. |
+| `flight_link` | A Google Flights search link. No live fares. |
+
+Every external call goes through a per-API daily budget ([`src/lib/budget.ts`](src/lib/budget.ts)) and a response cache, so repeated plan runs cost nothing and a runaway loop stops itself.
+
+## Honesty notes
+
+- Hotel bookings run in liteAPI's **sandbox**: real hotels and prices, simulated payment, no room is held. The UI says so on every booking screen.
+- Flight links are **search links**, not live fares.
+- If the Routes API is unavailable, transit items are marked **"times estimated"** and link to Google Maps directions instead.
+- Destination is fixed to Japan (Tokyo, Kyoto, Osaka) for this build. The architecture is destination-agnostic; only the card deck is Japan-specific.
+
+## Stack
+
+Next.js 16 (App Router, TypeScript, Tailwind v4) · SQLite via better-sqlite3 (single file, zero setup) · OpenAI SDK pointed at `api.meta.ai` · zod for plan validation. No hosting required; it runs locally.
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/wyy1048576/wander
+cd wander
+npm install
+cp .env.example .env.local   # fill in the keys below
+npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Keys needed in `.env.local`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `META_API_KEY` from dev.meta.ai (Muse Spark + Muse Image)
+- `GOOGLE_MAPS_API_KEY` with **Places API (New)** and **Routes API** enabled
+- `LITEAPI_KEY` sandbox key from liteapi.travel (free, no card)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open the app in two browser windows (or one laptop and one phone on the same Wi-Fi) to play both travellers. The card images are already generated and committed; `scripts/gen-cards.ts` regenerates them with Muse Image if you change `cards.json`.
 
-## Learn More
+Useful scripts:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npx tsx scripts/smoke.ts            # one call each to Muse Spark and Muse Image
+npx tsx scripts/test-tools.ts       # Routes + Places against the live APIs
+npx tsx scripts/test-hotels.ts      # liteAPI sandbox search
+npx tsx scripts/e2e.ts              # full flow: two users with opposite tastes, then the agent
+npx tsx scripts/golden-room.ts import   # load a finished demo room from seed/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/app/                 pages (/, /room/[code], /book) and route handlers (/api/...)
+src/components/          swipe UI, waiting screen, planning log, itinerary, booking
+src/lib/agent.ts         Muse Spark tool loop
+src/lib/tools/           routes.ts, places.ts, liteapi.ts
+src/lib/game.ts          pair generation, preference scoring, clash detection
+src/lib/plan-schema.ts   itinerary schema (zod + JSON schema for the model)
+src/lib/db.ts            SQLite schema
+src/data/cards.json      the 24 place cards and their Muse Image prompts
+```
 
-## Deploy on Vercel
+## Team
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Solo build by Wilson (wyy1048576). Indie Developer track.

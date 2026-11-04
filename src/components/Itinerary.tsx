@@ -49,7 +49,7 @@ export default function Itinerary({ plan, members, code }: { plan: Plan; members
         </ul>
       </div>
 
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1 -mx-4 px-4">
+      <div className="mt-5 flex gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4">
         {plan.days.map((x, i) => (
           <button
             key={x.day}

@@ -184,11 +184,11 @@ function Swiper({
           <button
             key={c.id}
             onClick={() => choose(c)}
-            className={`relative overflow-hidden rounded-2xl bg-card text-left shadow-sm border border-line ${picked === c.id ? "pop ring-2 ring-accent" : ""}`}
+            className={`relative flex flex-col overflow-hidden rounded-2xl bg-card text-left shadow-sm border border-line ${picked === c.id ? "pop ring-2 ring-accent" : ""}`}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={c.image} alt={c.title} className="h-[300px] w-full object-cover" draggable={false} />
-            <div className="p-3">
+            <img src={c.image} alt={c.title} className="flex-1 min-h-[220px] w-full object-cover" draggable={false} />
+            <div className="p-3 shrink-0">
               <div className="text-xs text-muted">
                 {c.city} · {c.area}
               </div>

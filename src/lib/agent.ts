@@ -3,7 +3,7 @@ import { sparkChat, type ChatMessage, type Tool } from "./muse";
 import { computePreferences, describePrefs, memberSwipes, tensions, type Preferences, deckFor } from "./game";
 import { destination } from "./destinations";
 import { flightLink } from "./tools/flights";
-import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan } from "./plan-schema";
+import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan, DaySchema, type PlanDay } from "./plan-schema";
 import { getTransitRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
 import { searchHotels, offerForModel } from "./tools/liteapi";
@@ -15,7 +15,7 @@ import { BudgetExceeded } from "./budget";
  * with a structured itinerary.
  */
 
-const MAX_TURNS = 24;
+const MAX_TURNS = 34;
 
 /** Reject plans that stop early: every trip day must be present with real content. */
 function completenessIssues(plan: Plan, room: { nights: number }): string | null {
@@ -63,6 +63,18 @@ function addDays(date: string, n: number) {
   return d.toISOString().slice(0, 10);
 }
 
+
+const DAY_JSON_SCHEMA = PLAN_JSON_SCHEMA.properties.days.items;
+const { days: _daysSchema, ...FINAL_PROPS } = PLAN_JSON_SCHEMA.properties;
+void _daysSchema;
+const FINALIZE_JSON_SCHEMA = {
+  type: "object",
+  required: ["title", "summary", "tradeoffs", "hotels", "tasks"],
+  properties: {
+    ...FINAL_PROPS,
+    days: { type: "array", description: "Leave out: days are submitted with add_day.", items: DAY_JSON_SCHEMA },
+  },
+};
 
 const TOOLS: Tool[] = [
   {
@@ -139,10 +151,19 @@ const TOOLS: Tool[] = [
   {
     type: "function",
     function: {
+      name: "add_day",
+      description:
+        "Submit ONE day of the itinerary. Call it once per day, in order (day 1 first), one call per turn, after all research is done. 4-5 items per day, each with time, type, title, detail, how (getting there from the previous item), cost, for, why, and the link the tools returned. Every meal must be a real restaurant from search_restaurants with its Maps link; every transit item carries the link from get_transit_route; hotel check-in items carry the hotel bookUrl.",
+      parameters: DAY_JSON_SCHEMA as unknown as Record<string, unknown>,
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "finalize_plan",
       description:
-        "Call exactly once, at the end, with the complete itinerary. Every hotel must come from search_hotels (copy bookUrl exactly). Every transit item must carry the link returned by get_transit_route. Every meal must be a real restaurant from search_restaurants with its Maps link.",
-      parameters: PLAN_JSON_SCHEMA as unknown as Record<string, unknown>,
+        "Call exactly once, after every day has been submitted with add_day: title, summary, tradeoffs, hotels (copy bookUrl exactly from search_hotels), tasks and notes. Do not resend the days.",
+      parameters: FINALIZE_JSON_SCHEMA as unknown as Record<string, unknown>,
     },
   },
 ];
@@ -157,7 +178,8 @@ How to work:
 1. Read each person's preferences. Identify where they agree and where they clash.
 2. Decide the city split. ${destination(room.dest_key).brief}
 3. Use tools for everything factual. Call get_transit_route for each intercity move and the big hops. Call search_hotels once per sleeping city with exact dates. Call search_restaurants for every meal you list (one query per meal, specific to neighbourhood and cuisine). Call flight_link once for arrival if origin is outside Japan, and for a domestic hop (e.g. Tokyo to Fukuoka) when flying beats the train.
-4. Then call finalize_plan once.
+4. Submit the itinerary one day at a time with add_day: day 1 first, one call per turn, 4-5 items each. Short strings; each call must be quick.
+5. Then call finalize_plan once with title, summary, tradeoffs, hotels, tasks and notes (no days).
 
 Rules for the plan:
 - Be specific: train line and departure time, hotel name and price, restaurant name and what to order.
@@ -173,7 +195,7 @@ Rules for the plan:
 - If a transit result says liveSchedule is false, set estimated: true on that item and keep the mapsUrl link.
 - Include a hotel check-in item on arrival days and the Shinkansen move as a transit item with its SmartEX link.
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
-- Keep finalize_plan compact, it must finish in one go: at most 5 items per day, "detail" under 80 characters, "how" under 120, "why" under 60, 6-8 tasks. Cover EVERY day of the trip and every night with a hotel.
+- Keep every call compact: at most 5 items per day, "detail" under 80 characters, "how" under 120, "why" under 60, 6-8 tasks. Cover EVERY day of the trip (one add_day per day) and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
 - tasks: 6-8 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
 Write in plain, warm English. No emojis.`;
@@ -260,6 +282,8 @@ export async function buildPlan(roomId: string): Promise<void> {
   ];
 
   let dropped = 0;
+  const dayBuffer = new Map<number, PlanDay>();
+  const wantDays = room.nights + 1;
   try {
     for (let turn = 0; turn < MAX_TURNS; turn++) {
       let res;
@@ -274,7 +298,7 @@ export async function buildPlan(roomId: string): Promise<void> {
           messages.push({
             role: "user",
             content:
-              "The connection dropped while you were writing. Call finalize_plan again, tighter: at most 5 items per day, \"how\" under 110 characters, \"detail\" under 70, \"why\" under 50, 6 tasks. Reuse the tool results you already have; do not call tools again.",
+              "The connection dropped while you were writing. Continue with shorter strings: submit the next missing day with add_day (4 items, \"how\" under 100 characters), one day per call, then finalize_plan. Reuse the tool results you already have; do not call tools again.",
           });
           continue;
         }
@@ -313,6 +337,47 @@ export async function buildPlan(roomId: string): Promise<void> {
         } catch {
           badJson = true;
         }
+        if (call.function.name === "add_day") {
+          if (badJson) {
+            logEvent(roomId, "thought", "add_day arguments were not valid JSON; asking for a shorter day");
+            messages.push({
+              role: "tool",
+              tool_call_id: call.id,
+              content: JSON.stringify({ ok: false, fix: "Not valid JSON, probably cut off. Resend this day with shorter strings (4 items, how under 100 characters)." }),
+            });
+            continue;
+          }
+          if (args.day && typeof args.day === "object") args = args.day as Record<string, unknown>;
+          if (typeof args.items === "string") {
+            try {
+              args.items = JSON.parse(args.items);
+            } catch {
+              /* schema will report */
+            }
+          }
+          const parsedDay = DaySchema.safeParse(args);
+          if (!parsedDay.success) {
+            const issues = parsedDay.error.issues.slice(0, 5).map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
+            logEvent(roomId, "thought", `Day needs fixes: ${issues}`);
+            messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify({ ok: false, fix: issues }) });
+            continue;
+          }
+          const dayOk = parsedDay.data;
+          dayBuffer.set(dayOk.day, dayOk);
+          const have = [...dayBuffer.keys()].sort((a, b) => a - b);
+          const missing = Array.from({ length: wantDays }, (_, i) => i + 1).filter((n) => !dayBuffer.has(n));
+          logEvent(roomId, "thought", `Day ${dayOk.day} written: ${dayOk.items.length} items in ${dayOk.city}`);
+          messages.push({
+            role: "tool",
+            tool_call_id: call.id,
+            content: JSON.stringify({
+              ok: true,
+              days_submitted: have,
+              next: missing.length ? `add_day for day ${missing[0]}` : "finalize_plan (title, summary, tradeoffs, hotels, tasks, notes)",
+            }),
+          });
+          continue;
+        }
         if (call.function.name === "finalize_plan") {
           if (badJson) {
             const len = (call.function.arguments ?? "").length;
@@ -322,7 +387,7 @@ export async function buildPlan(roomId: string): Promise<void> {
               tool_call_id: call.id,
               content: JSON.stringify({
                 ok: false,
-                fix: "The arguments were not valid JSON, probably cut off. Call finalize_plan again with the complete plan but shorter strings: detail under 100 characters, why under 80, 3-5 items per day.",
+                fix: "The arguments were not valid JSON, probably cut off. Call finalize_plan again with shorter strings (title, summary, tradeoffs, hotels, tasks, notes only; days are already stored).",
               }),
             });
             continue;
@@ -345,6 +410,13 @@ export async function buildPlan(roomId: string): Promise<void> {
               }
             }
           }
+          {
+            const provided = Array.isArray(args.days) ? (args.days as Record<string, unknown>[]) : [];
+            const merged = new Map<number, unknown>(dayBuffer);
+            for (const dd of provided) if (dd && typeof dd === "object" && typeof dd.day === "number") merged.set(dd.day, dd);
+            args.days = [...merged.entries()].sort((a, b) => a[0] - b[0]).map(([, v]) => v);
+            if (!Array.isArray(args.tasks)) args.tasks = [];
+          }
           const parsed = PlanSchema.safeParse(args);
           if (!parsed.success) {
             const issues = parsed.error.issues.slice(0, 5).map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
@@ -359,7 +431,7 @@ export async function buildPlan(roomId: string): Promise<void> {
             messages.push({
               role: "tool",
               tool_call_id: call.id,
-              content: JSON.stringify({ ok: false, fix: `${incomplete} Call finalize_plan again with the COMPLETE itinerary for every day, reusing the tool results you already have.` }),
+              content: JSON.stringify({ ok: false, fix: `${incomplete} Submit the missing or thin days with add_day (one per call), then call finalize_plan again. Reuse the tool results you already have.` }),
             });
             continue;
           }

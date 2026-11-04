@@ -74,11 +74,12 @@ export function normalizePlan(plan: Plan): Plan {
   for (const d of days) {
     const counts = new Map<string, number>();
     for (const it of d.items) {
-      const m = it.detail?.match(/\b(Tokyo|Kyoto|Osaka|Nara)\b/) ?? it.title.match(/\b(Tokyo|Kyoto|Osaka|Nara)\b/);
+      const CITY = /\b(Tokyo|Kyoto|Osaka|Nara|Fukuoka|Hakata|Nagasaki|Kumamoto|Beppu|Yufuin|Kagoshima|Takachiho)\b/;
+      const m = it.detail?.match(CITY) ?? it.title.match(CITY);
       if (m) counts.set(m[1], (counts.get(m[1]) ?? 0) + 1);
     }
     const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
-    if (top && top[1] >= 2 && d.items.length >= 3) d.city = top[0];
+    if (top && top[1] >= 2 && d.items.length >= 3) d.city = top[0] === "Hakata" ? "Fukuoka" : top[0];
   }
   return { ...plan, days };
 }

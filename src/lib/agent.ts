@@ -1,6 +1,7 @@
 import { db } from "./db";
 import { sparkChat, type ChatMessage, type Tool } from "./muse";
-import { computePreferences, describePrefs, memberSwipes, tensions, CARD_BY_ID, type Preferences } from "./game";
+import { computePreferences, describePrefs, memberSwipes, tensions, type Preferences, deckFor } from "./game";
+import { destination } from "./destinations";
 import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan } from "./plan-schema";
 import { getTransitRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
@@ -37,6 +38,7 @@ type Room = {
   id: string;
   code: string;
   destination: string;
+  dest_key: string | null;
   origin_city: string;
   start_date: string;
   nights: number;
@@ -102,7 +104,10 @@ const TOOLS: Tool[] = [
         type: "object",
         required: ["city", "checkin", "checkout"],
         properties: {
-          city: { type: "string", enum: ["Tokyo", "Kyoto", "Osaka"] },
+          city: {
+            type: "string",
+            description: "City the group sleeps in, e.g. Tokyo, Kyoto, Osaka, Nara, Fukuoka, Nagasaki, Kumamoto, Beppu, Yufuin, Kagoshima",
+          },
           checkin: { type: "string", description: "YYYY-MM-DD" },
           checkout: { type: "string", description: "YYYY-MM-DD" },
           adults: { type: "integer", default: 2 },
@@ -115,13 +120,13 @@ const TOOLS: Tool[] = [
     function: {
       name: "flight_link",
       description:
-        "Returns a Google Flights search link for the group's arrival flight (no live prices). Use once for the arrival day if the origin city is outside Japan.",
+        "Returns a Google Flights search link (no live prices). Use once for the arrival day if the origin city is outside Japan (Tokyo for Tokyo trips, Osaka for Kansai and Nara, Fukuoka for Kyushu), and for a domestic hop when flying beats the train.",
       parameters: {
         type: "object",
         required: ["origin", "destination_city", "date"],
         properties: {
           origin: { type: "string" },
-          destination_city: { type: "string", enum: ["Tokyo", "Osaka"] },
+          destination_city: { type: "string", enum: ["Tokyo", "Osaka", "Fukuoka"] },
           date: { type: "string", description: "YYYY-MM-DD" },
         },
       },
@@ -146,8 +151,8 @@ Trip: ${room.destination}. Arriving from ${room.origin_city}. Start date ${room.
 
 How to work:
 1. Read each person's preferences. Identify where they agree and where they clash.
-2. Decide the city split (e.g. Tokyo first, then Kyoto with an Osaka evening). Keep at most 2 hotels.
-3. Use tools for everything factual. Call get_transit_route for each intercity move and the big hops. Call search_hotels once per sleeping city with exact dates. Call search_restaurants for every meal you list (one query per meal, specific to neighbourhood and cuisine). Call flight_link once for arrival if origin is outside Japan.
+2. Decide the city split. ${destination(room.dest_key).brief}
+3. Use tools for everything factual. Call get_transit_route for each intercity move and the big hops. Call search_hotels once per sleeping city with exact dates. Call search_restaurants for every meal you list (one query per meal, specific to neighbourhood and cuisine). Call flight_link once for arrival if origin is outside Japan, and for a domestic hop (e.g. Tokyo to Fukuoka) when flying beats the train.
 4. Then call finalize_plan once.
 
 Rules for the plan:
@@ -201,7 +206,7 @@ async function runTool(roomId: string, name: string, args: Record<string, unknow
         adults: Number(args.adults ?? 2),
         max: 5,
       });
-      logEvent(roomId, "tool", `${args.city} ${args.checkin}→${args.checkout}: ${h.length} hotels, from $${Math.min(...h.map((x) => x.perNight))}/night`, name);
+      logEvent(roomId, "tool", h.length ? `${args.city} ${args.checkin}→${args.checkout}: ${h.length} hotels, from $${Math.min(...h.map((x) => x.perNight))}/night` : `${args.city} ${args.checkin}→${args.checkout}: no sandbox rates for these dates, try another base city`, name);
       return h.map(offerForModel);
     }
     case "flight_link": {
@@ -229,7 +234,7 @@ export async function buildPlan(roomId: string): Promise<void> {
     { role: "system", content: systemPrompt(room, members) },
     {
       role: "user",
-      content: `Dates: ${room.start_date} to ${endDate}. Arriving from ${room.origin_city}.\n\nPreferences from swiping (each person compared ${prefs[0]?.picks.length ?? 0} pairs of places):\n${prefsBlock(prefs)}\n\nAvailable place cards for reference: ${[...CARD_BY_ID.values()].map((c) => `${c.title} (${c.city}, ${c.tags.join("/")})`).join("; ")}.\n\nBuild the plan now. Use the tools, then call finalize_plan.`,
+      content: `Dates: ${room.start_date} to ${endDate}. Arriving from ${room.origin_city}.\n\nPreferences from swiping (each person compared ${prefs[0]?.picks.length ?? 0} pairs of places):\n${prefsBlock(prefs)}\n\nAvailable place cards for reference: ${deckFor(destination(room.dest_key)).map((c) => `${c.title} (${c.city}, ${c.tags.join("/")})`).join("; ")}.\n\nBuild the plan now. Use the tools, then call finalize_plan.`,
     },
   ];
 

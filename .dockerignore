@@ -1,0 +1,9 @@
+node_modules
+.next
+data
+docs
+seed/*.png
+.env*
+!.env.example
+.git
+*.md

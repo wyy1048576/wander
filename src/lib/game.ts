@@ -1,5 +1,6 @@
 import cardsJson from "@/data/cards.json";
 import { db } from "./db";
+import { destination, type Destination } from "./destinations";
 
 export type Card = {
   id: string;
@@ -16,7 +17,14 @@ export const CARDS: Card[] = (cardsJson as Omit<Card, "image">[]).map((c) => ({
   image: `/cards/${c.id}.webp`,
 }));
 export const CARD_BY_ID = new Map(CARDS.map((c) => [c.id, c]));
-export const PAIRS_PER_ROOM = 12;
+/** Pairs per room: 14 for the full deck, 12 for a single-destination deck. */
+export function pairCount(dest: Destination) {
+  return dest.cardIds.length >= 24 ? 14 : 12;
+}
+
+export function deckFor(dest: Destination): Card[] {
+  return dest.cardIds.map((id) => CARD_BY_ID.get(id)).filter((c): c is Card => !!c);
+}
 
 // Deterministic shuffle so every member of a room sees the same pairs in the same order.
 function seeded(seed: string) {
@@ -30,16 +38,39 @@ function seeded(seed: string) {
   };
 }
 
-export function pairsForRoom(roomId: string): [Card, Card][] {
+export function pairsForRoom(roomId: string, destKey?: string | null): [Card, Card][] {
+  const dest = destination(destKey);
   const rnd = seeded(roomId);
-  const ids = CARDS.map((c) => c.id);
+  const deck = deckFor(dest);
+  const ids = deck.map((c) => c.id);
   for (let i = ids.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
     [ids[i], ids[j]] = [ids[j], ids[i]];
   }
+  const want = pairCount(dest);
   const pairs: [Card, Card][] = [];
-  for (let i = 0; i + 1 < ids.length && pairs.length < PAIRS_PER_ROOM; i += 2) {
+  // First pass: disjoint pairs, so every card is seen once before any repeats.
+  for (let i = 0; i + 1 < ids.length && pairs.length < want; i += 2) {
     pairs.push([CARD_BY_ID.get(ids[i])!, CARD_BY_ID.get(ids[i + 1])!]);
+  }
+  // Small decks: keep going with fresh match-ups. No card more than 4 times, no repeated pair.
+  const seen = new Set(pairs.map(([a, b]) => [a.id, b.id].sort().join("|")));
+  const uses = new Map<string, number>();
+  for (const [a, b] of pairs) {
+    uses.set(a.id, (uses.get(a.id) ?? 0) + 1);
+    uses.set(b.id, (uses.get(b.id) ?? 0) + 1);
+  }
+  let guard = 0;
+  while (pairs.length < want && ids.length >= 2 && guard++ < 1000) {
+    const a = ids[Math.floor(rnd() * ids.length)];
+    const b = ids[Math.floor(rnd() * ids.length)];
+    if (a === b) continue;
+    const key = [a, b].sort().join("|");
+    if (seen.has(key) || (uses.get(a) ?? 0) >= 4 || (uses.get(b) ?? 0) >= 4) continue;
+    seen.add(key);
+    uses.set(a, (uses.get(a) ?? 0) + 1);
+    uses.set(b, (uses.get(b) ?? 0) + 1);
+    pairs.push([CARD_BY_ID.get(a)!, CARD_BY_ID.get(b)!]);
   }
   return pairs;
 }

@@ -1,11 +1,13 @@
 import { db, newId, roomCode } from "./db";
-import { computePreferences, describePrefs, memberSwipes, pairsForRoom, tensions, PAIRS_PER_ROOM, type Card } from "./game";
+import { computePreferences, describePrefs, memberSwipes, pairsForRoom, tensions, type Card } from "./game";
+import { destination, destinationLabel } from "./destinations";
 import { normalizePlan, type Plan } from "./plan-schema";
 
 export type RoomRow = {
   id: string;
   code: string;
   destination: string;
+  dest_key: string | null;
   origin_city: string;
   start_date: string;
   nights: number;
@@ -21,15 +23,16 @@ export type MemberRow = {
   created_at: string;
 };
 
-export function createRoom(input: { hostName: string; originCity: string; startDate: string; nights: number }) {
+export function createRoom(input: { hostName: string; originCity: string; startDate: string; nights: number; destination?: string }) {
+  const dest = destination(input.destination);
   const d = db();
   let code = roomCode();
   while (d.prepare("SELECT 1 FROM rooms WHERE code = ?").get(code)) code = roomCode();
   const roomId = newId();
   const memberId = newId();
   d.prepare(
-    "INSERT INTO rooms (id, code, destination, origin_city, start_date, nights) VALUES (?, ?, ?, ?, ?, ?)",
-  ).run(roomId, code, "Japan: Tokyo, Kyoto & Osaka", input.originCity, input.startDate, input.nights);
+    "INSERT INTO rooms (id, code, destination, dest_key, origin_city, start_date, nights) VALUES (?, ?, ?, ?, ?, ?, ?)",
+  ).run(roomId, code, destinationLabel(dest), dest.key, input.originCity, input.startDate, input.nights);
   d.prepare("INSERT INTO members (id, room_id, name, is_host) VALUES (?, ?, ?, 1)").run(memberId, roomId, input.hostName);
   return { code, memberId, roomId };
 }
@@ -56,11 +59,13 @@ export function members(roomId: string): MemberRow[] {
 export function recordSwipe(roomId: string, memberId: string, left: string, right: string, chosen: string) {
   if (chosen !== left && chosen !== right) throw new Error("chosen card must be one of the pair");
   const n = (db().prepare("SELECT COUNT(*) c FROM swipes WHERE member_id = ?").get(memberId) as { c: number }).c;
-  if (n >= PAIRS_PER_ROOM) return n;
+  const row = db().prepare("SELECT dest_key FROM rooms WHERE id = ?").get(roomId) as { dest_key: string | null } | undefined;
+  const total = pairsForRoom(roomId, row?.dest_key).length;
+  if (n >= total) return n;
   db()
     .prepare("INSERT INTO swipes (room_id, member_id, left_card, right_card, chosen_card) VALUES (?, ?, ?, ?, ?)")
     .run(roomId, memberId, left, right, chosen);
-  if (n + 1 >= PAIRS_PER_ROOM) db().prepare("UPDATE members SET done_swiping = 1 WHERE id = ?").run(memberId);
+  if (n + 1 >= total) db().prepare("UPDATE members SET done_swiping = 1 WHERE id = ?").run(memberId);
   return n + 1;
 }
 
@@ -69,7 +74,7 @@ export function markDone(memberId: string) {
 }
 
 export type RoomState = {
-  room: { code: string; destination: string; originCity: string; startDate: string; nights: number; status: RoomRow["status"] };
+  room: { code: string; destination: string; destinationKey: string; originCity: string; startDate: string; nights: number; status: RoomRow["status"] };
   members: { id: string; name: string; isHost: boolean; done: boolean; swipes: number; summary: string; topTags: string[]; picks: string[] }[];
   me?: { id: string; name: string; isHost: boolean; done: boolean; swipes: number };
   totalPairs: number;
@@ -84,7 +89,7 @@ export function roomState(code: string, memberId?: string): RoomState | undefine
   if (!room) return undefined;
   const d = db();
   const ms = members(room.id);
-  const pairs = pairsForRoom(room.id);
+  const pairs = pairsForRoom(room.id, room.dest_key);
   const prefs = ms.map((m) => computePreferences(m.name, memberSwipes(m.id)));
   const memberViews = ms.map((m, i) => ({
     id: m.id,
@@ -106,6 +111,7 @@ export function roomState(code: string, memberId?: string): RoomState | undefine
     room: {
       code: room.code,
       destination: room.destination,
+      destinationKey: destination(room.dest_key).key,
       originCity: room.origin_city,
       startDate: room.start_date,
       nights: room.nights,

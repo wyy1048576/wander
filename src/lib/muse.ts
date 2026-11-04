@@ -16,6 +16,9 @@ export function meta(): OpenAI {
     client = new OpenAI({
       apiKey: process.env.META_API_KEY,
       baseURL: process.env.META_API_BASE ?? "https://api.meta.ai/v1",
+      // Long planning turns occasionally drop the connection; retry rather than fail the whole plan.
+      maxRetries: 4,
+      timeout: 180_000,
     });
   }
   return client;

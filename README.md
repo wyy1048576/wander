@@ -12,8 +12,8 @@ Planning a trip with friends is a negotiation nobody wins. One person wants temp
 
 ## What Wander does
 
-1. **Start a trip, share a 4-letter code.** Friends join from their phones.
-2. **Everyone swipes.** Each person sees the same 12 pairs of place cards and picks one from each pair. Pairwise choices give a much stronger preference signal than like/dislike.
+1. **Pick a destination, start a trip, share a 4-letter code.** Tokyo, Kyoto & Osaka, Nara, Kyushu, or the whole Japan grand tour. Friends join from their phones.
+2. **Everyone swipes.** Each person sees the same 12 to 14 pairs of place cards from that destination's deck and picks one from each pair. Pairwise choices give a much stronger preference signal than like/dislike.
 3. **See where you disagree.** Before planning, the app shows each person's lean ("leans temples + nature, skips nightlife") and the clashes between them.
 4. **The agent builds one plan.** Muse Spark reads everyone's picks and runs a tool loop against live data: real trains, real hotels with live prices, real restaurants. It returns a day-by-day itinerary where every item says whose pick it was, why, and has a Book button.
 5. **Book.** Hotels book through liteAPI's sandbox (real inventory, simulated payment). Trains link to the operator. Flights link to a search.
@@ -25,7 +25,7 @@ The itinerary opens with a "How this balances the group" banner, which is the po
 | Model | Role |
 |---|---|
 | **Muse Spark 1.3** (Meta Model API, chat completions with function calling) | The planning agent. It reads both travellers' swipe histories, decides the city split, calls `get_transit_route`, `search_hotels`, `search_restaurants` and `flight_link`, then calls `finalize_plan` with a structured itinerary. ~15–20 tool calls per plan, about two minutes end to end. |
-| **Muse Image 1.0** (Meta Model API, image generation) | All 24 swipe cards in `public/cards/` were generated with Muse Image from the prompts in `src/data/cards.json`. This keeps the app free of third-party photo rights. |
+| **Muse Image 1.0** (Meta Model API, image generation) | All 40 swipe cards in `public/cards/` were generated with Muse Image from the prompts in `src/data/cards.json`. This keeps the app free of third-party photo rights. |
 
 The agent loop lives in [`src/lib/agent.ts`](src/lib/agent.ts). The Meta client is [`src/lib/muse.ts`](src/lib/muse.ts).
 
@@ -45,7 +45,7 @@ Every external call goes through a per-API daily budget ([`src/lib/budget.ts`](s
 - Hotel bookings run in liteAPI's **sandbox**: real hotels and prices, simulated payment, no room is held. The UI says so on every booking screen.
 - Flight links are **search links**, not live fares.
 - Google's Routes API has **no transit schedules for Japan** (its APIs return empty results there, unlike the Maps app). Train legs are therefore marked **"times estimated"**, timed by the model from general knowledge, and link to the operator (SmartEX for Shinkansen) or Google Maps directions. The tool returns live legs in countries Google does cover.
-- Destination is fixed to Japan (Tokyo, Kyoto, Osaka) for this build. The architecture is destination-agnostic; only the card deck is Japan-specific.
+- Destinations are five Japan decks (Tokyo · Kyoto & Osaka · Nara · Kyushu · grand tour), defined in `src/lib/destinations.ts` with a card list and a short brief for the agent. Adding a destination is cards plus one entry. On the grand tour the agent decides whether the trip is long enough to reach Kyushu and says so in the tradeoffs. The architecture is destination-agnostic; only the card deck is Japan-specific.
 
 ## Stack
 
@@ -87,10 +87,11 @@ src/app/                 pages (/, /room/[code], /book) and route handlers (/api
 src/components/          swipe UI, waiting screen, planning log, itinerary, booking
 src/lib/agent.ts         Muse Spark tool loop
 src/lib/tools/           routes.ts, places.ts, liteapi.ts
+src/lib/destinations.ts  destination decks and agent briefs
 src/lib/game.ts          pair generation, preference scoring, clash detection
 src/lib/plan-schema.ts   itinerary schema (zod + JSON schema for the model)
 src/lib/db.ts            SQLite schema
-src/data/cards.json      the 24 place cards and their Muse Image prompts
+src/data/cards.json      the 40 place cards and their Muse Image prompts
 ```
 
 ## Team

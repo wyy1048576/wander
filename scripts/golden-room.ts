@@ -28,8 +28,8 @@ type Row = Record<string, unknown>;
     let code = roomCode();
     while (d.prepare("SELECT 1 FROM rooms WHERE code = ?").get(code)) code = roomCode();
     const r = g.room;
-    d.prepare("INSERT INTO rooms (id, code, destination, origin_city, start_date, nights, status) VALUES (?, ?, ?, ?, ?, ?, ?)").run(
-      roomId, code, r.destination, r.origin_city, r.start_date, r.nights, g.plan ? "done" : "swiping",
+    d.prepare("INSERT INTO rooms (id, code, destination, dest_key, origin_city, start_date, nights, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)").run(
+      roomId, code, r.destination, r.dest_key ?? null, r.origin_city, r.start_date, r.nights, g.plan ? "done" : "swiping",
     );
     const idMap = new Map<string, string>();
     for (const m of g.members) {

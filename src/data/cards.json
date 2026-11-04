@@ -1,28 +1,501 @@
 [
-  { "id": "senso-ji", "title": "Senso-ji Temple", "city": "Tokyo", "area": "Asakusa", "tags": ["temples", "culture", "markets"], "blurb": "Tokyo's oldest temple, reached through the lantern-lit Nakamise shopping street.", "prompt": "Travel photograph of Senso-ji temple in Asakusa, Tokyo, giant red Kaminarimon lantern and five-story pagoda, early morning light, no people, no text, no watermark" },
-  { "id": "tsukiji-outer-market", "title": "Tsukiji Outer Market", "city": "Tokyo", "area": "Tsukiji", "tags": ["food", "markets"], "blurb": "Breakfast of fresh tuna, tamagoyaki and sea urchin from tiny stalls.", "prompt": "Travel photograph of Tsukiji outer market stalls in Tokyo, fresh sushi, grilled seafood skewers, tamagoyaki, steam rising, morning light, no people, no text, no watermark" },
-  { "id": "shibuya-crossing", "title": "Shibuya Crossing", "city": "Tokyo", "area": "Shibuya", "tags": ["modern", "nightlife", "views"], "blurb": "The world's busiest scramble crossing, best seen at night from above.", "prompt": "Travel photograph of Shibuya scramble crossing in Tokyo at night from above, neon billboards, wet reflective street, long exposure light trails, no readable text, no watermark" },
-  { "id": "teamlab-planets", "title": "teamLab Planets", "city": "Tokyo", "area": "Toyosu", "tags": ["museums", "modern"], "blurb": "Walk barefoot through water and mirrored rooms of light in this digital art museum.", "prompt": "Travel photograph inside an immersive digital art installation, infinite mirrored room filled with hanging glowing crystal lights in violet and gold, shallow water floor reflecting, no people, no text" },
-  { "id": "meiji-shrine", "title": "Meiji Shrine", "city": "Tokyo", "area": "Harajuku", "tags": ["temples", "nature"], "blurb": "A vast forest shrine of silence a minute's walk from Harajuku's chaos.", "prompt": "Travel photograph of Meiji Jingu shrine in Tokyo, enormous wooden torii gate on a gravel path through a dense cedar forest, soft dappled light, no people, no text, no watermark" },
-  { "id": "golden-gai", "title": "Shinjuku Golden Gai", "city": "Tokyo", "area": "Shinjuku", "tags": ["nightlife", "food", "culture"], "blurb": "Two hundred tiny bars packed into six alleys, each seating about eight people.", "prompt": "Travel photograph of Golden Gai alleys in Shinjuku, Tokyo at night, narrow lane of tiny two-story bars with glowing paper lanterns and warm signs, rain-slick ground, no people, no readable text, no watermark" },
-  { "id": "akihabara", "title": "Akihabara Electric Town", "city": "Tokyo", "area": "Akihabara", "tags": ["modern", "shopping", "culture"], "blurb": "Anime, arcades, retro games and electronics stacked eight floors high.", "prompt": "Travel photograph of Akihabara electric town street in Tokyo at dusk, towering buildings covered in colorful anime billboards and neon, no readable text, no people, no watermark" },
-  { "id": "tokyo-skytree", "title": "Tokyo Skytree at Sunset", "city": "Tokyo", "area": "Sumida", "tags": ["views", "modern"], "blurb": "Six hundred metres up, with Mount Fuji on a clear evening.", "prompt": "Travel photograph of Tokyo skyline at sunset seen from a high observation deck, Tokyo Skytree in view, Mount Fuji silhouette on the horizon, orange and purple sky, no people, no text, no watermark" },
-
-  { "id": "fushimi-inari", "title": "Fushimi Inari Shrine", "city": "Kyoto", "area": "Fushimi", "tags": ["temples", "nature", "views"], "blurb": "Ten thousand vermilion torii gates winding up a forested mountain.", "prompt": "Travel photograph of Fushimi Inari shrine in Kyoto, endless tunnel of vermilion torii gates on a forest path, golden hour light, no people, no text, no watermark" },
-  { "id": "arashiyama-bamboo", "title": "Arashiyama Bamboo Grove", "city": "Kyoto", "area": "Arashiyama", "tags": ["nature"], "blurb": "A path through towering bamboo, with the Togetsukyo bridge and monkey park nearby.", "prompt": "Travel photograph of Arashiyama bamboo grove in Kyoto, towering green bamboo stalks on both sides of a narrow path, soft morning mist and light rays, no people, no text, no watermark" },
-  { "id": "kinkaku-ji", "title": "Kinkaku-ji Golden Pavilion", "city": "Kyoto", "area": "Kita", "tags": ["temples", "culture"], "blurb": "A gold-leaf pavilion mirrored in a still pond.", "prompt": "Travel photograph of Kinkaku-ji golden pavilion in Kyoto, gold leaf temple reflected perfectly in a still pond, autumn maple trees, clear sky, no people, no text, no watermark" },
-  { "id": "nishiki-market", "title": "Nishiki Market", "city": "Kyoto", "area": "Downtown", "tags": ["food", "markets"], "blurb": "Kyoto's kitchen: pickles, yuba, matcha sweets and skewers down a five-block arcade.", "prompt": "Travel photograph of Nishiki market covered arcade in Kyoto, colorful stalls of pickles, seafood skewers and matcha sweets under a stained glass roof, no readable text, no people, no watermark" },
-  { "id": "gion-evening", "title": "Gion at Dusk", "city": "Kyoto", "area": "Gion", "tags": ["culture", "nightlife"], "blurb": "Wooden teahouses on Hanami-koji as lanterns come on.", "prompt": "Travel photograph of Gion district in Kyoto at dusk, traditional wooden machiya teahouses along a stone lane, glowing paper lanterns, no people, no text, no watermark" },
-  { "id": "philosophers-path", "title": "Philosopher's Path", "city": "Kyoto", "area": "Higashiyama", "tags": ["nature", "culture"], "blurb": "A canal-side walk between temples, cafes and cherry trees.", "prompt": "Travel photograph of the Philosopher's Path in Kyoto, stone walkway along a narrow canal lined with trees in autumn color, small bridge, soft light, no people, no text, no watermark" },
-  { "id": "pontocho", "title": "Pontocho Alley Dinner", "city": "Kyoto", "area": "Pontocho", "tags": ["food", "nightlife"], "blurb": "A narrow alley of restaurants with riverside terraces over the Kamo.", "prompt": "Travel photograph of Pontocho alley in Kyoto at night, extremely narrow lane lined with traditional restaurants, warm lantern light, wooden facades, no people, no readable text, no watermark" },
-  { "id": "kiyomizu-dera", "title": "Kiyomizu-dera", "city": "Kyoto", "area": "Higashiyama", "tags": ["temples", "views"], "blurb": "A wooden stage jutting over the hillside with the whole city below.", "prompt": "Travel photograph of Kiyomizu-dera temple in Kyoto, large wooden stage on a hillside above autumn forest, pagoda and city view in the distance, clear afternoon, no people, no text, no watermark" },
-
-  { "id": "dotonbori", "title": "Dotonbori", "city": "Osaka", "area": "Namba", "tags": ["nightlife", "food", "modern"], "blurb": "Neon canal, giant crab signs, takoyaki and okonomiyaki until late.", "prompt": "Travel photograph of Dotonbori canal in Osaka at night, giant neon signs reflected in the water, crowded with lights and color, no readable text, no people, no watermark" },
-  { "id": "osaka-castle", "title": "Osaka Castle", "city": "Osaka", "area": "Chuo", "tags": ["culture", "views", "nature"], "blurb": "A white-and-gold keep above moats and a huge park.", "prompt": "Travel photograph of Osaka Castle, white and green keep with gold trim on stone walls above a moat, park trees in autumn color, blue sky, no people, no text, no watermark" },
-  { "id": "kuromon-market", "title": "Kuromon Ichiba Market", "city": "Osaka", "area": "Nipponbashi", "tags": ["food", "markets"], "blurb": "Grilled scallops, fugu, wagyu skewers and fruit, eaten standing up.", "prompt": "Travel photograph of Kuromon market in Osaka, stalls grilling scallops and wagyu skewers over charcoal, fresh crab on ice, covered arcade, no readable text, no people, no watermark" },
-  { "id": "umeda-sky", "title": "Umeda Sky Building", "city": "Osaka", "area": "Umeda", "tags": ["views", "modern"], "blurb": "An open-air rooftop ring 170 metres up, best at blue hour.", "prompt": "Travel photograph of Umeda Sky Building floating garden observatory in Osaka at blue hour, open-air circular rooftop deck with city lights below, no people, no text, no watermark" },
-  { "id": "shinsekai", "title": "Shinsekai & Kushikatsu", "city": "Osaka", "area": "Shinsekai", "tags": ["food", "culture", "nightlife"], "blurb": "Retro neighbourhood under Tsutenkaku tower, famous for deep-fried skewers.", "prompt": "Travel photograph of Shinsekai district in Osaka, retro streets with Tsutenkaku tower lit at night, colorful vintage signage, no readable text, no people, no watermark" },
-  { "id": "usj", "title": "Universal Studios Japan", "city": "Osaka", "area": "Konohana", "tags": ["thrills", "modern"], "blurb": "Super Nintendo World and the Wizarding World, a full day of rides.", "prompt": "Travel photograph of a colorful theme park land inspired by a video game kingdom, bright mushroom-shaped buildings, winding paths, and a castle, sunny day, no people, no text, no logos, no watermark" },
-  { "id": "nara-deer", "title": "Nara Day Trip", "city": "Osaka", "area": "Nara (45 min)", "tags": ["daytrip", "nature", "temples"], "blurb": "Bowing deer, the Great Buddha of Todai-ji and lantern-lined paths.", "prompt": "Travel photograph of Nara park in Japan, sika deer standing on a path among stone lanterns and autumn trees, large wooden temple in the background, soft light, no people, no text, no watermark" },
-  { "id": "minoo-falls", "title": "Minoo Falls Hike", "city": "Osaka", "area": "Minoo (30 min)", "tags": ["daytrip", "nature"], "blurb": "A gentle forest trail to a 33-metre waterfall, with fried maple leaves on the way.", "prompt": "Travel photograph of Minoo waterfall near Osaka, tall waterfall surrounded by bright red autumn maple trees, forest trail with wooden railing, no people, no text, no watermark" }
+  {
+    "id": "senso-ji",
+    "title": "Senso-ji Temple",
+    "city": "Tokyo",
+    "area": "Asakusa",
+    "tags": [
+      "temples",
+      "culture",
+      "markets"
+    ],
+    "blurb": "Tokyo's oldest temple, reached through the lantern-lit Nakamise shopping street.",
+    "prompt": "Travel photograph of Senso-ji temple in Asakusa, Tokyo, giant red Kaminarimon lantern and five-story pagoda, early morning light, no people, no text, no watermark"
+  },
+  {
+    "id": "tsukiji-outer-market",
+    "title": "Tsukiji Outer Market",
+    "city": "Tokyo",
+    "area": "Tsukiji",
+    "tags": [
+      "food",
+      "markets"
+    ],
+    "blurb": "Breakfast of fresh tuna, tamagoyaki and sea urchin from tiny stalls.",
+    "prompt": "Travel photograph of Tsukiji outer market stalls in Tokyo, fresh sushi, grilled seafood skewers, tamagoyaki, steam rising, morning light, no people, no text, no watermark"
+  },
+  {
+    "id": "shibuya-crossing",
+    "title": "Shibuya Crossing",
+    "city": "Tokyo",
+    "area": "Shibuya",
+    "tags": [
+      "modern",
+      "nightlife",
+      "views"
+    ],
+    "blurb": "The world's busiest scramble crossing, best seen at night from above.",
+    "prompt": "Travel photograph of Shibuya scramble crossing in Tokyo at night from above, neon billboards, wet reflective street, long exposure light trails, no readable text, no watermark"
+  },
+  {
+    "id": "teamlab-planets",
+    "title": "teamLab Planets",
+    "city": "Tokyo",
+    "area": "Toyosu",
+    "tags": [
+      "museums",
+      "modern"
+    ],
+    "blurb": "Walk barefoot through water and mirrored rooms of light in this digital art museum.",
+    "prompt": "Travel photograph inside an immersive digital art installation, infinite mirrored room filled with hanging glowing crystal lights in violet and gold, shallow water floor reflecting, no people, no text"
+  },
+  {
+    "id": "meiji-shrine",
+    "title": "Meiji Shrine",
+    "city": "Tokyo",
+    "area": "Harajuku",
+    "tags": [
+      "temples",
+      "nature"
+    ],
+    "blurb": "A vast forest shrine of silence a minute's walk from Harajuku's chaos.",
+    "prompt": "Travel photograph of Meiji Jingu shrine in Tokyo, enormous wooden torii gate on a gravel path through a dense cedar forest, soft dappled light, no people, no text, no watermark"
+  },
+  {
+    "id": "golden-gai",
+    "title": "Shinjuku Golden Gai",
+    "city": "Tokyo",
+    "area": "Shinjuku",
+    "tags": [
+      "nightlife",
+      "food",
+      "culture"
+    ],
+    "blurb": "Two hundred tiny bars packed into six alleys, each seating about eight people.",
+    "prompt": "Travel photograph of Golden Gai alleys in Shinjuku, Tokyo at night, narrow lane of tiny two-story bars with glowing paper lanterns and warm signs, rain-slick ground, no people, no readable text, no watermark"
+  },
+  {
+    "id": "akihabara",
+    "title": "Akihabara Electric Town",
+    "city": "Tokyo",
+    "area": "Akihabara",
+    "tags": [
+      "modern",
+      "shopping",
+      "culture"
+    ],
+    "blurb": "Anime, arcades, retro games and electronics stacked eight floors high.",
+    "prompt": "Travel photograph of Akihabara electric town street in Tokyo at dusk, towering buildings covered in colorful anime billboards and neon, no readable text, no people, no watermark"
+  },
+  {
+    "id": "tokyo-skytree",
+    "title": "Tokyo Skytree at Sunset",
+    "city": "Tokyo",
+    "area": "Sumida",
+    "tags": [
+      "views",
+      "modern"
+    ],
+    "blurb": "Six hundred metres up, with Mount Fuji on a clear evening.",
+    "prompt": "Travel photograph of Tokyo skyline at sunset seen from a high observation deck, Tokyo Skytree in view, Mount Fuji silhouette on the horizon, orange and purple sky, no people, no text, no watermark"
+  },
+  {
+    "id": "fushimi-inari",
+    "title": "Fushimi Inari Shrine",
+    "city": "Kyoto",
+    "area": "Fushimi",
+    "tags": [
+      "temples",
+      "nature",
+      "views"
+    ],
+    "blurb": "Ten thousand vermilion torii gates winding up a forested mountain.",
+    "prompt": "Travel photograph of Fushimi Inari shrine in Kyoto, endless tunnel of vermilion torii gates on a forest path, golden hour light, no people, no text, no watermark"
+  },
+  {
+    "id": "arashiyama-bamboo",
+    "title": "Arashiyama Bamboo Grove",
+    "city": "Kyoto",
+    "area": "Arashiyama",
+    "tags": [
+      "nature"
+    ],
+    "blurb": "A path through towering bamboo, with the Togetsukyo bridge and monkey park nearby.",
+    "prompt": "Travel photograph of Arashiyama bamboo grove in Kyoto, towering green bamboo stalks on both sides of a narrow path, soft morning mist and light rays, no people, no text, no watermark"
+  },
+  {
+    "id": "kinkaku-ji",
+    "title": "Kinkaku-ji Golden Pavilion",
+    "city": "Kyoto",
+    "area": "Kita",
+    "tags": [
+      "temples",
+      "culture"
+    ],
+    "blurb": "A gold-leaf pavilion mirrored in a still pond.",
+    "prompt": "Travel photograph of Kinkaku-ji golden pavilion in Kyoto, gold leaf temple reflected perfectly in a still pond, autumn maple trees, clear sky, no people, no text, no watermark"
+  },
+  {
+    "id": "nishiki-market",
+    "title": "Nishiki Market",
+    "city": "Kyoto",
+    "area": "Downtown",
+    "tags": [
+      "food",
+      "markets"
+    ],
+    "blurb": "Kyoto's kitchen: pickles, yuba, matcha sweets and skewers down a five-block arcade.",
+    "prompt": "Travel photograph of Nishiki market covered arcade in Kyoto, colorful stalls of pickles, seafood skewers and matcha sweets under a stained glass roof, no readable text, no people, no watermark"
+  },
+  {
+    "id": "gion-evening",
+    "title": "Gion at Dusk",
+    "city": "Kyoto",
+    "area": "Gion",
+    "tags": [
+      "culture",
+      "nightlife"
+    ],
+    "blurb": "Wooden teahouses on Hanami-koji as lanterns come on.",
+    "prompt": "Travel photograph of Gion district in Kyoto at dusk, traditional wooden machiya teahouses along a stone lane, glowing paper lanterns, no people, no text, no watermark"
+  },
+  {
+    "id": "philosophers-path",
+    "title": "Philosopher's Path",
+    "city": "Kyoto",
+    "area": "Higashiyama",
+    "tags": [
+      "nature",
+      "culture"
+    ],
+    "blurb": "A canal-side walk between temples, cafes and cherry trees.",
+    "prompt": "Travel photograph of the Philosopher's Path in Kyoto, stone walkway along a narrow canal lined with trees in autumn color, small bridge, soft light, no people, no text, no watermark"
+  },
+  {
+    "id": "pontocho",
+    "title": "Pontocho Alley Dinner",
+    "city": "Kyoto",
+    "area": "Pontocho",
+    "tags": [
+      "food",
+      "nightlife"
+    ],
+    "blurb": "A narrow alley of restaurants with riverside terraces over the Kamo.",
+    "prompt": "Travel photograph of Pontocho alley in Kyoto at night, extremely narrow lane lined with traditional restaurants, warm lantern light, wooden facades, no people, no readable text, no watermark"
+  },
+  {
+    "id": "kiyomizu-dera",
+    "title": "Kiyomizu-dera",
+    "city": "Kyoto",
+    "area": "Higashiyama",
+    "tags": [
+      "temples",
+      "views"
+    ],
+    "blurb": "A wooden stage jutting over the hillside with the whole city below.",
+    "prompt": "Travel photograph of Kiyomizu-dera temple in Kyoto, large wooden stage on a hillside above autumn forest, pagoda and city view in the distance, clear afternoon, no people, no text, no watermark"
+  },
+  {
+    "id": "dotonbori",
+    "title": "Dotonbori",
+    "city": "Osaka",
+    "area": "Namba",
+    "tags": [
+      "nightlife",
+      "food",
+      "modern"
+    ],
+    "blurb": "Neon canal, giant crab signs, takoyaki and okonomiyaki until late.",
+    "prompt": "Travel photograph of Dotonbori canal in Osaka at night, giant neon signs reflected in the water, crowded with lights and color, no readable text, no people, no watermark"
+  },
+  {
+    "id": "osaka-castle",
+    "title": "Osaka Castle",
+    "city": "Osaka",
+    "area": "Chuo",
+    "tags": [
+      "culture",
+      "views",
+      "nature"
+    ],
+    "blurb": "A white-and-gold keep above moats and a huge park.",
+    "prompt": "Travel photograph of Osaka Castle, white and green keep with gold trim on stone walls above a moat, park trees in autumn color, blue sky, no people, no text, no watermark"
+  },
+  {
+    "id": "kuromon-market",
+    "title": "Kuromon Ichiba Market",
+    "city": "Osaka",
+    "area": "Nipponbashi",
+    "tags": [
+      "food",
+      "markets"
+    ],
+    "blurb": "Grilled scallops, fugu, wagyu skewers and fruit, eaten standing up.",
+    "prompt": "Travel photograph of Kuromon market in Osaka, stalls grilling scallops and wagyu skewers over charcoal, fresh crab on ice, covered arcade, no readable text, no people, no watermark"
+  },
+  {
+    "id": "umeda-sky",
+    "title": "Umeda Sky Building",
+    "city": "Osaka",
+    "area": "Umeda",
+    "tags": [
+      "views",
+      "modern"
+    ],
+    "blurb": "An open-air rooftop ring 170 metres up, best at blue hour.",
+    "prompt": "Travel photograph of Umeda Sky Building floating garden observatory in Osaka at blue hour, open-air circular rooftop deck with city lights below, no people, no text, no watermark"
+  },
+  {
+    "id": "shinsekai",
+    "title": "Shinsekai & Kushikatsu",
+    "city": "Osaka",
+    "area": "Shinsekai",
+    "tags": [
+      "food",
+      "culture",
+      "nightlife"
+    ],
+    "blurb": "Retro neighbourhood under Tsutenkaku tower, famous for deep-fried skewers.",
+    "prompt": "Travel photograph of Shinsekai district in Osaka, retro streets with Tsutenkaku tower lit at night, colorful vintage signage, no readable text, no people, no watermark"
+  },
+  {
+    "id": "usj",
+    "title": "Universal Studios Japan",
+    "city": "Osaka",
+    "area": "Konohana",
+    "tags": [
+      "thrills",
+      "modern"
+    ],
+    "blurb": "Super Nintendo World and the Wizarding World, a full day of rides.",
+    "prompt": "Travel photograph of a colorful theme park land inspired by a video game kingdom, bright mushroom-shaped buildings, winding paths, and a castle, sunny day, no people, no text, no logos, no watermark"
+  },
+  {
+    "id": "nara-deer",
+    "title": "Nara Day Trip",
+    "city": "Osaka",
+    "area": "Nara (45 min)",
+    "tags": [
+      "daytrip",
+      "nature",
+      "temples"
+    ],
+    "blurb": "Bowing deer, the Great Buddha of Todai-ji and lantern-lined paths.",
+    "prompt": "Travel photograph of Nara park in Japan, sika deer standing on a path among stone lanterns and autumn trees, large wooden temple in the background, soft light, no people, no text, no watermark"
+  },
+  {
+    "id": "minoo-falls",
+    "title": "Minoo Falls Hike",
+    "city": "Osaka",
+    "area": "Minoo (30 min)",
+    "tags": [
+      "daytrip",
+      "nature"
+    ],
+    "blurb": "A gentle forest trail to a 33-metre waterfall, with fried maple leaves on the way.",
+    "prompt": "Travel photograph of Minoo waterfall near Osaka, tall waterfall surrounded by bright red autumn maple trees, forest trail with wooden railing, no people, no text, no watermark"
+  },
+  {
+    "id": "fukuoka-yatai",
+    "title": "Nakasu Yatai Stalls",
+    "city": "Fukuoka",
+    "area": "Nakasu",
+    "tags": [
+      "food",
+      "nightlife",
+      "culture"
+    ],
+    "blurb": "Riverside food stalls serving Hakata tonkotsu ramen, yakitori and beer until late.",
+    "prompt": "Travel photograph of yatai food stalls along the Naka River in Nakasu, Fukuoka at night, warm lantern light, steam rising from ramen pots, river reflections, no people, no text, no watermark"
+  },
+  {
+    "id": "dazaifu-tenmangu",
+    "title": "Dazaifu Tenmangu",
+    "city": "Fukuoka",
+    "area": "Dazaifu",
+    "tags": [
+      "temples",
+      "culture",
+      "daytrip"
+    ],
+    "blurb": "Shrine of the god of learning, with plum trees, red bridges and an umegae-mochi street.",
+    "prompt": "Travel photograph of Dazaifu Tenmangu shrine near Fukuoka, vermilion arched bridge over a pond, plum blossoms, main hall with curved roof, soft morning light, no people, no text, no watermark"
+  },
+  {
+    "id": "nagasaki-glover",
+    "title": "Nagasaki Harbour & Glover Garden",
+    "city": "Nagasaki",
+    "area": "Minamiyamate",
+    "tags": [
+      "culture",
+      "views",
+      "daytrip"
+    ],
+    "blurb": "Hillside colonial houses above a harbour city with trams, Dutch history and champon noodles.",
+    "prompt": "Travel photograph of Glover Garden in Nagasaki, Western-style wooden villa on a hillside overlooking Nagasaki harbour, cranes and ships in the distance, late afternoon light, no people, no text, no watermark"
+  },
+  {
+    "id": "kumamoto-castle",
+    "title": "Kumamoto Castle",
+    "city": "Kumamoto",
+    "area": "Chuo",
+    "tags": [
+      "culture",
+      "views",
+      "temples"
+    ],
+    "blurb": "One of Japan's great castles, rebuilt after the 2016 earthquake, with sweeping stone walls.",
+    "prompt": "Travel photograph of Kumamoto Castle, black and white main keep rising above massive curved stone walls, clear blue sky, ginkgo trees, no people, no text, no watermark"
+  },
+  {
+    "id": "beppu-hells",
+    "title": "Beppu Hells Onsen",
+    "city": "Beppu",
+    "area": "Kannawa",
+    "tags": [
+      "onsen",
+      "nature",
+      "culture"
+    ],
+    "blurb": "Steaming cobalt-blue and blood-red hot spring pools, then a soak in a real onsen town.",
+    "prompt": "Travel photograph of Umi Jigoku in Beppu, cobalt blue boiling hot spring pool with thick white steam rising, red torii gate and lush garden around it, no people, no text, no watermark"
+  },
+  {
+    "id": "yufuin",
+    "title": "Yufuin Onsen Village",
+    "city": "Yufuin",
+    "area": "Yufuin",
+    "tags": [
+      "onsen",
+      "nature",
+      "shopping"
+    ],
+    "blurb": "A quiet onsen town under Mount Yufu, with a misty lake, craft shops and ryokan dinners.",
+    "prompt": "Travel photograph of Lake Kinrin in Yufuin at dawn, morning mist over the water, Mount Yufu behind, wooden ryokan buildings on the shore, autumn colours, no people, no text, no watermark"
+  },
+  {
+    "id": "sakurajima",
+    "title": "Sakurajima Volcano",
+    "city": "Kagoshima",
+    "area": "Sakurajima",
+    "tags": [
+      "nature",
+      "views",
+      "thrills"
+    ],
+    "blurb": "An active volcano across the bay from Kagoshima, reached by a 15-minute ferry.",
+    "prompt": "Travel photograph of Sakurajima volcano seen across Kagoshima Bay, a plume of ash and steam rising from the crater, calm sea in the foreground, dramatic evening sky, no people, no text, no watermark"
+  },
+  {
+    "id": "takachiho-gorge",
+    "title": "Takachiho Gorge",
+    "city": "Takachiho",
+    "area": "Miyazaki",
+    "tags": [
+      "nature",
+      "daytrip",
+      "views"
+    ],
+    "blurb": "Row a boat beneath basalt cliffs and a waterfall in the gorge where Japanese mythology begins.",
+    "prompt": "Travel photograph of Takachiho Gorge, narrow emerald river between dark columnar basalt cliffs, Manai waterfall pouring into the gorge, a small empty rowing boat, no people, no text, no watermark"
+  },
+  {
+    "id": "todai-ji",
+    "title": "Todai-ji Great Buddha",
+    "city": "Nara",
+    "area": "Nara Park",
+    "tags": [
+      "temples",
+      "culture"
+    ],
+    "blurb": "A 15-metre bronze Buddha inside one of the largest wooden buildings on earth.",
+    "prompt": "Travel photograph of Todai-ji temple in Nara, the enormous wooden Daibutsuden hall with its curved roof, wide stone approach, early morning light, no people, no text, no watermark"
+  },
+  {
+    "id": "nara-park-deer",
+    "title": "Nara Park Deer",
+    "city": "Nara",
+    "area": "Nara Park",
+    "tags": [
+      "nature",
+      "culture"
+    ],
+    "blurb": "Over a thousand bowing sika deer roam free among the lawns, ponds and shrines.",
+    "prompt": "Travel photograph of sika deer resting on a lawn in Nara Park, stone lanterns and autumn maple trees behind, soft afternoon light, no people, no text, no watermark"
+  },
+  {
+    "id": "kasuga-taisha",
+    "title": "Kasuga Taisha Lanterns",
+    "city": "Nara",
+    "area": "Kasugayama",
+    "tags": [
+      "temples",
+      "nature"
+    ],
+    "blurb": "Three thousand moss-covered stone and bronze lanterns line the path through a primeval forest.",
+    "prompt": "Travel photograph of the approach to Kasuga Taisha shrine in Nara, rows of moss-covered stone lanterns under tall cedar trees, vermilion shrine gate at the end, dappled light, no people, no text, no watermark"
+  },
+  {
+    "id": "naramachi",
+    "title": "Naramachi Old Town",
+    "city": "Nara",
+    "area": "Naramachi",
+    "tags": [
+      "culture",
+      "shopping",
+      "food"
+    ],
+    "blurb": "Lattice-fronted merchant houses turned into cafes, sake bars and craft shops.",
+    "prompt": "Travel photograph of a narrow lane in Naramachi, Nara, traditional wooden machiya townhouses with lattice windows and hanging red monkey charms, warm evening light, no people, no text, no watermark"
+  },
+  {
+    "id": "horyu-ji",
+    "title": "Horyu-ji",
+    "city": "Nara",
+    "area": "Ikaruga",
+    "tags": [
+      "temples",
+      "culture",
+      "daytrip"
+    ],
+    "blurb": "The world's oldest wooden buildings, a 7th-century pagoda and hall, 20 minutes by train.",
+    "prompt": "Travel photograph of Horyu-ji temple near Nara, the ancient five-storey wooden pagoda and main hall inside a gravel courtyard, clear sky, no people, no text, no watermark"
+  },
+  {
+    "id": "mount-wakakusa",
+    "title": "Mount Wakakusa",
+    "city": "Nara",
+    "area": "Nara Park",
+    "tags": [
+      "nature",
+      "views"
+    ],
+    "blurb": "A grassy hill above the park with a 30-minute climb and a view over the whole city at sunset.",
+    "prompt": "Travel photograph from the grassy slope of Mount Wakakusa in Nara at sunset, rolling green hillside in the foreground, Nara city and distant mountains below, warm sky, no people, no text, no watermark"
+  },
+  {
+    "id": "isuien-garden",
+    "title": "Isuien Garden",
+    "city": "Nara",
+    "area": "Suimon-cho",
+    "tags": [
+      "nature",
+      "culture"
+    ],
+    "blurb": "A quiet strolling garden that borrows Todai-ji's gate and the hills as its backdrop.",
+    "prompt": "Travel photograph of Isuien Garden in Nara, pond with stepping stones, manicured pines and moss, a thatched tea house, temple gate and green hills borrowed in the background, no people, no text, no watermark"
+  },
+  {
+    "id": "mount-yoshino",
+    "title": "Mount Yoshino",
+    "city": "Nara",
+    "area": "Yoshino",
+    "tags": [
+      "nature",
+      "daytrip",
+      "views"
+    ],
+    "blurb": "A mountain of 30,000 cherry trees, temples and ridge paths, 90 minutes south by Kintetsu.",
+    "prompt": "Travel photograph of Mount Yoshino in Nara prefecture, hillside covered in thousands of cherry blossom trees in full bloom, a wooden temple roof among them, misty valley, no people, no text, no watermark"
+  }
 ]

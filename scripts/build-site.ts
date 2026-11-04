@@ -14,7 +14,7 @@ import { CARDS, computePreferences, describePrefs, tensions, type Swipe } from "
 const root = path.join(__dirname, "..");
 const docs = path.join(root, "docs");
 const golden = JSON.parse(fs.readFileSync(path.join(root, "seed", "golden-room.json"), "utf8"));
-const site = JSON.parse(fs.readFileSync(path.join(root, "seed", "site.json"), "utf8")) as { video?: string; repo: string };
+const site = JSON.parse(fs.readFileSync(path.join(root, "seed", "site.json"), "utf8")) as { video?: string; repo: string; app?: string };
 
 fs.mkdirSync(path.join(docs, "cards"), { recursive: true });
 for (const c of CARDS) {
@@ -52,6 +52,7 @@ const pairs = swipes
 const data = {
   repo: site.repo,
   video: site.video ?? "",
+  app: site.app ?? "",
   room: {
     code: golden.room.code,
     destination: golden.room.destination,

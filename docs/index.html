@@ -31,7 +31,8 @@
   .nav nav { display: flex; gap: 18px; font-size: 14px; color: var(--muted); }
   .nav nav a { text-decoration: none; }
   .nav nav a:hover { color: var(--fg); }
-  @media (max-width: 640px) { .nav nav { display: none; } }
+  .nav nav { align-items: center; }
+  @media (max-width: 960px) { .nav nav a:not(.appbtn) { display: none; } }
 
   .hero { padding: 64px 0 40px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
   @media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: 40px; } }
@@ -189,6 +190,19 @@
   pre .c { color: #c9b9ab; }
   .video { margin: 28px 0 0; aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--card); }
   .video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .nav .appbtn { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: #fff !important; font-weight: 600; font-size: 13px; }
+  .nav .appbtn:hover { color: #fff; }
+  .cta { margin: 56px 0 0; background: var(--fg); color: var(--bg); border-radius: 28px; padding: 40px 36px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 28px; align-items: center; }
+  @media (max-width: 860px) { .cta { grid-template-columns: 1fr; padding: 28px 22px; } }
+  .cta h2 { color: #fff; margin: 0 0 8px; }
+  .cta p { color: #d8ccc0; margin: 0 0 20px; font-size: 16px; }
+  .cta .btn.primary { height: 52px; font-size: 17px; padding: 0 26px; }
+  .cta .btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
+  .cta .steps3 { display: grid; gap: 10px; }
+  .cta .steps3 div { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 12px 14px; font-size: 14px; color: #e8dfd4; display: flex; gap: 10px; align-items: center; }
+  .cta .steps3 b { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 12px; flex-shrink: 0; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+  .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); display: inline-block; }
   footer { padding: 40px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   .rise { animation: rise .35s ease-out both; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -207,6 +221,7 @@
       <a href="#built">Built with</a>
       <a href="#run">Run it</a>
       <a id="nav-repo" href="#" target="_blank" rel="noreferrer">GitHub ↗</a>
+      <a id="nav-app" class="appbtn" href="#run">Open Wander</a>
     </nav>
   </div>
 </header>
@@ -216,9 +231,13 @@
     <div class="rise">
       <div class="eyebrow">Meta Global AI Developer Hackathon 2026 · Indie Developer track</div>
       <h1>Friends swipe on places.<br/>One agent plans the trip.</h1>
-      <p class="lede">Start a room, share a four-letter code, everyone swipes through the same pairs of place cards. An agent built on <b>Muse Spark</b> reads every pick and books a day-by-day itinerary with real trains, hotels and restaurants, and tells you who got what.</p>
+      <p class="lede">Pick a destination, share a four-letter code, everyone swipes through the same pairs of place cards. An agent built on <b>Muse Spark</b> reads every pick and books a day-by-day itinerary with real trains, hotels and restaurants, and tells you who got what.</p>
+      <div id="live-pill" class="pill" style="display:none"><i></i> Live now, free to try</div>
       <div class="btns">
-        <a id="btn-video" class="btn primary" href="#video" style="display:none">
+        <a id="btn-app" class="btn primary" href="#run">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg> <span id="btn-app-label">Open Wander</span>
+        </a>
+        <a id="btn-video" class="btn" href="#video" style="display:none">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Watch the 3-minute demo
         </a>
         <a id="btn-repo" class="btn dark" href="#" target="_blank" rel="noreferrer">
@@ -244,7 +263,7 @@
     <h2>How it works</h2>
     <p class="sub">Four steps from "where should we go" to "book it". Everything after the swipes is the agent's job.</p>
     <div class="steps">
-      <div class="step"><div class="n">1</div><b>Start a trip, share a code</b><p>One person starts a room. Friends join from their phones with a four-letter code. No accounts.</p></div>
+      <div class="step"><div class="n">1</div><b>Pick a destination, share a code</b><p>Tokyo, Kyoto &amp; Osaka, Nara, Kyushu or the whole grand tour. One person starts a room, friends join from their phones with a four-letter code. No accounts.</p></div>
       <div class="step"><div class="n">2</div><b>Everyone swipes the same pairs</b><p>Twelve pairs of place cards, pick one from each. Pairwise choices give a far stronger signal than like / dislike.</p></div>
       <div class="step"><div class="n">3</div><b>See where you clash</b><p>Before planning, each person's lean is spelled out, and so are the clashes. Nobody is surprised by the plan.</p></div>
       <div class="step"><div class="n">4</div><b>The agent reconciles, connects, books</b><p>Muse Spark runs a tool loop over live data and returns one itinerary: every item says whose pick it was and why, trains have times, and a task list covers the chores.</p></div>
@@ -292,7 +311,7 @@
         <table>
           <tr><th>Meta model</th><th>Role</th></tr>
           <tr><td>Muse Spark 1.3</td><td>The planning agent. Chat completions with function calling: reads both swipe histories, decides the city split, calls the tools below, then <code>finalize_plan</code> with a structured itinerary validated by zod.</td></tr>
-          <tr><td>Muse Image 1.0</td><td>All 24 swipe cards on this page. Generated from prompts in <code>cards.json</code>, so the app carries no third-party photo rights.</td></tr>
+          <tr><td>Muse Image 1.0</td><td>All 40 swipe cards across the five destination decks (Tokyo, Kyoto &amp; Osaka, Nara, Kyushu, grand tour). Generated from prompts in <code>cards.json</code>, so the app carries no third-party photo rights.</td></tr>
         </table>
       </div>
       <div>
@@ -308,6 +327,7 @@
     <div class="honest" style="margin-top:20px">
       <b>Honesty notes</b>
       <ul>
+        <li>Five Japan destinations today, each its own deck and agent brief; more destinations are listed as coming. On the grand tour the agent decides whether the trip is long enough to reach Kyushu, and says so in the tradeoffs when it isn't.</li>
         <li>Hotel bookings run in liteAPI's <b>sandbox</b>: real hotels and prices, simulated payment, no room is held. The booking screen says so.</li>
         <li>Flight links are search links, not fares.</li>
         <li>Google has no transit schedules for Japan through its API, so train legs are marked <b>times estimated</b> and link to the operator (SmartEX for Shinkansen) or Google Maps.</li>
@@ -316,6 +336,19 @@
       </ul>
     </div>
   </section>
+
+  <div class="cta" id="try">
+    <div>
+      <h2>Try it with your friends tonight</h2>
+      <p id="cta-copy">Open Wander, pick a destination, share the four-letter code. Each person swipes for a minute, then the agent builds the trip while you watch the tool log. No account, nothing to install.</p>
+      <div class="btns"><a class="btn primary app-link" href="#run">Open Wander</a><a class="btn ghost" href="#plan">See a finished plan first</a></div>
+    </div>
+    <div class="steps3">
+      <div><b>1</b> One person starts a trip and gets a code</div>
+      <div><b>2</b> Everyone joins and swipes 12 pairs</div>
+      <div><b>3</b> Host taps "Build our plan", 2 to 5 minutes later it's done</div>
+    </div>
+  </div>
 
   <section id="run">
     <h2>Run it locally</h2>
@@ -348,6 +381,18 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
   const tone = (name) => (name === names[0] ? "a" : "b");
 
   for (const id of ["nav-repo", "btn-repo", "foot-repo"]) $("#" + id).href = D.repo;
+  // The live product. Until it is hosted, every app link points at the local run instructions.
+  function wireApp() {
+    const els = [$("#nav-app"), $("#btn-app"), ...document.querySelectorAll(".app-link")];
+    for (const el of els) {
+      if (!el) continue;
+      if (D.app) { el.href = D.app; el.target = "_blank"; el.rel = "noreferrer"; }
+      else { el.href = "#run"; }
+    }
+    if (D.app) { $("#live-pill").style.display = ""; $("#btn-app-label").textContent = "Open Wander, it's live"; }
+    else { $("#btn-app-label").textContent = "Run Wander on your laptop"; $("#cta-copy").textContent = "Wander runs on your own machine today: clone, add three free keys, npm run dev, open it on two phones over Wi-Fi. A hosted version is on its way."; }
+  }
+  wireApp();
   $("#built-at").textContent = "Page built " + D.builtAt;
 
   // Video
@@ -381,8 +426,10 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
       $("#sw-pair").innerHTML = `<div class="result" style="grid-column:1/-1">
         <div class="big">You lean ${esc(likes.join(" + ") || "everything")}</div>
         <p>${skips.length ? "and skip " + esc(skips.join(" and ")) + "." : ""} That one line, for every traveller, is what the agent reconciles.</p>
-        <p><a class="lnk" href="#" id="sw-again">Swipe again</a></p></div>`;
+        <p style="margin-top:14px"><a class="btn primary app-link" href="#run" style="height:42px">Do this with your friends</a></p>
+        <p><a class="lnk" href="#" id="sw-again" style="background:transparent;color:var(--muted);border:1px solid var(--line)">Swipe again</a></p></div>`;
       $("#sw-again").onclick = (e) => { e.preventDefault(); i = 0; for (const k in scores) delete scores[k]; renderPair(); };
+      wireApp();
       return;
     }
     const p = pairs[i];

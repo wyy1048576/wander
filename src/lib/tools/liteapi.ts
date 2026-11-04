@@ -33,7 +33,19 @@ export type HotelOffer = {
   bookUrl: string;
 };
 
-const CITY_FIX: Record<string, string> = { tokyo: "Tokyo", kyoto: "Kyoto", osaka: "Osaka" };
+const CITY_FIX: Record<string, string> = {
+  tokyo: "Tokyo",
+  kyoto: "Kyoto",
+  osaka: "Osaka",
+  nara: "Nara",
+  fukuoka: "Fukuoka",
+  hakata: "Fukuoka",
+  nagasaki: "Nagasaki",
+  kumamoto: "Kumamoto",
+  beppu: "Beppu",
+  yufuin: "Yufuin",
+  kagoshima: "Kagoshima",
+};
 
 export async function searchHotels(args: {
   city: string;

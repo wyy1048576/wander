@@ -80,6 +80,12 @@ function open(): DatabaseSync {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
+  // Added after the first rooms were created: which deck/destination the room uses.
+  try {
+    db.exec("ALTER TABLE rooms ADD COLUMN dest_key TEXT");
+  } catch {
+    /* column already exists */
+  }
   return db;
 }
 

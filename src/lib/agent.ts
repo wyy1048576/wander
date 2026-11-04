@@ -173,9 +173,9 @@ Rules for the plan:
 - If a transit result says liveSchedule is false, set estimated: true on that item and keep the mapsUrl link.
 - Include a hotel check-in item on arrival days and the Shinkansen move as a transit item with its SmartEX link.
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
-- Keep finalize_plan compact: "detail" under 100 characters, "how" under 170, "why" under 80, no more than 6 items per day. Cover EVERY day of the trip and every night with a hotel.
+- Keep finalize_plan compact, it must finish in one go: at most 5 items per day, "detail" under 80 characters, "how" under 120, "why" under 60, 6-8 tasks. Cover EVERY day of the trip and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
-- tasks: 6-10 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
+- tasks: 6-8 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
 Write in plain, warm English. No emojis.`;
 }
 
@@ -259,9 +259,27 @@ export async function buildPlan(roomId: string): Promise<void> {
     },
   ];
 
+  let dropped = 0;
   try {
     for (let turn = 0; turn < MAX_TURNS; turn++) {
-      const res = await sparkChat(messages, TOOLS, { temperature: 0.3, maxTokens: 16000 });
+      let res;
+      try {
+        res = await sparkChat(messages, TOOLS, { temperature: 0.3, maxTokens: 16000 });
+      } catch (e) {
+        // Meta's gateway drops very long generations ("Connection error"). Ask for a tighter plan and go again.
+        const msg = String((e as Error).message ?? e);
+        if (/connection|ECONNRESET|socket|terminated|fetch failed/i.test(msg) && dropped < 2) {
+          dropped++;
+          logEvent(roomId, "thought", `Connection dropped while writing the plan (${dropped}/2); asking for a tighter plan`);
+          messages.push({
+            role: "user",
+            content:
+              "The connection dropped while you were writing. Call finalize_plan again, tighter: at most 5 items per day, \"how\" under 110 characters, \"detail\" under 70, \"why\" under 50, 6 tasks. Reuse the tool results you already have; do not call tools again.",
+          });
+          continue;
+        }
+        throw e;
+      }
       const choice = res.choices[0];
       const msg = choice?.message;
       if (!msg) throw new Error("Empty response from Muse Spark");

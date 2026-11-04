@@ -17,8 +17,9 @@ export function meta(): OpenAI {
       apiKey: process.env.META_API_KEY,
       baseURL: process.env.META_API_BASE ?? "https://api.meta.ai/v1",
       // Long planning turns occasionally drop the connection; retry rather than fail the whole plan.
-      maxRetries: 4,
-      timeout: 180_000,
+      // A long finalize_plan answer can take 4-5 minutes; never cut it off client-side.
+      maxRetries: 2,
+      timeout: 600_000,
     });
   }
   return client;
@@ -33,14 +34,15 @@ export async function sparkChat(
   opts: { temperature?: number; json?: boolean; maxTokens?: number } = {},
 ) {
   spend("meta");
-  return meta().chat.completions.create({
+  const params = {
     model: SPARK_MODEL,
     messages,
     tools: tools && tools.length ? tools : undefined,
     temperature: opts.temperature ?? 0.4,
     max_tokens: opts.maxTokens ?? 6000,
     ...(opts.json ? { response_format: { type: "json_object" as const } } : {}),
-  });
+  };
+  return meta().chat.completions.create(params);
 }
 
 export async function generateImage(prompt: string, size = "1024x1024"): Promise<Buffer> {

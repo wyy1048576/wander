@@ -14,7 +14,7 @@ export const ItemSchema = z.object({
   how: z
     .string()
     .optional()
-    .describe("Getting there from the previous item: mode, line, platform or exit, times, fare. Under 170 characters."),
+    .describe("Getting there from the previous item: mode, line, platform or exit, times, fare. Under 120 characters."),
   cost: z.string().optional().describe("Out-of-pocket cost for this item, e.g. '¥2,570 pp' or 'free'"),
 });
 
@@ -125,14 +125,14 @@ export const PLAN_JSON_SCHEMA = {
                 title: { type: "string" },
                 detail: {
                   type: "string",
-                  description: "Concrete specifics in under 100 characters: train line + times, what to order, neighbourhood",
+                  description: "Concrete specifics in under 80 characters: train line + times, what to order, neighbourhood",
                 },
                 for: {
                   type: "array",
                   items: { type: "string" },
                   description: 'Member names this is mainly for, or ["both"]',
                 },
-                why: { type: "string", description: "Under 80 characters, tying it to a swipe or compromise" },
+                why: { type: "string", description: "Under 60 characters, tying it to a swipe or compromise" },
                 link: {
                   type: "object",
                   required: ["label", "url"],
@@ -142,7 +142,7 @@ export const PLAN_JSON_SCHEMA = {
                 how: {
                   type: "string",
                   description:
-                    "REQUIRED on every item after the first of the day, and on the first item if it is a journey. How to get here from the previous item: walk/taxi/line name, platform or station exit, depart→arrive times, fare, IC card or ticket. Under 170 characters. e.g. 'JR Yamanote from Akihabara pf 2 to Harajuku, 15:02→15:27, ¥210 IC, exit Omotesando'",
+                    "REQUIRED on every item after the first of the day, and on the first item if it is a journey. How to get here from the previous item: walk/taxi/line name, platform or station exit, depart→arrive times, fare, IC card or ticket. Under 120 characters. e.g. 'JR Yamanote from Akihabara pf 2, 15:02→15:27, ¥210 IC, Omotesando exit'",
                 },
                 cost: { type: "string", description: "Out-of-pocket cost, e.g. '¥2,570 pp', '¥600 entry', 'free'" },
               },

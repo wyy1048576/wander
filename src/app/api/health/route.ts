@@ -22,6 +22,15 @@ export async function GET(req: Request) {
     usage: usage(),
     node: process.version,
   };
+  if (new URL(req.url).searchParams.get("models") === "1") {
+    try {
+      const list = await meta().models.list();
+      out.models = list.data.map((m) => m.id);
+    } catch (e) {
+      const err = e as { status?: number; message?: string };
+      out.models = { status: err.status ?? null, message: String(err.message ?? e).slice(0, 200) };
+    }
+  }
   if (probe) {
     try {
       const r = await meta().chat.completions.create({

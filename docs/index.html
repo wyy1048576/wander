@@ -154,6 +154,27 @@
   .notes { font-size: 12px; color: var(--muted); margin-top: 18px; }
   .notes p { margin: 4px 0; }
 
+  .precise { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 860px) { .precise { grid-template-columns: 1fr; } }
+  .pcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .pcard .lbl { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .pcard .ex { background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; font-size: 13.5px; }
+  .pcard .ex .t { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); }
+  .pcard .ex b { display: block; margin: 2px 0 3px; font-size: 14px; }
+  .pcard .ex .d { color: var(--fg); }
+  .pcard .ex .w { color: var(--muted); font-style: italic; font-size: 12px; margin-top: 4px; }
+  .pcard p { margin: 0; font-size: 14px; color: var(--muted); }
+  .tasks h4 { margin: 22px 0 2px; font-size: 15px; }
+  .tasks .cnt { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .task { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 11px 13px; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; transition: opacity .2s; }
+  .task.done { opacity: .55; }
+  .task .cb { width: 20px; height: 20px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); flex-shrink: 0; margin-top: 1px; cursor: pointer; display: grid; place-items: center; font-size: 12px; color: #fff; }
+  .task.done .cb { background: var(--ok); border-color: var(--ok); }
+  .task .hd { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .task .hd b { font-size: 13.5px; line-height: 1.25; font-weight: 500; }
+  .task.done .hd b { text-decoration: line-through; }
+  .task .m { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .task .lk { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); font-size: 12px; font-weight: 500; text-decoration: none; margin-top: 6px; }
   table { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
   th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
   tr:last-child td { border-bottom: 0; }
@@ -182,6 +203,7 @@
       <a href="#how">How it works</a>
       <a href="#swipes">The swipes</a>
       <a href="#plan">The plan</a>
+      <a href="#precise">Precision</a>
       <a href="#built">Built with</a>
       <a href="#run">Run it</a>
       <a id="nav-repo" href="#" target="_blank" rel="noreferrer">GitHub ↗</a>
@@ -225,7 +247,7 @@
       <div class="step"><div class="n">1</div><b>Start a trip, share a code</b><p>One person starts a room. Friends join from their phones with a four-letter code. No accounts.</p></div>
       <div class="step"><div class="n">2</div><b>Everyone swipes the same pairs</b><p>Twelve pairs of place cards, pick one from each. Pairwise choices give a far stronger signal than like / dislike.</p></div>
       <div class="step"><div class="n">3</div><b>See where you clash</b><p>Before planning, each person's lean is spelled out, and so are the clashes. Nobody is surprised by the plan.</p></div>
-      <div class="step"><div class="n">4</div><b>The agent reconciles and books</b><p>Muse Spark runs a tool loop over live data and returns one itinerary where every item says whose pick it was, why, and has a Book button.</p></div>
+      <div class="step"><div class="n">4</div><b>The agent reconciles, connects, books</b><p>Muse Spark runs a tool loop over live data and returns one itinerary: every item says whose pick it was and why, trains have times, and a task list covers the chores.</p></div>
     </div>
   </section>
 
@@ -254,6 +276,12 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section id="precise">
+    <h2>Not a list of places. A plan you can execute.</h2>
+    <p class="sub">Most AI trip planners stop at "visit Kinkaku-ji". Wander connects the places: which train, from which station, at what time, what to order when you get there, and the chores that have to happen first. Three real items from the plan above.</p>
+    <div class="precise" id="precise-cards"></div>
   </section>
 
   <section id="built">
@@ -418,7 +446,7 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
     return `<a class="lnk" href="${esc(l.url)}" target="_blank" rel="noreferrer">${esc(l.label)} ↗</a>`;
   };
   let day = 0;
-  function renderPlan() {
+  let renderPlan = function () {
     const d = P.days[day];
     $("#it").innerHTML = `
       <h3>${esc(P.title)}</h3>
@@ -439,10 +467,41 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
           ${h.why ? `<p class="why">${esc(h.why)}</p>` : ""}
           <span class="book" title="Books through liteAPI's sandbox inside the local app">Book${h.totalUSD ? ` · $${h.totalUSD} total` : ""}<span class="sb">sandbox</span></span>
         </div>`).join("")}</div>` : ""}
+      ${P.tasks && P.tasks.length ? `<div class="tasks"><h4>Before you go</h4><div class="cnt"><span id="task-cnt">0</span> of ${P.tasks.length} done</div>${P.tasks.map((t, k) => `<div class="task" data-k="${k}">
+          <div class="cb" role="checkbox" aria-checked="false" tabindex="0"></div>
+          <div style="flex:1;min-width:0"><div class="hd"><b>${esc(t.title)}</b><span class="chip neutral">${esc(t.when)}</span></div>
+          ${t.detail ? `<div class="m">${esc(t.detail)}</div>` : ""}
+          ${t.link && !t.link.url.startsWith("/") ? `<a class="lk" href="${esc(t.link.url)}" target="_blank" rel="noreferrer">${esc(t.link.label)} ↗</a>` : ""}</div></div>`).join("")}</div>` : ""}
       ${P.notes && P.notes.length ? `<div class="notes">${P.notes.map((n) => `<p>${esc(n)}</p>`).join("")}</div>` : ""}`;
     $("#it").querySelectorAll(".tab").forEach((b) => (b.onclick = () => { day = +b.dataset.k; renderPlan(); const sc = $("#it").closest(".screen"); const tabs = $("#it .tabs"); sc.scrollTo({ top: tabs.offsetTop - 8, behavior: "smooth" }); }));
+  };
+  const taskDone = new Set();
+  function wireTasks() {
+    $("#it").querySelectorAll(".task").forEach((el) => {
+      const k = +el.dataset.k;
+      const cb = el.querySelector(".cb");
+      const paint = () => { el.classList.toggle("done", taskDone.has(k)); cb.textContent = taskDone.has(k) ? "\u2713" : ""; cb.setAttribute("aria-checked", String(taskDone.has(k))); };
+      const toggle = () => { if (taskDone.has(k)) taskDone.delete(k); else taskDone.add(k); paint(); $("#task-cnt").textContent = taskDone.size; };
+      paint();
+      cb.onclick = toggle;
+      cb.onkeydown = (e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); toggle(); } };
+    });
+    if ($("#task-cnt")) $("#task-cnt").textContent = taskDone.size;
   }
+  const renderPlanBase = renderPlan;
+  renderPlan = function () { renderPlanBase(); wireTasks(); };
   renderPlan();
+
+  // Precision showcase: a transit leg, a meal, and a task, straight from the plan.
+  const allItems = P.days.flatMap((d) => d.items.map((it) => ({ ...it, day: d.day })));
+  const transit = allItems.find((it) => it.type === "transit" && /shinkansen|nozomi|hikari/i.test(it.title + " " + (it.detail ?? ""))) || allItems.find((it) => it.type === "transit");
+  const meal = allItems.find((it) => it.type === "meal" && it.detail && /order|try|get the|set|omakase|course/i.test(it.detail)) || allItems.find((it) => it.type === "meal" && it.detail);
+  const task = (P.tasks || []).find((t) => /yen|jpy|cash|exchange|atm/i.test(t.title + " " + (t.detail ?? ""))) || (P.tasks || [])[0];
+  const ex = (it) => it ? `<div class="ex"><div class="t">Day ${it.day} \u00b7 ${esc(it.time)}</div><b>${esc(it.title)}</b><div class="d">${esc(it.detail ?? "")}</div>${it.why ? `<div class="w">${esc(it.why)}</div>` : ""}</div>` : "";
+  $("#precise-cards").innerHTML = `
+    <div class="pcard"><div class="lbl">The train, not "take a train"</div>${ex(transit)}<p>Service, stations, departure and arrival, and the ticket to buy. The next item starts where this one ends.${transit && transit.estimated ? " Times are estimated for Japan, where Google has no transit API data, and labelled as such." : ""}</p></div>
+    <div class="pcard"><div class="lbl">The dish, not "eat local food"</div>${ex(meal)}<p>Every meal is a real restaurant from Google Places, chosen near where you already are, with what to order.</p></div>
+    <div class="pcard"><div class="lbl">The chores, as a task list</div>${task ? `<div class="ex"><div class="t">${esc(task.when)}</div><b>${esc(task.title)}</b><div class="d">${esc(task.detail ?? "")}</div></div>` : ""}<p>Money and where to change it, IC card, seat reservations, advance tickets, luggage forwarding. Each tied to a day in this plan, each tickable in the app.</p></div>`;
 })();
 </script>
 </body>

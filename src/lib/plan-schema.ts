@@ -33,12 +33,21 @@ export const HotelPickSchema = z.object({
   why: z.string().optional(),
 });
 
+export const TaskSchema = z.object({
+  when: z.string().describe('"Before you fly", "On arrival", "Day 2 morning", ...'),
+  title: z.string(),
+  detail: z.string().optional().describe("Exactly where / how, in under 120 characters"),
+  link: LinkSchema.optional(),
+  for: z.array(z.string()).optional(),
+});
+
 export const PlanSchema = z.object({
   title: z.string(),
   summary: z.string().describe("Two sentences on how the plan balances the group"),
   tradeoffs: z.array(z.string()).min(1).describe("Concrete sentences: who got what, where someone compromised"),
   days: z.array(DaySchema).min(1),
   hotels: z.array(HotelPickSchema),
+  tasks: z.array(TaskSchema).optional().describe("Logistics checklist: money, IC card, seat reservations, advance tickets"),
   notes: z.array(z.string()).optional().describe("Honesty notes, e.g. which links are search links"),
 });
 
@@ -74,6 +83,7 @@ export function normalizePlan(plan: Plan): Plan {
   return { ...plan, days };
 }
 export type PlanItem = z.infer<typeof ItemSchema>;
+export type PlanTask = z.infer<typeof TaskSchema>;
 export type PlanDay = z.infer<typeof DaySchema>;
 
 /** JSON schema handed to Muse Spark as the finalize_plan tool's parameters. */
@@ -144,6 +154,22 @@ export const PLAN_JSON_SCHEMA = {
           room: { type: "string" },
           bookUrl: { type: "string", description: "Exactly the bookUrl returned by search_hotels" },
           why: { type: "string" },
+        },
+      },
+    },
+    tasks: {
+      type: "array",
+      description:
+        "6-10 logistics tasks that make the plan executable: currency (how much, where to exchange or which ATMs), IC card, Shinkansen seat reservation with the date to do it, advance tickets for timed-entry places, luggage forwarding, eSIM, restaurant reservations. Each one specific to THIS itinerary.",
+      items: {
+        type: "object",
+        required: ["when", "title"],
+        properties: {
+          when: { type: "string", description: '"Before you fly", "On arrival at Narita", "Day 2 evening"' },
+          title: { type: "string" },
+          detail: { type: "string", description: "Exactly where and how, under 120 characters" },
+          link: { type: "object", required: ["label", "url"], properties: { label: { type: "string" }, url: { type: "string" } } },
+          for: { type: "array", items: { type: "string" } },
         },
       },
     },

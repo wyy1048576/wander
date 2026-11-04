@@ -29,6 +29,7 @@ function completenessIssues(plan: Plan, room: { nights: number }): string | null
   }, 0);
   if (nightsCovered < room.nights) problems.push(`hotels cover ${nightsCovered} of ${room.nights} nights`);
   if (!plan.days.some((d) => d.items.some((i) => i.type === "meal"))) problems.push("no meals listed");
+  if ((plan.tasks?.length ?? 0) < 4) problems.push(`only ${plan.tasks?.length ?? 0} tasks listed; include 6-10 logistics tasks (money, IC card, seat reservations, advance tickets)`);
   return problems.length ? problems.join("; ") + "." : null;
 }
 
@@ -151,6 +152,7 @@ How to work:
 
 Rules for the plan:
 - Be specific: train line and departure time, hotel name and price, restaurant name and what to order.
+- Transit items must be executable: name the service (e.g. "Nozomi 21"), the platform station, departure and arrival times, and the ticket to buy. Day items should chain: the item after a transit leg starts where that leg ends.
 - Every item gets a "for" value: a member's name when it is clearly their pick, or ["both"] for shared items. Aim for each person to have roughly equal "wins", and say so in tradeoffs.
 - "why" must reference their actual swipes ("Sam picked Golden Gai over Skytree") or an explicit compromise.
 - Use the exact links tools return. Never invent URLs. Hotels: copy bookUrl verbatim into hotels[].bookUrl and into the day item link.
@@ -159,6 +161,7 @@ Rules for the plan:
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
 - Keep finalize_plan compact: "detail" under 100 characters, "why" under 80, no more than 6 items per day. Cover EVERY day of the trip and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
+- tasks: 6-10 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
 Write in plain, warm English. No emojis.`;
 }
 
@@ -289,7 +292,7 @@ export async function buildPlan(roomId: string): Promise<void> {
               /* schema will report */
             }
           }
-          for (const k of ["days", "hotels", "tradeoffs", "notes"]) {
+          for (const k of ["days", "hotels", "tradeoffs", "notes", "tasks"]) {
             if (typeof args[k] === "string") {
               try {
                 args[k] = JSON.parse(args[k] as string);

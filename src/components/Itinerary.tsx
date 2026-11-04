@@ -31,6 +31,7 @@ function withRoom(url: string, code: string) {
 
 export default function Itinerary({ plan, members, code }: { plan: Plan; members: { name: string }[]; code: string }) {
   const [day, setDay] = useState(0);
+  const [done, setDone] = useState<Record<number, boolean>>({});
   const d = plan.days[day];
   return (
     <section className="mt-2 rise">
@@ -126,6 +127,45 @@ export default function Itinerary({ plan, members, code }: { plan: Plan; members
                 >
                   Book {h.totalUSD ? `· $${h.totalUSD} total` : ""}
                 </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {plan.tasks && plan.tasks.length > 0 && (
+        <div className="mt-6">
+          <h3 className="font-semibold">Before you go</h3>
+          <p className="text-xs text-muted mt-0.5">
+            {Object.values(done).filter(Boolean).length} of {plan.tasks.length} done
+          </p>
+          <ul className="mt-2 space-y-2">
+            {plan.tasks.map((t, i) => (
+              <li key={i} className={`rounded-2xl bg-card border border-line p-3.5 flex gap-3 items-start transition ${done[i] ? "opacity-55" : ""}`}>
+                <button
+                  aria-label={done[i] ? "Mark not done" : "Mark done"}
+                  onClick={() => setDone((d) => ({ ...d, [i]: !d[i] }))}
+                  className={`mt-0.5 h-5 w-5 shrink-0 rounded-md border flex items-center justify-center text-[11px] ${done[i] ? "bg-ok border-ok text-white" : "border-line bg-background"}`}
+                >
+                  {done[i] ? "✓" : ""}
+                </button>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className={`font-medium text-sm leading-tight ${done[i] ? "line-through" : ""}`}>{t.title}</div>
+                    <Chip tone="neutral">{t.when}</Chip>
+                  </div>
+                  {t.detail && <p className="text-xs text-muted mt-1">{t.detail}</p>}
+                  {t.link && (
+                    <a
+                      href={withRoom(t.link.url, code)}
+                      target={t.link.url.startsWith("/") ? "_self" : "_blank"}
+                      rel="noreferrer"
+                      className="mt-1.5 inline-flex h-7 items-center rounded-full border border-line bg-background px-2.5 text-xs font-medium"
+                    >
+                      {t.link.label}
+                    </a>
+                  )}
+                </div>
               </li>
             ))}
           </ul>

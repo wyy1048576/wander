@@ -1,486 +1,484 @@
 {
  "room": {
-  "id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-  "code": "JDMT",
+  "id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+  "code": "XJME",
   "destination": "Japan: Tokyo, Kyoto & Osaka",
   "origin_city": "Singapore",
   "start_date": "2026-11-18",
   "nights": 4,
   "status": "done",
-  "created_at": "2026-11-04 10:17:38"
+  "created_at": "2026-11-04 20:40:52"
  },
  "members": [
   {
-   "id": "69b35508-943a-49b3-96aa-142be8434716",
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "name": "Alex",
    "is_host": 1,
    "done_swiping": 1,
-   "created_at": "2026-11-04 10:17:38"
+   "created_at": "2026-11-04 20:40:52"
   },
   {
-   "id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "name": "Sam",
    "is_host": 0,
    "done_swiping": 1,
-   "created_at": "2026-11-04 10:17:39"
+   "created_at": "2026-11-04 20:40:53"
   }
  ],
  "swipes": [
   {
-   "id": 109,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "kinkaku-ji",
-   "right_card": "golden-gai",
-   "chosen_card": "kinkaku-ji",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 110,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "senso-ji",
-   "right_card": "umeda-sky",
-   "chosen_card": "senso-ji",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 111,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "pontocho",
-   "right_card": "osaka-castle",
-   "chosen_card": "osaka-castle",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 112,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "kuromon-market",
-   "right_card": "tokyo-skytree",
-   "chosen_card": "kuromon-market",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 113,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "shibuya-crossing",
-   "right_card": "usj",
-   "chosen_card": "shibuya-crossing",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 114,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "tsukiji-outer-market",
-   "right_card": "gion-evening",
-   "chosen_card": "gion-evening",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 115,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
+   "id": 157,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
    "left_card": "philosophers-path",
-   "right_card": "meiji-shrine",
-   "chosen_card": "philosophers-path",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 116,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "akihabara",
-   "right_card": "shinsekai",
-   "chosen_card": "akihabara",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 117,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "dotonbori",
    "right_card": "teamlab-planets",
-   "chosen_card": "teamlab-planets",
-   "created_at": "2026-11-04 10:17:39"
+   "chosen_card": "philosophers-path",
+   "created_at": "2026-11-04 20:40:55"
   },
   {
-   "id": 118,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
+   "id": 158,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "tokyo-skytree",
+   "right_card": "nishiki-market",
+   "chosen_card": "tokyo-skytree",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 159,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "shinsekai",
+   "right_card": "tsukiji-outer-market",
+   "chosen_card": "shinsekai",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 160,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
    "left_card": "fushimi-inari",
-   "right_card": "arashiyama-bamboo",
+   "right_card": "kiyomizu-dera",
    "chosen_card": "fushimi-inari",
-   "created_at": "2026-11-04 10:17:39"
+   "created_at": "2026-11-04 20:40:55"
   },
   {
-   "id": 119,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "kiyomizu-dera",
+   "id": 161,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "minoo-falls",
+   "right_card": "senso-ji",
+   "chosen_card": "minoo-falls",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 162,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "osaka-castle",
+   "right_card": "shibuya-crossing",
+   "chosen_card": "osaka-castle",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 163,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "kinkaku-ji",
+   "right_card": "pontocho",
+   "chosen_card": "kinkaku-ji",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 164,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "gion-evening",
+   "right_card": "umeda-sky",
+   "chosen_card": "gion-evening",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 165,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "arashiyama-bamboo",
+   "right_card": "usj",
+   "chosen_card": "arashiyama-bamboo",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 166,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "akihabara",
+   "right_card": "kuromon-market",
+   "chosen_card": "akihabara",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 167,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "dotonbori",
+   "right_card": "meiji-shrine",
+   "chosen_card": "meiji-shrine",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 168,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "bb394aa4-2f77-4f0b-9261-d7eafbb05375",
+   "left_card": "golden-gai",
    "right_card": "nara-deer",
    "chosen_card": "nara-deer",
-   "created_at": "2026-11-04 10:17:39"
+   "created_at": "2026-11-04 20:40:55"
   },
   {
-   "id": 120,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "69b35508-943a-49b3-96aa-142be8434716",
-   "left_card": "minoo-falls",
-   "right_card": "nishiki-market",
-   "chosen_card": "minoo-falls",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 121,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "kinkaku-ji",
-   "right_card": "golden-gai",
-   "chosen_card": "golden-gai",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 122,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "senso-ji",
-   "right_card": "umeda-sky",
-   "chosen_card": "senso-ji",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 123,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "pontocho",
-   "right_card": "osaka-castle",
-   "chosen_card": "pontocho",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 124,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "kuromon-market",
-   "right_card": "tokyo-skytree",
-   "chosen_card": "kuromon-market",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 125,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "shibuya-crossing",
-   "right_card": "usj",
-   "chosen_card": "shibuya-crossing",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 126,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "tsukiji-outer-market",
-   "right_card": "gion-evening",
-   "chosen_card": "tsukiji-outer-market",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 127,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
+   "id": 169,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
    "left_card": "philosophers-path",
-   "right_card": "meiji-shrine",
-   "chosen_card": "philosophers-path",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 128,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "akihabara",
-   "right_card": "shinsekai",
-   "chosen_card": "shinsekai",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 129,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "dotonbori",
    "right_card": "teamlab-planets",
-   "chosen_card": "dotonbori",
-   "created_at": "2026-11-04 10:17:39"
+   "chosen_card": "teamlab-planets",
+   "created_at": "2026-11-04 20:40:55"
   },
   {
-   "id": 130,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "fushimi-inari",
-   "right_card": "arashiyama-bamboo",
-   "chosen_card": "fushimi-inari",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 131,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "kiyomizu-dera",
-   "right_card": "nara-deer",
-   "chosen_card": "kiyomizu-dera",
-   "created_at": "2026-11-04 10:17:39"
-  },
-  {
-   "id": 132,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "member_id": "a434d327-4416-44fa-8e6b-7df260c6fe6f",
-   "left_card": "minoo-falls",
+   "id": 170,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "tokyo-skytree",
    "right_card": "nishiki-market",
    "chosen_card": "nishiki-market",
-   "created_at": "2026-11-04 10:17:39"
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 171,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "shinsekai",
+   "right_card": "tsukiji-outer-market",
+   "chosen_card": "shinsekai",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 172,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "fushimi-inari",
+   "right_card": "kiyomizu-dera",
+   "chosen_card": "fushimi-inari",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 173,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "minoo-falls",
+   "right_card": "senso-ji",
+   "chosen_card": "senso-ji",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 174,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "osaka-castle",
+   "right_card": "shibuya-crossing",
+   "chosen_card": "shibuya-crossing",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 175,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "kinkaku-ji",
+   "right_card": "pontocho",
+   "chosen_card": "pontocho",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 176,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "gion-evening",
+   "right_card": "umeda-sky",
+   "chosen_card": "gion-evening",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 177,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "arashiyama-bamboo",
+   "right_card": "usj",
+   "chosen_card": "usj",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 178,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "akihabara",
+   "right_card": "kuromon-market",
+   "chosen_card": "kuromon-market",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 179,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "dotonbori",
+   "right_card": "meiji-shrine",
+   "chosen_card": "dotonbori",
+   "created_at": "2026-11-04 20:40:55"
+  },
+  {
+   "id": 180,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "member_id": "f1088c07-7630-46db-b6b9-d3ae5db04d98",
+   "left_card": "golden-gai",
+   "right_card": "nara-deer",
+   "chosen_card": "golden-gai",
+   "created_at": "2026-11-04 20:40:55"
   }
  ],
  "events": [
   {
-   "id": 89,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 124,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "start",
    "tool": null,
    "summary": "Reading swipes from Alex and Sam",
-   "created_at": "2026-11-04 10:17:39"
+   "created_at": "2026-11-04 20:40:56"
   },
   {
-   "id": 90,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "flight_link",
-   "summary": "Singapore → Tokyo on 2026-11-18: search link",
-   "created_at": "2026-11-04 10:17:47"
-  },
-  {
-   "id": 91,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 125,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "tool",
    "tool": "search_hotels",
    "summary": "Tokyo 2026-11-18→2026-11-20: 5 hotels, from $244/night",
-   "created_at": "2026-11-04 10:17:47"
+   "created_at": "2026-11-04 20:41:13"
   },
   {
-   "id": 92,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 126,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "tool",
    "tool": "search_hotels",
    "summary": "Kyoto 2026-11-20→2026-11-22: 5 hotels, from $340/night",
-   "created_at": "2026-11-04 10:17:47"
+   "created_at": "2026-11-04 20:41:18"
   },
   {
-   "id": 93,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 127,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "flight_link",
+   "summary": "Singapore → Tokyo on 2026-11-18: search link",
+   "created_at": "2026-11-04 20:41:18"
+  },
+  {
+   "id": 128,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "tool",
    "tool": "get_transit_route",
    "summary": "Tokyo Station, Tokyo, Japan → Kyoto Station, Kyoto, Japan: schedule unavailable, maps link only",
-   "created_at": "2026-11-04 10:17:47"
+   "created_at": "2026-11-04 20:41:18"
   },
   {
-   "id": 94,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 129,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"sushi lunch near Tsukiji Outer Market Tokyo\" → Tsukiji Sushi Dai Honkan, Sushidokoro Unitora, Sushizanmai Main Store",
+   "created_at": "2026-11-04 20:41:36"
+  },
+  {
+   "id": 130,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"izakaya dinner near Akihabara Tokyo\" → Torarenbo Akihabara, Tsukada Nojo Akihabara Chuo Dori, Shinjidai",
+   "created_at": "2026-11-04 20:41:37"
+  },
+  {
+   "id": 131,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"tempura lunch near Senso-ji Asakusa Tokyo\" → Tempura Asakusa SAKURA, Tencha, Asakusa Amairo",
+   "created_at": "2026-11-04 20:41:37"
+  },
+  {
+   "id": 132,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"izakaya in Shinjuku Golden Gai Tokyo dinner\" → Fukumimi Shinjuku, IZAKAYA AJITO, Kan Agari",
+   "created_at": "2026-11-04 20:41:37"
+  },
+  {
+   "id": 133,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"ramen lunch near Tokyo Station\" → Rokurinsha Tokyo Ramen Street, Menya NOBUNAGA, T’s Tantan",
+   "created_at": "2026-11-04 20:41:38"
+  },
+  {
+   "id": 134,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"kyoto Pontocho Alley dinner kaiseki\" → Pontocho Fujita, Wagyu Sukiyaki Kyoto Chikarayama Pontocho, Pontocho Suishin",
+   "created_at": "2026-11-04 20:41:38"
+  },
+  {
+   "id": 135,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"lunch near Nishiki Market Kyoto\" → HIROSHIGE Nishiki Market, Kyoto Tonkatsu Katsuda Shijokarasuma, Nishiki Market Alley by MOON and BACK",
+   "created_at": "2026-11-04 20:41:38"
+  },
+  {
+   "id": 136,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"best kushikatsu Shinsekai Osaka\" → Kushikatsu Daruma, Shinsekai Kushikatsu Ittoku Main Store, Kushikatsu Shinsekai",
+   "created_at": "2026-11-04 20:41:39"
+  },
+  {
+   "id": 137,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
+   "kind": "tool",
+   "tool": "search_restaurants",
+   "summary": "\"udon lunch near Kyoto Station\" → Tsukumo Udon - Shiokoji Main Shop, Kyoto Shijo Kuon, Handmade Udon & Soba Shōraku",
+   "created_at": "2026-11-04 20:41:39"
+  },
+  {
+   "id": 138,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "tool",
    "tool": "get_transit_route",
-   "summary": "Kyoto Station, Kyoto, Japan → Osaka Castle, Osaka, Japan: schedule unavailable, maps link only",
-   "created_at": "2026-11-04 10:18:02"
+   "summary": "Kyoto Station, Kyoto, Japan → Shinsekai, Osaka, Japan: schedule unavailable, maps link only",
+   "created_at": "2026-11-04 20:41:39"
   },
   {
-   "id": 95,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "get_transit_route",
-   "summary": "Dotonbori, Osaka, Japan → Kyoto Station, Kyoto, Japan: schedule unavailable, maps link only",
-   "created_at": "2026-11-04 10:18:02"
-  },
-  {
-   "id": 96,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"best tempura lunch Asakusa near Senso-ji Tokyo\" → Tempura Asakusa SAKURA, Asakusa Amairo, Tencha",
-   "created_at": "2026-11-04 10:18:03"
-  },
-  {
-   "id": 97,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"izakaya dinner Shinjuku Golden Gai Tokyo\" → IZAKAYA AJITO, Barubora-ya, Kan Agari",
-   "created_at": "2026-11-04 10:18:03"
-  },
-  {
-   "id": 98,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"best sushi lunch Tsukiji Outer Market Tokyo\" → Irodori Tsukiji, Tsukiji Sushi Dai Honkan, Sushidokoro Unitora",
-   "created_at": "2026-11-04 10:18:03"
-  },
-  {
-   "id": 99,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"ramen dinner Akihabara Tokyo\" → Tsujita Akihabara, Ramen Tanaka soba Akihabara, Hakata Furyu Akihabara flagship shop",
-   "created_at": "2026-11-04 10:18:04"
-  },
-  {
-   "id": 100,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 139,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "tool",
    "tool": "search_restaurants",
    "summary": "\"soba lunch near Philosopher's Path Kyoto\" → Juugo, Echigo Soba, Yama-gen",
-   "created_at": "2026-11-04 10:18:08"
+   "created_at": "2026-11-04 20:42:14"
   },
   {
-   "id": 101,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"izakaya dinner Pontocho Alley Kyoto\" → Shishikura Izakaya, Izakaya Fukurou Pontocho, gyoza izakaya sakurasaku",
-   "created_at": "2026-11-04 10:18:08"
-  },
-  {
-   "id": 102,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"best street food lunch Kuromon Market Osaka\" → Kuromon Sushi & Tempura, Kuromon Kobe Beef & Beef Cutlet, Kuromon Konamon Sakaba",
-   "created_at": "2026-11-04 10:18:09"
-  },
-  {
-   "id": 103,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"best okonomiyaki Dotonbori Osaka dinner\" → Chitose, Teppan Okonomiyaki Mitsuki, Yakisoba Baby Okonomiyaki Baby Dotonbori",
-   "created_at": "2026-11-04 10:18:09"
-  },
-  {
-   "id": 104,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
-   "kind": "tool",
-   "tool": "search_restaurants",
-   "summary": "\"udon lunch near Fushimi Inari Kyoto\" → Teuchi-udon Kendonya, Inari Myoudai Dohachi, Kyoto Shijo Kuon",
-   "created_at": "2026-11-04 10:18:10"
-  },
-  {
-   "id": 105,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 140,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "thought",
    "tool": null,
-   "summary": "Plan needs fixes: days: Invalid input: expected array, received string",
-   "created_at": "2026-11-04 10:19:00"
+   "summary": "Plan incomplete: hotels cover 2 of 4 nights.",
+   "created_at": "2026-11-04 20:45:12"
   },
   {
-   "id": 106,
-   "room_id": "1c186745-898c-40d8-8e4a-8607cfd7fbe8",
+   "id": 141,
+   "room_id": "dcab0e82-83f5-4161-8995-2d4da4bf7954",
    "kind": "done",
    "tool": null,
    "summary": "Plan ready: 5 days, 2 hotels",
-   "created_at": "2026-11-04 10:19:28"
+   "created_at": "2026-11-04 20:45:48"
   }
  ],
  "plan": {
-  "title": "Tokyo, Kyoto and Osaka temples and neon for Alex and Sam",
-  "summary": "Tokyo first for shared Senso-ji and Shibuya plus teamLab and Tsukiji, then Kyoto base with Osaka day trip for temples and food nights. Alex and Sam each get about five clear wins with five shared favourites holding the plan together.",
+  "title": "Tokyo Kyoto Osaka Highlights 5 Days",
+  "summary": "Tokyo first for city lights then Kyoto base with Osaka evening balances temples and nightlife. Shared picks Fushimi, Gion and Shinsekai anchor fair wins for Alex and Sam.",
   "tradeoffs": [
-   "Alex got Kinkaku-ji, Gion at Dusk, teamLab Planets, Akihabara and Osaka Castle while Sam joined even though Sam passed on all five.",
-   "Sam got Tsukiji, Golden Gai dinner, Pontocho dinner, Dotonbori and dinner, Kiyomizu-dera and Nishiki Market while Alex joined even though Alex passed on food and nightlife.",
-   "Both shared Senso-ji, Shibuya Crossing, Philosophers Path, Fushimi Inari and Kuromon Ichiba Market with no compromise needed.",
-   "Alex compromised by skipping Nara Day Trip and Minoo Falls Hike nature daytrips because Sam passed on nature and daytrips, replaced with a shorter Osaka Castle plus Kuromon day.",
-   "Sam compromised by keeping nightlife to early dinners in Golden Gai, Pontocho and Dotonbori rather than late nights, respecting that Alex skips nightlife."
+   "Alex got Meiji Shrine, Akihabara, Skytree sunset, Philosopher Path, Kinkaku-ji and Bamboo Grove.",
+   "Sam got Shibuya, Golden Gai dinner, Senso-ji, Pontocho dinner, Nishiki Market and Dotonbori.",
+   "Both shared Fushimi Inari, Gion at Dusk and Shinsekai kushikatsu as agreed picks.",
+   "Skipped teamLab and USJ to keep 5 days walkable, and skipped Nara and Minoo daytrips."
   ],
   "days": [
    {
     "day": 1,
     "date": "2026-11-18",
     "city": "Tokyo",
-    "headline": "Arrival, Asakusa temples and Shibuya lights",
+    "headline": "Arrive Tokyo, shrine calm and Shibuya lights",
     "items": [
      {
-      "time": "10:30",
+      "time": "10:00",
       "type": "flight",
-      "title": "Flight arrival from Singapore to Tokyo",
+      "title": "Flight Singapore to Tokyo",
       "for": [
        "both"
       ],
-      "why": "Shared start from Singapore, both picked Senso-ji and Shibuya for day one",
+      "why": "Arrival from Singapore start in Tokyo",
       "link": {
        "label": "Search flights",
        "url": "https://www.google.com/travel/flights?q=Flights%20from%20Singapore%20to%20Tokyo%20on%202026-11-18"
       }
      },
      {
-      "time": "12:30-13:30",
+      "time": "13:00",
       "type": "meal",
-      "title": "Lunch at Tempura Asakusa SAKURA",
-      "detail": "Tempura Asakusa SAKURA near Senso-ji, order tendon tempura bowl and miso soup",
+      "title": "Lunch Rokurinsha Tokyo Ramen Street",
+      "detail": "Tsukemen and gyoza at Tokyo Ramen Street shop",
       "for": [
        "both"
       ],
-      "why": "Both picked Kuromon Ichiba Market for food markets, so starting with market-area lunch near Senso-ji works for both",
+      "why": "Quick shared lunch after arrival",
       "link": {
-       "label": "Tempura Asakusa SAKURA map",
-       "url": "https://maps.google.com/?cid=13396600733169788112&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=11140097630059971228&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      },
      {
-      "time": "13:30-15:00",
-      "type": "place",
-      "title": "Senso-ji Temple",
-      "detail": "Senso-ji Temple in Asakusa, Nakamise street, Hozomon Gate and main hall, 1 hour on foot",
-      "for": [
-       "both"
-      ],
-      "why": "Both picked Senso-ji Temple, the strongest shared culture pick"
-     },
-     {
-      "time": "15:30",
+      "time": "15:00",
       "type": "hotel",
-      "title": "Check-in Tokyo hotel in Hibiya",
-      "detail": "THE BLOSSOM HIBIYA, SUPERIOR ROOM, Room Only, 478 USD per night, check-in from 15:00",
+      "title": "Check-in THE TOURIST HOTEL Akihabara",
       "for": [
        "both"
       ],
-      "why": "Central base for Senso-ji and Shibuya, Alex gets culture access and Sam gets nightlife access",
+      "why": "Base in Akihabara for Alex pick",
       "link": {
-       "label": "Book THE BLOSSOM HIBIYA",
-       "url": "/book?hotelId=lp1db0a1&checkin=2026-11-18&checkout=2026-11-20&adults=2"
+       "label": "Book hotel",
+       "url": "/book?hotelId=lp65566b6b&checkin=2026-11-18&checkout=2026-11-20&adults=2"
       }
      },
      {
-      "time": "17:30-18:30",
+      "time": "16:00",
+      "type": "place",
+      "title": "Meiji Shrine",
+      "detail": "Forested walk, sake barrels, city calm after flight",
+      "for": [
+       "Alex"
+      ],
+      "why": "Alex picked Meiji, Sam passed"
+     },
+     {
+      "time": "18:00",
       "type": "place",
       "title": "Shibuya Crossing",
-      "detail": "Shibuya Crossing scramble, Hachiko statue and street views, JR Yamanote to Shibuya about 30 min",
-      "for": [
-       "both"
-      ],
-      "why": "Both picked Shibuya Crossing, shared modern and nightlife compromise"
-     },
-     {
-      "time": "19:30-21:00",
-      "type": "meal",
-      "title": "Dinner at IZAKAYA AJITO and Golden Gai walk",
-      "detail": "IZAKAYA AJITO near Golden Gai, order yakitori, agedashi tofu and highball, short stroll through Golden Gai alleys",
+      "detail": "Scramble crossing photos and Shibuya Sky view",
       "for": [
        "Sam"
       ],
-      "why": "Sam picked Shinjuku Golden Gai and Alex passed on it, so dinner there is Sams win",
+      "why": "Sam picked Shibuya over Skytree"
+     },
+     {
+      "time": "20:00",
+      "type": "meal",
+      "title": "Dinner Fukumimi Shinjuku",
+      "detail": "Yakitori, edamame, highball in Golden Gai alley",
+      "for": [
+       "Sam"
+      ],
+      "why": "Sam picked Golden Gai, Alex passed",
       "link": {
-       "label": "IZAKAYA AJITO map",
-       "url": "https://maps.google.com/?cid=7751447338446385462&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=9963970958915078822&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      }
     ]
@@ -489,64 +487,64 @@
     "day": 2,
     "date": "2026-11-19",
     "city": "Tokyo",
-    "headline": "Markets, teamLab and Akihabara",
+    "headline": "Old Asakusa, Akihabara and Skytree sunset",
     "items": [
      {
-      "time": "09:00-11:00",
+      "time": "09:30",
       "type": "place",
-      "title": "Tsukiji Outer Market",
-      "detail": "Tsukiji Outer Market stalls, tamagoyaki, tuna and street snacks, 2 hours on foot",
+      "title": "Senso-ji Temple",
+      "detail": "Nakamise lane, incense, Senso-ji main hall visit",
       "for": [
        "Sam"
       ],
-      "why": "Sam picked Tsukiji Outer Market and Alex passed on it, so this morning is Sams food win"
+      "why": "Sam picked Senso-ji, Alex passed"
      },
      {
-      "time": "11:30-12:30",
+      "time": "12:00",
       "type": "meal",
-      "title": "Lunch at Tsukiji Sushi Dai Honkan",
-      "detail": "Tsukiji Sushi Dai Honkan, order chirashi or nigiri set",
-      "for": [
-       "Sam"
-      ],
-      "why": "Sam picked Tsukiji and Kuromon markets for food, Alex compromises and joins for sushi",
-      "link": {
-       "label": "Tsukiji Sushi Dai Honkan map",
-       "url": "https://maps.google.com/?cid=12703375602748450933&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
-      }
-     },
-     {
-      "time": "14:00-16:00",
-      "type": "place",
-      "title": "teamLab Planets",
-      "detail": "teamLab Planets in Toyosu, immersive water and light rooms, pre-book 14:00 entry, 2 hours",
-      "for": [
-       "Alex"
-      ],
-      "why": "Alex picked teamLab Planets and Sam passed on it, so this is Alexs modern culture win"
-     },
-     {
-      "time": "16:30-18:00",
-      "type": "place",
-      "title": "Akihabara Electric Town",
-      "detail": "Akihabara Electric Town arcades, electronics shops and anime stores",
-      "for": [
-       "Alex"
-      ],
-      "why": "Alex picked Akihabara Electric Town and Sam passed on it, balancing Sams Tsukiji morning"
-     },
-     {
-      "time": "18:30-19:30",
-      "type": "meal",
-      "title": "Dinner at Tsujita Akihabara",
-      "detail": "Tsujita Akihabara, order tsukemen dipping ramen with thick pork broth",
+      "title": "Lunch Tempura Asakusa SAKURA",
+      "detail": "Seasonal tempura set, shrimp and vegetable",
       "for": [
        "both"
       ],
-      "why": "Compromise dinner near Akihabara, Alex gets neighbourhood pick and Sam gets ramen food pick",
+      "why": "Compromise lunch near temple",
       "link": {
-       "label": "Tsujita Akihabara map",
-       "url": "https://maps.google.com/?cid=10186200391388986545&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=13396600733169788112&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+     },
+     {
+      "time": "14:00",
+      "type": "place",
+      "title": "Akihabara Electric Town",
+      "detail": "Arcades, retro games, Electric Town walk",
+      "for": [
+       "Alex"
+      ],
+      "why": "Alex picked Akihabara, Sam passed"
+     },
+     {
+      "time": "16:30",
+      "type": "place",
+      "title": "Tokyo Skytree at Sunset",
+      "detail": "Sunset observatory, Sumida river views",
+      "for": [
+       "Alex"
+      ],
+      "why": "Alex picked Skytree, Sam passed"
+     },
+     {
+      "time": "19:30",
+      "type": "meal",
+      "title": "Dinner Torarenbo Akihabara",
+      "detail": "Chicken nanban, karaage, beer in Akihabara",
+      "for": [
+       "both"
+      ],
+      "why": "Shared izakaya near hotel",
+      "link": {
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=12345825277641757674&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      }
     ]
@@ -555,17 +553,17 @@
     "day": 3,
     "date": "2026-11-20",
     "city": "Kyoto",
-    "headline": "Shinkansen west, Philosophers Path and Pontocho night",
+    "headline": "Shinkansen to Kyoto, fox gates and Gion",
     "items": [
      {
       "time": "09:00-11:15",
       "type": "transit",
       "title": "Tokyo Station to Kyoto Station Shinkansen",
-      "detail": "Tokaido Shinkansen Nozomi from Tokyo Station to Kyoto Station, departs 09:00 arrives about 11:15, reserve seats",
+      "detail": "Nozomi from Tokyo 09:00 arr Kyoto 11:15, reserved seats",
       "for": [
        "both"
       ],
-      "why": "Shared move to give both Kyoto temples and Osaka food, live schedule unavailable so times estimated",
+      "why": "Move to Kyoto base for temples",
       "link": {
        "label": "Directions",
        "url": "https://www.google.com/maps/dir/?api=1&origin=Tokyo%20Station%2C%20Tokyo%2C%20Japan&destination=Kyoto%20Station%2C%20Kyoto%2C%20Japan&travelmode=transit"
@@ -573,75 +571,64 @@
       "estimated": true
      },
      {
-      "time": "11:45",
+      "time": "11:30",
       "type": "hotel",
-      "title": "Check-in Kyoto hotel",
-      "detail": "Sotetsu Fresa Inn Kyoto-Kiyomizu Gojo, DOUBLE room, Room Only, 340 USD per night, drop bags",
+      "title": "Check-in Sotetsu Fresa Inn Kyoto",
       "for": [
        "both"
       ],
-      "why": "Central base for both temple mornings and Pontocho nights",
+      "why": "Two nights in Kyoto, daytrip Osaka",
       "link": {
-       "label": "Book Sotetsu Fresa Inn Kyoto-Kiyomizu Gojo",
+       "label": "Book hotel",
        "url": "/book?hotelId=lp65577772&checkin=2026-11-20&checkout=2026-11-22&adults=2"
       }
      },
      {
-      "time": "12:15-13:15",
+      "time": "12:00",
       "type": "meal",
-      "title": "Lunch at Juugo",
-      "detail": "Juugo near Philosophers Path, order soba set and tempura",
+      "title": "Lunch Tsukumo Udon Shiokoji",
+      "detail": "Kitsune udon and tempura near Kyoto Station",
       "for": [
        "both"
       ],
-      "why": "Both picked Philosophers Path, so quiet soba lunch suits Alex culture lean and Sam market food lean",
+      "why": "Quick lunch after Shinkansen",
       "link": {
-       "label": "Juugo map",
-       "url": "https://maps.google.com/?cid=7407452684643359882&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=14487329995985695804&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      },
      {
-      "time": "13:30-15:00",
+      "time": "14:00",
       "type": "place",
-      "title": "Philosophers Path",
-      "detail": "Philosophers Path canal walk north to south, temples and autumn leaves, 1.5 km flat walk",
+      "title": "Fushimi Inari Shrine",
+      "detail": "Thousand torii hike to Yotsutsuji viewpoint",
       "for": [
        "both"
       ],
-      "why": "Both picked Philosophers Path, rare nature plus culture agreement"
+      "why": "Both picked Fushimi Inari"
      },
      {
-      "time": "15:30-16:30",
-      "type": "place",
-      "title": "Kinkaku-ji Golden Pavilion",
-      "detail": "Kinkaku-ji Golden Pavilion, bus from Philosopher area about 30 min, see pavilion and gardens 45 min",
-      "for": [
-       "Alex"
-      ],
-      "why": "Alex picked Kinkaku-ji Golden Pavilion and Sam passed on it, so Alex temple win"
-     },
-     {
-      "time": "17:30-18:15",
+      "time": "17:30",
       "type": "place",
       "title": "Gion at Dusk",
-      "detail": "Gion at Dusk walk through Hanamikoji and Yasaka area, 45 min before dinner",
+      "detail": "Lantern streets, Yasaka shrine, machiya stroll",
       "for": [
-       "Alex"
+       "both"
       ],
-      "why": "Alex picked Gion at Dusk and Sam passed on it, paired same evening as Sams Pontocho pick for fairness"
+      "why": "Both picked Gion at Dusk"
      },
      {
-      "time": "18:30-20:00",
+      "time": "19:30",
       "type": "meal",
-      "title": "Dinner at Izakaya Fukurou Pontocho",
-      "detail": "Izakaya Fukurou Pontocho in Pontocho Alley, order sashimi, kushiyaki and Kyoto sake",
+      "title": "Dinner Pontocho Fujita",
+      "detail": "Kaiseki, tempura, Kamo river view seats",
       "for": [
        "Sam"
       ],
-      "why": "Sam picked Pontocho Alley Dinner and Alex passed on it, so Sams nightlife food win to balance Alex Kinkaku-ji",
+      "why": "Sam picked Pontocho, Alex passed",
       "link": {
-       "label": "Izakaya Fukurou Pontocho map",
-       "url": "https://maps.google.com/?cid=10979506284441820148&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=325402138680568532&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      }
     ]
@@ -649,96 +636,81 @@
    {
     "day": 4,
     "date": "2026-11-21",
-    "city": "Osaka",
-    "headline": "Fushimi at dawn, Osaka Castle and Dotonbori night",
+    "city": "Kyoto",
+    "headline": "Quiet canal morning, markets and Osaka night",
     "items": [
      {
-      "time": "08:00-09:30",
+      "time": "09:00",
       "type": "place",
-      "title": "Fushimi Inari Shrine",
-      "detail": "Fushimi Inari Shrine thousand torii gates, early walk to Yotsutsuji viewpoint, 90 min",
-      "for": [
-       "both"
-      ],
-      "why": "Both picked Fushimi Inari Shrine, shared temples and nature pick"
-     },
-     {
-      "time": "09:45-10:45",
-      "type": "transit",
-      "title": "Kyoto Station to Osaka Castle",
-      "detail": "JR Nara Line to Kyoto Station then JR Special Rapid to Osaka, departs about 09:45 arrives Osaka Castle area about 10:45",
-      "for": [
-       "both"
-      ],
-      "why": "Day trip compromise because Alex picked Nara Day Trip and Minoo Falls Hike but Sam passed on daytrips, so short Osaka day instead",
-      "link": {
-       "label": "Directions",
-       "url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto%20Station%2C%20Kyoto%2C%20Japan&destination=Osaka%20Castle%2C%20Osaka%2C%20Japan&travelmode=transit"
-      },
-      "estimated": true
-     },
-     {
-      "time": "11:00-12:30",
-      "type": "place",
-      "title": "Osaka Castle",
-      "detail": "Osaka Castle tower and park, views and history, 90 min",
+      "title": "Philosopher's Path",
+      "detail": "Canal walk, small temples, autumn leaves",
       "for": [
        "Alex"
       ],
-      "why": "Alex picked Osaka Castle and Sam passed on it, Alex culture win in Osaka"
+      "why": "Alex picked Philosopher, Sam passed"
      },
      {
-      "time": "13:00-14:00",
+      "time": "11:30",
       "type": "meal",
-      "title": "Lunch at Kuromon Sushi and Tempura",
-      "detail": "Kuromon Sushi and Tempura inside Kuromon Ichiba Market, order sushi set and tempura, then walk market stalls",
+      "title": "Lunch Juugo",
+      "detail": "Warm soba and tempura near canal north end",
       "for": [
        "both"
       ],
-      "why": "Both picked Kuromon Ichiba Market, shared food market agreement",
+      "why": "Compromise lunch by nature walk",
       "link": {
-       "label": "Kuromon Sushi and Tempura map",
-       "url": "https://maps.google.com/?cid=17773804989354706591&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=7407452684643359882&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      },
      {
-      "time": "14:30-16:00",
+      "time": "14:00",
       "type": "place",
-      "title": "Dotonbori",
-      "detail": "Dotonbori canal, Glico sign and Shinsaibashi arcade, 90 min stroll",
+      "title": "Nishiki Market",
+      "detail": "Tastings, pickles, sweets in covered arcade",
       "for": [
        "Sam"
       ],
-      "why": "Sam picked Dotonbori and Alex passed on it, Sams nightlife food win"
+      "why": "Sam picked Nishiki, Alex passed"
      },
      {
-      "time": "18:00-19:30",
-      "type": "meal",
-      "title": "Dinner at Teppan Okonomiyaki Mitsuki",
-      "detail": "Teppan Okonomiyaki Mitsuki in Dotonbori, order pork okonomiyaki and yakisoba",
-      "for": [
-       "Sam"
-      ],
-      "why": "Sam picked Dotonbori and Shinsekai food, Alex passed on Dotonbori, so Sam gets Osaka dinner",
-      "link": {
-       "label": "Teppan Okonomiyaki Mitsuki map",
-       "url": "https://maps.google.com/?cid=5741312494286645964&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
-      }
-     },
-     {
-      "time": "20:30-21:30",
+      "time": "16:00-17:15",
       "type": "transit",
-      "title": "Dotonbori to Kyoto Station return",
-      "detail": "Midosuji subway to Umeda then JR Special Rapid to Kyoto Station, departs about 20:30 arrives about 21:30, return to Kyoto hotel",
+      "title": "Kyoto to Shinsekai Osaka transit",
+      "detail": "JR Kyoto 16:00 to Shin-Imamiya, subway to Dobutsuen",
       "for": [
        "both"
       ],
-      "why": "Return to same Kyoto hotel to keep only 2 hotels, compromise to avoid packing again",
+      "why": "Evening Osaka trip both wanted",
       "link": {
        "label": "Directions",
-       "url": "https://www.google.com/maps/dir/?api=1&origin=Dotonbori%2C%20Osaka%2C%20Japan&destination=Kyoto%20Station%2C%20Kyoto%2C%20Japan&travelmode=transit"
+       "url": "https://www.google.com/maps/dir/?api=1&origin=Kyoto%20Station%2C%20Kyoto%2C%20Japan&destination=Shinsekai%2C%20Osaka%2C%20Japan&travelmode=transit"
       },
       "estimated": true
+     },
+     {
+      "time": "17:30",
+      "type": "meal",
+      "title": "Dinner Ittoku Shinsekai",
+      "detail": "Kushikatsu set, doteyaki, lemon sour",
+      "for": [
+       "both"
+      ],
+      "why": "Both picked Shinsekai kushikatsu",
+      "link": {
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=17386472739885960395&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+      }
+     },
+     {
+      "time": "19:30",
+      "type": "place",
+      "title": "Dotonbori night stroll",
+      "detail": "Neon canal, takoyaki snack, return to Kyoto",
+      "for": [
+       "Sam"
+      ],
+      "why": "Sam picked Dotonbori, Alex passed"
      }
     ]
    },
@@ -746,40 +718,40 @@
     "day": 5,
     "date": "2026-11-22",
     "city": "Kyoto",
-    "headline": "Kiyomizu and Nishiki farewell",
+    "headline": "Golden temple and bamboo, calm farewell",
     "items": [
      {
-      "time": "09:00-10:30",
+      "time": "09:00",
       "type": "place",
-      "title": "Kiyomizu-dera",
-      "detail": "Kiyomizu-dera temple, wooden stage and city views, 90 min morning visit",
+      "title": "Kinkaku-ji Golden Pavilion",
+      "detail": "Gold pavilion, pond garden, early entry",
       "for": [
-       "Sam"
+       "Alex"
       ],
-      "why": "Sam picked Kiyomizu-dera and Alex passed on it, Sams temple win on final day"
+      "why": "Alex picked Kinkaku-ji, Sam passed"
      },
      {
-      "time": "11:00-12:00",
+      "time": "10:30",
       "type": "place",
-      "title": "Nishiki Market",
-      "detail": "Nishiki Market covered arcade, pickles, tofu donuts and knives, 1 hour browsing",
+      "title": "Arashiyama Bamboo Grove",
+      "detail": "Grove walk, Tenryu-ji garden, river edge",
       "for": [
-       "Sam"
+       "Alex"
       ],
-      "why": "Sam picked Nishiki Market and Alex passed on it, final food market for Sam"
+      "why": "Alex picked Bamboo, Sam passed"
      },
      {
-      "time": "12:15-13:15",
+      "time": "13:00",
       "type": "meal",
-      "title": "Lunch at Teuchi-udon Kendonya",
-      "detail": "Teuchi-udon Kendonya near central Kyoto, order kitsune udon and inari sushi",
+      "title": "Lunch HIROSHIGE Nishiki Market",
+      "detail": "Tamagoyaki, croquette, market bites for lunch",
       "for": [
-       "both"
+       "Sam"
       ],
-      "why": "Both picked Fushimi Inari and Philosophers Path, so simple udon farewell suits both before late afternoon end",
+      "why": "Sam picked markets, Alex compromised",
       "link": {
-       "label": "Teuchi-udon Kendonya map",
-       "url": "https://maps.google.com/?cid=16984350875559884345&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
+       "label": "Maps",
+       "url": "https://maps.google.com/?cid=13310193980442449358&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA"
       }
      }
     ]
@@ -788,14 +760,14 @@
   "hotels": [
    {
     "city": "Tokyo",
-    "name": "THE BLOSSOM HIBIYA",
+    "name": "THE TOURIST HOTEL & Cafe AKIHABARA",
     "checkin": "2026-11-18",
     "checkout": "2026-11-20",
-    "perNightUSD": 478,
-    "totalUSD": 957,
-    "room": "SUPERIOR ROOM (2PAX) -",
-    "bookUrl": "/book?hotelId=lp1db0a1&checkin=2026-11-18&checkout=2026-11-20&adults=2",
-    "why": "Base for Senso-ji, Shibuya and Akihabara, matches Alex Akihabara pick with easy Shinjuku access for Sam"
+    "perNightUSD": 284,
+    "totalUSD": 567,
+    "room": "Quadruple Room, Room Only",
+    "bookUrl": "/book?hotelId=lp65566b6b&checkin=2026-11-18&checkout=2026-11-20&adults=2",
+    "why": "Near Akihabara for Alex, transit hub"
    },
    {
     "city": "Kyoto",
@@ -804,15 +776,88 @@
     "checkout": "2026-11-22",
     "perNightUSD": 340,
     "totalUSD": 680,
-    "room": "DOUBLE 1/2 PAX",
+    "room": "DOUBLE 1/2 PAX, Room Only",
     "bookUrl": "/book?hotelId=lp65577772&checkin=2026-11-20&checkout=2026-11-22&adults=2",
-    "why": "Near Kiyomizu and Gion-Pontocho, keeps only 2 hotels while covering Kyoto and Osaka day trip"
+    "why": "Near Gion, base for Kyoto plus Osaka evening"
+   }
+  ],
+  "tasks": [
+   {
+    "when": "Before you fly",
+    "title": "Cash and yen ATMs",
+    "detail": "Carry 30000 yen cash each, exchange at Narita then 7-Eleven ATMs",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
+   },
+   {
+    "when": "On arrival at Narita",
+    "title": "IC card setup",
+    "detail": "Add Suica to iPhone or buy Welcome Suica at Narita station",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
+   },
+   {
+    "when": "Before you fly",
+    "title": "Reserve Shinkansen seats",
+    "detail": "Buy Nozomi reserved seats Tokyo-Kyoto on SmartEX app",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
+   },
+   {
+    "when": "Day 2 evening",
+    "title": "Luggage forwarding",
+    "detail": "Forward big bags Tokyo to Kyoto by Yamato at front desk Day 2",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
+   },
+   {
+    "when": "Before you fly",
+    "title": "Skytree timed ticket",
+    "detail": "Book Skytree 17:00 slot online 2 weeks ahead",
+    "for": [
+     "Alex"
+    ]
+   },
+   {
+    "when": "Before you fly",
+    "title": "Pontocho dinner reservation",
+    "detail": "Reserve Pontocho Fujita dinner online for Day 3 19:30",
+    "for": [
+     "Sam"
+    ]
+   },
+   {
+    "when": "Before you fly",
+    "title": "eSIM data",
+    "detail": "Buy eSIM with 5GB Japan data, activate on landing",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
+   },
+   {
+    "when": "Day 4 morning",
+    "title": "Osaka evening return check",
+    "detail": "Check JR Kyoto-Osaka return times for Day 4 late return",
+    "for": [
+     "Alex",
+     "Sam"
+    ]
    }
   ],
   "notes": [
-   "Flight links are Google Flights search links, not live tickets with prices.",
-   "Hotel bookings run in a sandbox, bookUrls are test links, totals are 957 USD Tokyo and 680 USD Kyoto.",
-   "Transit times for Shinkansen and Kyoto-Osaka moves are estimated because liveSchedule was false, maps links kept for directions."
+   "Flight link is a Google Flights search link, not a ticket.",
+   "Hotel bookings run in a sandbox, copy bookUrl to book.",
+   "Shinkansen times are estimated, confirm on SmartEX.",
+   "Transit Osaka times estimated, use maps link live."
   ]
  }
 }

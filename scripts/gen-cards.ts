@@ -1,5 +1,5 @@
 // Generates the swipe-card images with Muse Image. Idempotent: skips cards that already have a PNG.
-// Run: npx tsx scripts/gen-cards.ts
+// Run: npx tsx scripts/gen-cards.ts   then   npx tsx scripts/optimize-cards.ts  (PNG -> 768px WebP)
 import { loadEnv } from "./env";
 loadEnv();
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
@@ -11,7 +11,7 @@ mkdirSync(OUT, { recursive: true });
 
 async function gen(card: { id: string; prompt: string }) {
   const file = resolve(OUT, `${card.id}.png`);
-  if (existsSync(file)) return "skip";
+  if (existsSync(file) || existsSync(resolve(OUT, `${card.id}.webp`))) return "skip";
   const { generateImage } = await import("../src/lib/muse");
   const buf = await generateImage(card.prompt, "1024x1024");
   writeFileSync(file, buf);

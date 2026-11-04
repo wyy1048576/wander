@@ -13,7 +13,7 @@ export type Card = {
 
 export const CARDS: Card[] = (cardsJson as Omit<Card, "image">[]).map((c) => ({
   ...c,
-  image: `/cards/${c.id}.png`,
+  image: `/cards/${c.id}.webp`,
 }));
 export const CARD_BY_ID = new Map(CARDS.map((c) => [c.id, c]));
 export const PAIRS_PER_ROOM = 12;

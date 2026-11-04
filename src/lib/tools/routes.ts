@@ -123,7 +123,16 @@ export async function getTransitRoute(args: {
     const j = await res.json();
     const route = j.routes?.[0];
     if (!route) {
-      return { origin: args.origin, destination: args.destination, totalMinutes: 0, steps: [], mapsUrl };
+      // Google returns no transit data for some countries (Japan among them). Keep the maps link,
+      // and tell the agent to estimate the schedule and label it as such.
+      return {
+        origin: args.origin,
+        destination: args.destination,
+        totalMinutes: 0,
+        steps: [],
+        mapsUrl,
+        unavailable: "Google has no transit schedule for this route; estimate times from general knowledge and mark them estimated.",
+      } as TransitRoute & { unavailable: string };
     }
     const steps: TransitStep[] = [];
     for (const leg of route.legs ?? []) {

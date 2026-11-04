@@ -31,7 +31,7 @@ The agent loop lives in [`src/lib/agent.ts`](src/lib/agent.ts). The Meta client 
 
 | Tool | Source |
 |---|---|
-| `get_transit_route` | Google Routes API, transit mode. Real train/bus legs with departure and arrival times and the operator's site. Shinkansen legs link to SmartEX. |
+| `get_transit_route` | Google Routes API, transit mode. Real train/bus legs with departure and arrival times and the operator's site where Google has transit data. Shinkansen legs link to SmartEX. |
 | `search_restaurants` | Google Places API (New) text search. Real restaurants with rating, review count, price level and a Maps link. |
 | `search_hotels` | liteAPI (Nuitée) sandbox. Real hotels with live rates; `/book` runs prebook → book with liteAPI's simulated payment. |
 | `flight_link` | A Google Flights search link. No live fares. |
@@ -42,7 +42,7 @@ Every external call goes through a per-API daily budget ([`src/lib/budget.ts`](s
 
 - Hotel bookings run in liteAPI's **sandbox**: real hotels and prices, simulated payment, no room is held. The UI says so on every booking screen.
 - Flight links are **search links**, not live fares.
-- If the Routes API is unavailable, transit items are marked **"times estimated"** and link to Google Maps directions instead.
+- Google's Routes API has **no transit schedules for Japan** (its APIs return empty results there, unlike the Maps app). Train legs are therefore marked **"times estimated"**, timed by the model from general knowledge, and link to the operator (SmartEX for Shinkansen) or Google Maps directions. The tool returns live legs in countries Google does cover.
 - Destination is fixed to Japan (Tokyo, Kyoto, Osaka) for this build. The architecture is destination-agnostic; only the card deck is Japan-specific.
 
 ## Stack

@@ -4,7 +4,6 @@
 
 Built for the Meta Global AI Developer Hackathon 2026 (Oct 26 – Nov 4). Everything in this repository was written during the hackathon window.
 
-**Try it:** https://wander-production-bd23.up.railway.app (hosted on Railway, free to use, no account)
 **Showcase site:** https://wyy1048576.github.io/wander/ (the demo room, swipes, agent log and itinerary, rendered statically from `seed/`).
 
 ## The problem
@@ -54,7 +53,7 @@ Next.js 16 (App Router, TypeScript, Tailwind v4) · SQLite via Node's built-in `
 
 ## Run it
 
-The hosted version above is the same code, deployed from `main` with the included `Dockerfile` (SQLite on a mounted volume at `/data`). To run it yourself:
+Wander runs on your own machine. A `Dockerfile` is included and deploys cleanly (tested on Railway), but **Meta's Model API currently rejects calls from cloud datacenter IPs** (`model_not_found` with the same key that works from a home network), so the agent only runs where your key is accepted. To run it:
 
 ```bash
 git clone https://github.com/wyy1048576/wander

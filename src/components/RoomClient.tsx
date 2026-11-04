@@ -265,7 +265,7 @@ function Waiting({
               <span className="font-semibold">{m.name}</span>
               <Chip tone={m.done ? "ok" : "neutral"}>{m.done ? "done" : `${m.swipes}/${state.totalPairs}`}</Chip>
             </div>
-            <p className="text-sm mt-1 capitalize">{m.summary}</p>
+            <p className="text-sm mt-1 first-letter:uppercase">{m.summary}</p>
             {m.picks.length > 0 && (
               <p className="text-xs text-muted mt-2 line-clamp-2">Picked: {m.picks.slice(0, 6).join(", ")}</p>
             )}

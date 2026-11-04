@@ -200,7 +200,7 @@ export async function buildPlan(roomId: string): Promise<void> {
   const members = d.prepare("SELECT id, name FROM members WHERE room_id = ? ORDER BY created_at").all(roomId) as Member[];
   d.prepare("UPDATE rooms SET status = 'planning' WHERE id = ?").run(roomId);
   d.prepare("DELETE FROM plan_events WHERE room_id = ?").run(roomId);
-  logEvent(roomId, "start", `Reading ${members.length} travellers' swipes`);
+  logEvent(roomId, "start", `Reading swipes from ${members.map((m) => m.name).join(" and ")}`);
 
   const prefs = members.map((m) => computePreferences(m.name, memberSwipes(m.id)));
   const endDate = addDays(room.start_date, room.nights);

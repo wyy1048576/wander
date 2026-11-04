@@ -16,8 +16,11 @@ export default function RoomClient({ code }: { code: string }) {
 
   useEffect(() => {
     // Identity lives in localStorage; read it once after mount (client only).
+    // ?me=<memberId> pins this window to a member (handy for two side-by-side windows in a demo).
+    const pinned = new URLSearchParams(window.location.search).get("me");
+    if (pinned) localStorage.setItem(`wander:${code}`, pinned);
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMemberId(localStorage.getItem(`wander:${code}`));
+    setMemberId(pinned ?? localStorage.getItem(`wander:${code}`));
     setLoaded(true);
   }, [code]);
 

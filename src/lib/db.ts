@@ -1,18 +1,21 @@
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-// Single SQLite file, created on first use. Zero setup for judges running locally.
+/**
+ * Single SQLite file via Node's built-in sqlite module (Node 22.13+ / 24).
+ * No native build step, so `npm install` works on any machine. Created on first use.
+ */
 const DB_PATH = process.env.DB_PATH ?? resolve(process.cwd(), "data", "app.db");
 
 declare global {
-  var __wanderDb: Database.Database | undefined;
+  var __wanderDb: DatabaseSync | undefined;
 }
 
-function open(): Database.Database {
+function open(): DatabaseSync {
   mkdirSync(resolve(DB_PATH, ".."), { recursive: true });
-  const db = new Database(DB_PATH);
-  db.pragma("journal_mode = WAL");
+  const db = new DatabaseSync(DB_PATH);
+  db.exec("PRAGMA journal_mode = WAL");
   db.exec(`
     CREATE TABLE IF NOT EXISTS rooms (
       id TEXT PRIMARY KEY,
@@ -80,7 +83,7 @@ function open(): Database.Database {
   return db;
 }
 
-export function db(): Database.Database {
+export function db(): DatabaseSync {
   if (!globalThis.__wanderDb) globalThis.__wanderDb = open();
   return globalThis.__wanderDb;
 }

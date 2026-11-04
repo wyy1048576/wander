@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
     "next": "16.4.5",
     "openai": "^7.50.0",
     "react": "19.3.0",
@@ -18,8 +17,7 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/better-sqlite3": "^9.6.0",
-    "@types/node": "^20",
+    "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -28,5 +26,8 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=22.13"
   }
 }

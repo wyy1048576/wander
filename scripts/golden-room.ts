@@ -14,10 +14,11 @@ type Row = Record<string, unknown>;
   if (cmd === "export") {
     const room = d.prepare("SELECT * FROM rooms WHERE code = ?").get(String(arg).toUpperCase()) as Row | undefined;
     if (!room) throw new Error("room not found");
-    const members = d.prepare("SELECT * FROM members WHERE room_id = ? ORDER BY created_at").all(room.id) as Row[];
-    const swipes = d.prepare("SELECT * FROM swipes WHERE room_id = ? ORDER BY id").all(room.id) as Row[];
-    const events = d.prepare("SELECT * FROM plan_events WHERE room_id = ? ORDER BY id").all(room.id) as Row[];
-    const plan = d.prepare("SELECT json FROM plans WHERE room_id = ?").get(room.id) as { json: string } | undefined;
+    const rid = String(room.id);
+    const members = d.prepare("SELECT * FROM members WHERE room_id = ? ORDER BY created_at").all(rid) as Row[];
+    const swipes = d.prepare("SELECT * FROM swipes WHERE room_id = ? ORDER BY id").all(rid) as Row[];
+    const events = d.prepare("SELECT * FROM plan_events WHERE room_id = ? ORDER BY id").all(rid) as Row[];
+    const plan = d.prepare("SELECT json FROM plans WHERE room_id = ?").get(rid) as { json: string } | undefined;
     const out = { room, members, swipes, events, plan: plan ? JSON.parse(plan.json) : null };
     writeFileSync("seed/golden-room.json", JSON.stringify(out, null, 1));
     console.log(`exported ${room.code}: ${members.length} members, ${swipes.length} swipes, ${events.length} events, plan=${!!plan}`);
@@ -38,7 +39,7 @@ type Row = Record<string, unknown>;
     }
     for (const s of g.swipes) {
       d.prepare("INSERT INTO swipes (room_id, member_id, left_card, right_card, chosen_card) VALUES (?, ?, ?, ?, ?)").run(
-        roomId, idMap.get(s.member_id), s.left_card, s.right_card, s.chosen_card,
+        roomId, idMap.get(s.member_id) ?? "", s.left_card, s.right_card, s.chosen_card,
       );
     }
     for (const e of g.events) {

@@ -47,7 +47,7 @@ Every external call goes through a per-API daily budget ([`src/lib/budget.ts`](s
 
 ## Stack
 
-Next.js 16 (App Router, TypeScript, Tailwind v4) · SQLite via better-sqlite3 (single file, zero setup) · OpenAI SDK pointed at `api.meta.ai` · zod for plan validation. No hosting required; it runs locally.
+Next.js 16 (App Router, TypeScript, Tailwind v4) · SQLite via Node's built-in `node:sqlite` (single file, no native build) · OpenAI SDK pointed at `api.meta.ai` · zod for plan validation. No hosting required; it runs locally. Needs **Node 22.13 or newer** (built on Node 24).
 
 ## Run it
 

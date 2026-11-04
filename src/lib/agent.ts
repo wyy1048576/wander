@@ -13,7 +13,24 @@ import { BudgetExceeded } from "./budget";
  * with a structured itinerary.
  */
 
-const MAX_TURNS = 18;
+const MAX_TURNS = 24;
+
+/** Reject plans that stop early: every trip day must be present with real content. */
+function completenessIssues(plan: Plan, room: { nights: number }): string | null {
+  const wantDays = room.nights + 1;
+  const problems: string[] = [];
+  if (plan.days.length < wantDays) problems.push(`only ${plan.days.length} of ${wantDays} days are present`);
+  const thin = plan.days.filter((d) => d.items.length < 3).map((d) => `day ${d.day}`);
+  if (thin.length) problems.push(`${thin.join(", ")} ${thin.length === 1 ? "has" : "have"} fewer than 3 items`);
+  const nightsCovered = plan.hotels.reduce((n, h) => {
+    const a = Date.parse(h.checkin);
+    const b = Date.parse(h.checkout);
+    return n + (Number.isFinite(a) && Number.isFinite(b) ? Math.max(0, Math.round((b - a) / 86400e3)) : 0);
+  }, 0);
+  if (nightsCovered < room.nights) problems.push(`hotels cover ${nightsCovered} of ${room.nights} nights`);
+  if (!plan.days.some((d) => d.items.some((i) => i.type === "meal"))) problems.push("no meals listed");
+  return problems.length ? problems.join("; ") + "." : null;
+}
 
 type Room = {
   id: string;
@@ -140,6 +157,7 @@ Rules for the plan:
 - If a transit result says liveSchedule is false, set estimated: true on that item and keep the mapsUrl link.
 - Include a hotel check-in item on arrival days and the Shinkansen move as a transit item with its SmartEX link.
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
+- Keep finalize_plan compact: "detail" under 100 characters, "why" under 80, no more than 6 items per day. Cover EVERY day of the trip and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
 Write in plain, warm English. No emojis.`;
 }
@@ -242,12 +260,36 @@ export async function buildPlan(roomId: string): Promise<void> {
       for (const call of calls) {
         if (call.type !== "function") continue;
         let args: Record<string, unknown> = {};
+        let badJson = false;
         try {
           args = JSON.parse(call.function.arguments || "{}");
         } catch {
-          args = {};
+          badJson = true;
         }
         if (call.function.name === "finalize_plan") {
+          if (badJson) {
+            const len = (call.function.arguments ?? "").length;
+            logEvent(roomId, "thought", `finalize_plan arguments were not valid JSON (${len} chars); asking for a shorter plan`);
+            messages.push({
+              role: "tool",
+              tool_call_id: call.id,
+              content: JSON.stringify({
+                ok: false,
+                fix: "The arguments were not valid JSON, probably cut off. Call finalize_plan again with the complete plan but shorter strings: detail under 100 characters, why under 80, 3-5 items per day.",
+              }),
+            });
+            continue;
+          }
+          // Some turns stringify nested fields; unwrap them before validating.
+          for (const k of ["days", "hotels", "tradeoffs", "notes"]) {
+            if (typeof args[k] === "string") {
+              try {
+                args[k] = JSON.parse(args[k] as string);
+              } catch {
+                /* leave for the schema to report */
+              }
+            }
+          }
           const parsed = PlanSchema.safeParse(args);
           if (!parsed.success) {
             const issues = parsed.error.issues.slice(0, 5).map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
@@ -255,7 +297,18 @@ export async function buildPlan(roomId: string): Promise<void> {
             messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify({ ok: false, fix: issues }) });
             continue;
           }
-          finalized = normalizePlan(parsed.data);
+          const candidate = normalizePlan(parsed.data);
+          const incomplete = completenessIssues(candidate, room);
+          if (incomplete) {
+            logEvent(roomId, "thought", `Plan incomplete: ${incomplete}`);
+            messages.push({
+              role: "tool",
+              tool_call_id: call.id,
+              content: JSON.stringify({ ok: false, fix: `${incomplete} Call finalize_plan again with the COMPLETE itinerary for every day, reusing the tool results you already have.` }),
+            });
+            continue;
+          }
+          finalized = candidate;
           messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify({ ok: true }) });
           continue;
         }

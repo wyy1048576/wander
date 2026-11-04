@@ -109,14 +109,14 @@ export const PLAN_JSON_SCHEMA = {
                 title: { type: "string" },
                 detail: {
                   type: "string",
-                  description: "Concrete specifics: train line + times, what to order, neighbourhood",
+                  description: "Concrete specifics in under 100 characters: train line + times, what to order, neighbourhood",
                 },
                 for: {
                   type: "array",
                   items: { type: "string" },
                   description: 'Member names this is mainly for, or ["both"]',
                 },
-                why: { type: "string", description: "Short sentence tying it to a swipe or compromise" },
+                why: { type: "string", description: "Under 80 characters, tying it to a swipe or compromise" },
                 link: {
                   type: "object",
                   required: ["label", "url"],

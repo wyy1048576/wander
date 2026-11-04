@@ -1,7 +1,7 @@
 import { db } from "./db";
 import { sparkChat, type ChatMessage, type Tool } from "./muse";
 import { computePreferences, describePrefs, memberSwipes, tensions, CARD_BY_ID, type Preferences } from "./game";
-import { PlanSchema, PLAN_JSON_SCHEMA, type Plan } from "./plan-schema";
+import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan } from "./plan-schema";
 import { getTransitRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
 import { searchHotels, offerForModel } from "./tools/liteapi";
@@ -214,17 +214,30 @@ export async function buildPlan(roomId: string): Promise<void> {
 
   try {
     for (let turn = 0; turn < MAX_TURNS; turn++) {
-      const res = await sparkChat(messages, TOOLS, { temperature: 0.3 });
-      const msg = res.choices[0]?.message;
+      const res = await sparkChat(messages, TOOLS, { temperature: 0.3, maxTokens: 16000 });
+      const choice = res.choices[0];
+      const msg = choice?.message;
       if (!msg) throw new Error("Empty response from Muse Spark");
-      messages.push(msg as ChatMessage);
-      const calls = msg.tool_calls ?? [];
+      const calls = (msg.tool_calls ?? []).filter((c) => c.type === "function");
+      const text = (msg.content ?? "").trim();
+      if (choice.finish_reason === "length") {
+        logEvent(roomId, "thought", "Output was cut off; asking for a tighter plan");
+        messages.push({ role: "user", content: "Your last message was cut off. Call finalize_plan again with a more concise itinerary (shorter detail strings)." });
+        continue;
+      }
       if (!calls.length) {
-        // The model answered in prose without finalizing. Nudge once.
-        logEvent(roomId, "thought", (msg.content ?? "").slice(0, 200) || "Thinking…");
+        // Prose or an empty turn. Only echo it back if it has content; the API rejects empty assistant messages.
+        if (text) messages.push({ role: "assistant", content: text });
+        logEvent(roomId, "thought", text.slice(0, 200) || "Thinking…");
         messages.push({ role: "user", content: "Continue. When you have what you need, call finalize_plan with the full itinerary." });
         continue;
       }
+      // Re-emit a clean assistant message (no provider-specific extras) before the tool results.
+      messages.push({
+        role: "assistant",
+        ...(text ? { content: text } : {}),
+        tool_calls: calls.map((c) => ({ id: c.id, type: "function" as const, function: { name: c.function.name, arguments: c.function.arguments } })),
+      } as ChatMessage);
       let finalized: Plan | undefined;
       for (const call of calls) {
         if (call.type !== "function") continue;
@@ -242,7 +255,7 @@ export async function buildPlan(roomId: string): Promise<void> {
             messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify({ ok: false, fix: issues }) });
             continue;
           }
-          finalized = parsed.data;
+          finalized = normalizePlan(parsed.data);
           messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify({ ok: true }) });
           continue;
         }

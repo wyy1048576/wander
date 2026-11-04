@@ -50,7 +50,7 @@ export async function searchHotels(args: {
     1,
     Math.round((Date.parse(args.checkout) - Date.parse(args.checkin)) / 86400e3),
   );
-  return cached(cacheKey("liteapi-search", { city, ...args, adults, max }), 3600, async () => {
+  return cached(cacheKey("liteapi-search", { ...args, city, adults, max }), 3600, async () => {
     // 1. Candidate hotels in the city (well-reviewed, 3-5 stars).
     spend("liteapi");
     const q = new URLSearchParams({

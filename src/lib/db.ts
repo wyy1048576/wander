@@ -6,7 +6,6 @@ import { resolve } from "node:path";
 const DB_PATH = process.env.DB_PATH ?? resolve(process.cwd(), "data", "app.db");
 
 declare global {
-  // eslint-disable-next-line no-var
   var __wanderDb: Database.Database | undefined;
 }
 

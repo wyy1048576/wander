@@ -1,6 +1,6 @@
 import { db, newId, roomCode } from "./db";
 import { computePreferences, describePrefs, memberSwipes, pairsForRoom, tensions, PAIRS_PER_ROOM, type Card } from "./game";
-import type { Plan } from "./plan-schema";
+import { normalizePlan, type Plan } from "./plan-schema";
 
 export type RoomRow = {
   id: string;
@@ -117,6 +117,6 @@ export function roomState(code: string, memberId?: string): RoomState | undefine
     nextPair,
     tensions: prefs.length >= 2 ? tensions(prefs[0], prefs[1]) : [],
     events: events.reverse(),
-    plan: planRow ? (JSON.parse(planRow.json) as Plan) : null,
+    plan: planRow ? normalizePlan(JSON.parse(planRow.json) as Plan) : null,
   };
 }

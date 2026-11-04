@@ -43,6 +43,36 @@ export const PlanSchema = z.object({
 });
 
 export type Plan = z.infer<typeof PlanSchema>;
+
+/**
+ * Models sometimes emit one `days` entry per item. Merge entries that share a day number,
+ * keep item order, and sort days. Idempotent, so it runs on write and on read.
+ */
+export function normalizePlan(plan: Plan): Plan {
+  const byDay = new Map<number, Plan["days"][number]>();
+  for (const d of plan.days) {
+    const existing = byDay.get(d.day);
+    if (!existing) {
+      byDay.set(d.day, { ...d, items: [...d.items] });
+    } else {
+      existing.items.push(...d.items);
+      if (!existing.headline && d.headline) existing.headline = d.headline;
+      if (!existing.city && d.city) existing.city = d.city;
+    }
+  }
+  const days = [...byDay.values()].sort((a, b) => a.day - b.day);
+  // A day's city is where most of its non-transit items happen.
+  for (const d of days) {
+    const counts = new Map<string, number>();
+    for (const it of d.items) {
+      const m = it.detail?.match(/\b(Tokyo|Kyoto|Osaka|Nara)\b/) ?? it.title.match(/\b(Tokyo|Kyoto|Osaka|Nara)\b/);
+      if (m) counts.set(m[1], (counts.get(m[1]) ?? 0) + 1);
+    }
+    const top = [...counts.entries()].sort((a, b) => b[1] - a[1])[0];
+    if (top && top[1] >= 2 && d.items.length >= 3) d.city = top[0];
+  }
+  return { ...plan, days };
+}
 export type PlanItem = z.infer<typeof ItemSchema>;
 export type PlanDay = z.infer<typeof DaySchema>;
 

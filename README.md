@@ -4,6 +4,8 @@
 
 Built for the Meta Global AI Developer Hackathon 2026 (Oct 26 – Nov 4). Everything in this repository was written during the hackathon window.
 
+**Showcase site:** https://wyy1048576.github.io/wander/ (the demo room, swipes, agent log and itinerary, rendered statically from `seed/`).
+
 ## The problem
 
 Planning a trip with friends is a negotiation nobody wins. One person wants temples, another wants nightlife, and the group chat dies under 200 messages and three half-finished spreadsheets.
@@ -75,6 +77,7 @@ npx tsx scripts/test-tools.ts       # Routes + Places against the live APIs
 npx tsx scripts/test-hotels.ts      # liteAPI sandbox search
 npx tsx scripts/e2e.ts              # full flow: two users with opposite tastes, then the agent
 npx tsx scripts/golden-room.ts import   # load a finished demo room from seed/
+npx tsx scripts/build-site.ts          # regenerate docs/ (the GitHub Pages showcase) from seed/
 ```
 
 ## Project layout

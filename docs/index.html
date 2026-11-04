@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wander · friends swipe, one agent plans the trip</title>
+<meta name="description" content="Friends swipe on places. An agent built on Muse Spark turns everyone's picks into one specific, bookable itinerary. Built for the Meta Global AI Developer Hackathon 2026." />
+<meta property="og:title" content="Wander" />
+<meta property="og:description" content="Friends swipe on places. One agent turns everyone's picks into a single, bookable trip." />
+<meta property="og:image" content="cards/fushimi-inari.webp" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%23d9542b'/><text x='50' y='66' font-size='52' text-anchor='middle' fill='white' font-family='system-ui' font-weight='700'>W</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f7f3ec; --fg: #1f1a17; --card: #ffffff; --muted: #7a6f66; --line: #e6dfd4;
+    --accent: #d9542b; --accent-ink: #fff; --accent-soft: #fbe6de;
+    --ok: #2f7d4f; --ok-soft: #e1f3e8; --warn-soft: #fff4d6; --warn: #8a6300;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  code, .mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header.nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 86%, transparent); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none; }
+  .brand .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 14px; font-weight: 700; }
+  .nav nav { display: flex; gap: 18px; font-size: 14px; color: var(--muted); }
+  .nav nav a { text-decoration: none; }
+  .nav nav a:hover { color: var(--fg); }
+  @media (max-width: 640px) { .nav nav { display: none; } }
+
+  .hero { padding: 64px 0 40px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: 40px; } }
+  .eyebrow { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.05; letter-spacing: -0.025em; margin: 12px 0 16px; font-weight: 700; }
+  .lede { font-size: 18px; color: var(--muted); max-width: 54ch; margin: 0 0 24px; }
+  .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line); background: var(--card); transition: transform .15s ease, background .15s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.dark { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* Phone frame */
+  .phone { width: 100%; max-width: 380px; margin: 0 auto; background: var(--card); border: 1px solid var(--line); border-radius: 36px; padding: 14px; box-shadow: 0 30px 60px -30px rgba(31,26,23,.35), 0 2px 8px rgba(31,26,23,.06); }
+  .phone .screen { background: var(--bg); border-radius: 26px; padding: 16px; min-height: 560px; display: flex; flex-direction: column; }
+  .phone.tall .screen { position: relative; min-height: 640px; max-height: 760px; overflow: auto; scrollbar-width: none; }
+  .phone.tall .screen::-webkit-scrollbar { display: none; }
+  .ph-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+  .ph-top b { color: var(--fg); }
+  .progress { height: 4px; background: var(--line); border-radius: 4px; margin: 10px 0 14px; overflow: hidden; }
+  .progress i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .25s ease; }
+  .q { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; align-content: start; }
+  .swipe-card { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: var(--card); cursor: pointer; display: flex; flex-direction: column; padding: 0; text-align: left; font: inherit; color: inherit; transition: transform .15s ease, box-shadow .15s ease; }
+  .swipe-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -14px rgba(31,26,23,.4); }
+  .swipe-card img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+  .swipe-card .cap { padding: 10px 10px 12px; }
+  .swipe-card .cap b { display: block; font-size: 13px; line-height: 1.25; }
+  .swipe-card .cap span { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .swipe-card.pop { animation: pop .22s ease-out; }
+  @keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  .hint { font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px; }
+  .result { flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  .result .big { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+  .result p { color: var(--muted); font-size: 14px; }
+
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: clamp(26px, 3.4vw, 36px); letter-spacing: -0.02em; line-height: 1.1; margin: 0 0 8px; }
+  .sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 62ch; }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .step .n { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 13px; margin-bottom: 10px; }
+  .step b { display: block; margin-bottom: 4px; }
+  .step p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  .members { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 640px) { .members { grid-template-columns: 1fr; } }
+  .member { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; display: flex; gap: 14px; align-items: center; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .member .who { font-weight: 600; }
+  .member .lean { font-size: 14px; color: var(--muted); }
+  .member .lean::first-letter { text-transform: uppercase; }
+  .clash { background: var(--warn-soft); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 22px; font-size: 14px; }
+  .clash b { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--warn); margin-bottom: 4px; }
+  .clash ul { margin: 0; padding-left: 18px; }
+
+  .pairs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media (max-width: 860px) { .pairs { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .pairs { grid-template-columns: 1fr; } }
+  .pairbox { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; position: relative; }
+  .pairbox .vs { position: absolute; left: 50%; top: 38%; transform: translate(-50%,-50%); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; font-size: 10px; font-weight: 700; padding: 3px 7px; color: var(--muted); }
+  .pc img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; display: block; }
+  .pc .t { font-size: 12px; font-weight: 600; line-height: 1.2; margin-top: 7px; min-height: 2.4em; }
+  .pc .chips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; min-height: 20px; }
+  .chip { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: var(--bg); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+  .chip.a { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+  .chip.b { background: var(--ok-soft); color: var(--ok); border-color: transparent; }
+  .chip.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+  .chip.neutral { background: var(--bg); }
+  .pairbox.split::after { content: "clash"; position: absolute; top: -8px; right: 12px; background: var(--warn-soft); color: var(--warn); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+
+  .plan-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 36px; align-items: start; }
+  @media (max-width: 860px) { .plan-grid { grid-template-columns: 1fr; } }
+  .log { background: var(--fg); color: var(--bg); border-radius: var(--radius); padding: 16px 18px; font-size: 12.5px; line-height: 1.55; }
+  .log .ttl { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #c9b9ab; margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .log ol { list-style: none; margin: 0; padding: 0; }
+  .log li { display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px dashed rgba(255,255,255,.08); }
+  .log li .tool { color: #ffb59b; flex-shrink: 0; width: 128px; }
+  .log li .tool.sys { color: #9ad8b3; }
+  .log li .s { color: #e8dfd4; }
+
+  /* Itinerary inside phone */
+  .it h3 { font-size: 20px; line-height: 1.15; letter-spacing: -0.015em; margin: 0; }
+  .it .summary { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+  .trade { margin-top: 14px; background: var(--accent-soft); border-radius: 16px; padding: 12px 14px; }
+  .trade .ttl { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .trade ul { margin: 6px 0 0; padding-left: 0; list-style: none; font-size: 13px; }
+  .trade li { display: flex; gap: 8px; margin-top: 4px; }
+  .trade li::before { content: "•"; color: var(--accent); }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 16px -16px 0; padding: 8px 16px 8px; position: sticky; top: -16px; background: var(--bg); z-index: 2; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex-shrink: 0; height: 34px; padding: 0 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--muted); font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .tab.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .daymeta { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .items { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; display: flex; gap: 12px; }
+  .item .tm { width: 46px; flex-shrink: 0; }
+  .item .tm .t { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); }
+  .item .tm .ic { font-size: 17px; line-height: 1; margin-top: 4px; }
+  .item .bd { flex: 1; min-width: 0; }
+  .item .hd { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .item .hd b { font-size: 14px; line-height: 1.25; }
+  .item .dt { font-size: 13px; margin: 4px 0 0; }
+  .item .why { font-size: 12px; color: var(--muted); font-style: italic; margin: 5px 0 0; }
+  .item .acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .lnk { display: inline-flex; align-items: center; height: 28px; padding: 0 11px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 12px; font-weight: 600; text-decoration: none; }
+  .lnk.sandbox { background: var(--card); color: var(--muted); border: 1px dashed var(--line); cursor: help; }
+  .hotels h4 { margin: 22px 0 8px; font-size: 15px; }
+  .hotel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin-bottom: 8px; }
+  .hotel .hd { display: flex; justify-content: space-between; gap: 8px; }
+  .hotel .hd b { font-size: 14px; }
+  .hotel .m { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .hotel .price { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .hotel .book { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; margin-top: 10px; text-decoration: none; }
+  .hotel .book .sb { font-weight: 500; opacity: .85; margin-left: 6px; font-size: 11px; }
+  .notes { font-size: 12px; color: var(--muted); margin-top: 18px; }
+  .notes p { margin: 4px 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+  .honest { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; font-size: 14.5px; }
+  .honest ul { margin: 8px 0 0; padding-left: 18px; }
+  .honest li { margin: 4px 0; }
+  pre { background: var(--fg); color: var(--bg); border-radius: var(--radius); padding: 18px 20px; overflow: auto; font-size: 13.5px; line-height: 1.6; margin: 0; }
+  pre .c { color: #c9b9ab; }
+  .video { margin: 28px 0 0; aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+  .video iframe { width: 100%; height: 100%; border: 0; display: block; }
+  footer { padding: 40px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .rise { animation: rise .35s ease-out both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#"><span class="dot">W</span> Wander</a>
+    <nav>
+      <a href="#how">How it works</a>
+      <a href="#swipes">The swipes</a>
+      <a href="#plan">The plan</a>
+      <a href="#built">Built with</a>
+      <a href="#run">Run it</a>
+      <a id="nav-repo" href="#" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div class="rise">
+      <div class="eyebrow">Meta Global AI Developer Hackathon 2026 · Indie Developer track</div>
+      <h1>Friends swipe on places.<br/>One agent plans the trip.</h1>
+      <p class="lede">Start a room, share a four-letter code, everyone swipes through the same pairs of place cards. An agent built on <b>Muse Spark</b> reads every pick and books a day-by-day itinerary with real trains, hotels and restaurants, and tells you who got what.</p>
+      <div class="btns">
+        <a id="btn-video" class="btn primary" href="#video" style="display:none">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Watch the 3-minute demo
+        </a>
+        <a id="btn-repo" class="btn dark" href="#" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg> View the code
+        </a>
+        <a class="btn" href="#plan">See the plan it built</a>
+      </div>
+      <div id="video" class="video" style="display:none"></div>
+    </div>
+
+    <div class="phone rise" id="swiper">
+      <div class="screen">
+        <div class="ph-top"><span>Room <b id="sw-code">····</b></span><span id="sw-count">1 / 12</span></div>
+        <div class="progress"><i id="sw-bar"></i></div>
+        <div class="q">Which one, if you had to pick?</div>
+        <div class="pair" id="sw-pair"></div>
+        <div class="hint">Tap a card. This is the real swipe deck, and the real card images from Muse Image.</div>
+      </div>
+    </div>
+  </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">Four steps from "where should we go" to "book it". Everything after the swipes is the agent's job.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><b>Start a trip, share a code</b><p>One person starts a room. Friends join from their phones with a four-letter code. No accounts.</p></div>
+      <div class="step"><div class="n">2</div><b>Everyone swipes the same pairs</b><p>Twelve pairs of place cards, pick one from each. Pairwise choices give a far stronger signal than like / dislike.</p></div>
+      <div class="step"><div class="n">3</div><b>See where you clash</b><p>Before planning, each person's lean is spelled out, and so are the clashes. Nobody is surprised by the plan.</p></div>
+      <div class="step"><div class="n">4</div><b>The agent reconciles and books</b><p>Muse Spark runs a tool loop over live data and returns one itinerary where every item says whose pick it was, why, and has a Book button.</p></div>
+    </div>
+  </section>
+
+  <section id="swipes">
+    <h2 id="swipes-h">Two travellers, twelve pairs</h2>
+    <p class="sub">This is the real demo room from the video. Alex and Sam saw the same twelve pairs. Chips under each card show who chose it.</p>
+    <div class="members" id="members"></div>
+    <div class="clash" id="clash"></div>
+    <div class="pairs" id="pairs"></div>
+  </section>
+
+  <section id="plan">
+    <h2>The plan the agent built</h2>
+    <p class="sub">Unedited output of the Muse Spark tool loop for the room above. On the left, the live tool log the travellers watched while it ran. On the right, what they got.</p>
+    <div class="plan-grid">
+      <div>
+        <div class="log">
+          <div class="ttl"><span>Agent log · muse-spark-1.3</span><span id="log-n"></span></div>
+          <ol id="log"></ol>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin:14px 2px 0">Every tool call is persisted and streamed to both phones while the plan builds. Plans take about two minutes and 15 to 20 tool calls.</p>
+      </div>
+      <div class="phone tall">
+        <div class="screen">
+          <div class="it" id="it"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="built">
+    <h2>Built with</h2>
+    <p class="sub">Two Meta models, three live data sources, one SQLite file. No hosting, it runs on a laptop.</p>
+    <div class="two">
+      <div>
+        <table>
+          <tr><th>Meta model</th><th>Role</th></tr>
+          <tr><td>Muse Spark 1.3</td><td>The planning agent. Chat completions with function calling: reads both swipe histories, decides the city split, calls the tools below, then <code>finalize_plan</code> with a structured itinerary validated by zod.</td></tr>
+          <tr><td>Muse Image 1.0</td><td>All 24 swipe cards on this page. Generated from prompts in <code>cards.json</code>, so the app carries no third-party photo rights.</td></tr>
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr><th>Tool</th><th>Source</th></tr>
+          <tr><td>search_hotels</td><td>liteAPI sandbox. Real hotels, live rates, prebook → book with simulated payment.</td></tr>
+          <tr><td>search_restaurants</td><td>Google Places API (New). Rating, reviews, price level, Maps link.</td></tr>
+          <tr><td>get_transit_route</td><td>Google Routes API, transit mode. Live legs where Google has data.</td></tr>
+          <tr><td>flight_link</td><td>Google Flights search link. No live fares.</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="honest" style="margin-top:20px">
+      <b>Honesty notes</b>
+      <ul>
+        <li>Hotel bookings run in liteAPI's <b>sandbox</b>: real hotels and prices, simulated payment, no room is held. The booking screen says so.</li>
+        <li>Flight links are search links, not fares.</li>
+        <li>Google has no transit schedules for Japan through its API, so train legs are marked <b>times estimated</b> and link to the operator (SmartEX for Shinkansen) or Google Maps.</li>
+        <li>Every external call runs through a per-API daily budget and a response cache, so a runaway loop stops itself.</li>
+        <li>Everything in the repository was written during the hackathon window, Oct 26 to Nov 4, 2026.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="run">
+    <h2>Run it locally</h2>
+    <p class="sub">Needs Node 22.13 or newer and three free API keys. The agent runs on your machine, so your keys never leave it.</p>
+<pre><span class="c"># clone and install</span>
+git clone https://github.com/wyy1048576/wander
+cd wander
+npm install
+
+<span class="c"># keys: META_API_KEY (dev.meta.ai), GOOGLE_MAPS_API_KEY (Places API New + Routes), LITEAPI_KEY (sandbox)</span>
+cp .env.example .env.local
+
+npm run dev            <span class="c"># http://localhost:3000, open two windows to play both travellers</span>
+npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact demo room</span></pre>
+  </section>
+
+  <footer>
+    <div>Solo build by <b>Wilson</b> (<a id="foot-repo" href="#" target="_blank" rel="noreferrer">wyy1048576</a>) for the Meta Global AI Developer Hackathon 2026.</div>
+    <div>Cards by Muse Image · Agent by Muse Spark · <span id="built-at"></span></div>
+  </footer>
+</main>
+
+<script src="data.js"></script>
+<script>
+(function () {
+  const D = window.WANDER;
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const names = D.members.map((m) => m.name);
+  const tone = (name) => (name === names[0] ? "a" : "b");
+
+  for (const id of ["nav-repo", "btn-repo", "foot-repo"]) $("#" + id).href = D.repo;
+  $("#built-at").textContent = "Page built " + D.builtAt;
+
+  // Video
+  if (D.video) {
+    const m = D.video.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/);
+    const v = $("#video");
+    v.style.display = "";
+    v.innerHTML = m
+      ? `<iframe src="https://www.youtube-nocookie.com/embed/${m[1]}" title="Wander demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+      : `<a class="btn primary" href="${esc(D.video)}" target="_blank" rel="noreferrer">Watch the demo ↗</a>`;
+    $("#btn-video").style.display = "";
+  }
+
+  // Interactive swiper (hero)
+  const pairs = D.pairs;
+  let i = 0;
+  const scores = {};
+  $("#sw-code").textContent = D.room.code;
+  function cardBtn(id) {
+    const c = D.cards[id];
+    return `<button class="swipe-card" data-id="${id}"><img src="${c.image}" alt="${esc(c.title)}" loading="lazy" /><div class="cap"><b>${esc(c.title)}</b><span>${esc(c.city)} · ${esc(c.area)}</span></div></button>`;
+  }
+  function renderPair() {
+    $("#sw-count").textContent = `${Math.min(i + 1, pairs.length)} / ${pairs.length}`;
+    $("#sw-bar").style.width = `${(i / pairs.length) * 100}%`;
+    if (i >= pairs.length) {
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const likes = sorted.filter(([, v]) => v > 0).slice(0, 2).map(([t]) => t);
+      const skips = sorted.filter(([, v]) => v < 0).slice(-2).map(([t]) => t).reverse();
+      $("#sw-bar").style.width = "100%";
+      $("#sw-pair").innerHTML = `<div class="result" style="grid-column:1/-1">
+        <div class="big">You lean ${esc(likes.join(" + ") || "everything")}</div>
+        <p>${skips.length ? "and skip " + esc(skips.join(" and ")) + "." : ""} That one line, for every traveller, is what the agent reconciles.</p>
+        <p><a class="lnk" href="#" id="sw-again">Swipe again</a></p></div>`;
+      $("#sw-again").onclick = (e) => { e.preventDefault(); i = 0; for (const k in scores) delete scores[k]; renderPair(); };
+      return;
+    }
+    const p = pairs[i];
+    $("#sw-pair").innerHTML = cardBtn(p.left) + cardBtn(p.right);
+    $("#sw-pair").querySelectorAll(".swipe-card").forEach((b) => {
+      b.onclick = () => {
+        const chosen = b.dataset.id, other = chosen === p.left ? p.right : p.left;
+        for (const t of D.cards[chosen].tags) scores[t] = (scores[t] ?? 0) + 1;
+        for (const t of D.cards[other].tags) scores[t] = (scores[t] ?? 0) - 1;
+        b.classList.add("pop");
+        setTimeout(() => { i++; renderPair(); }, 180);
+      };
+    });
+  }
+  renderPair();
+  document.addEventListener("keydown", (e) => {
+    if (i >= pairs.length) return;
+    const btns = $("#sw-pair").querySelectorAll(".swipe-card");
+    if (e.key === "ArrowLeft" && btns[0]) btns[0].click();
+    if (e.key === "ArrowRight" && btns[1]) btns[1].click();
+  });
+
+  // Members and clashes
+  $("#members").innerHTML = D.members.map((m, k) => `<div class="member">
+      <div class="avatar" style="background:${k === 0 ? "var(--accent)" : "var(--ok)"}">${esc(m.name[0])}</div>
+      <div><div class="who">${esc(m.name)}${m.host ? ' <span class="chip neutral">host</span>' : ""}</div><div class="lean">${esc(m.summary)}</div></div>
+    </div>`).join("");
+  $("#clash").innerHTML = D.tensions.length
+    ? `<b>Where they clash</b><ul>${D.tensions.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`
+    : `<b>Where they clash</b>No strong clashes in this room.`;
+
+  // Pair grid
+  const nSplit = pairs.filter((p) => new Set(Object.values(p.choices)).size > 1).length;
+  $("#swipes-h").textContent = `${names.length === 2 ? "Two travellers" : names.length + " travellers"}, ${pairs.length} pairs, ${nSplit} clashes`;
+  $("#pairs").innerHTML = pairs.map((p) => {
+    const chooser = (id) => names.filter((n) => p.choices[n] === id);
+    const split = new Set(Object.values(p.choices)).size > 1;
+    const side = (id) => {
+      const c = D.cards[id];
+      return `<div class="pc"><img src="${c.image}" alt="${esc(c.title)}" loading="lazy" /><div class="t">${esc(c.title)}</div>
+        <div class="chips">${chooser(id).map((n) => `<span class="chip ${tone(n)}">${esc(n)}</span>`).join("")}</div></div>`;
+    };
+    return `<div class="pairbox${split ? " split" : ""}">${side(p.left)}<span class="vs">vs</span>${side(p.right)}</div>`;
+  }).join("");
+
+  // Agent log
+  $("#log").innerHTML = D.events.map((e) => `<li><span class="tool ${e.tool ? "" : "sys"}">${esc(e.tool ?? e.kind)}</span><span class="s">${esc(e.summary)}</span></li>`).join("");
+  $("#log-n").textContent = `${D.events.filter((e) => e.tool).length} tool calls`;
+
+  // Itinerary
+  const ICON = { place: "◎", meal: "🍜", transit: "🚄", hotel: "🛏", flight: "✈", free: "☕" };
+  const P = D.plan;
+  const pretty = (d) => { const dt = new Date(d + "T00:00:00"); return isNaN(dt) ? d : dt.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }); };
+  const forChip = (f) => {
+    if (!f || !f.length || f.includes("both") || f.includes("all") || f.length >= names.length) return `<span class="chip neutral">Both</span>`;
+    return `<span class="chip ${tone(f[0])}">${esc(f.join(" & "))}'s pick</span>`;
+  };
+  const linkBtn = (l) => {
+    if (!l) return "";
+    if (l.url.startsWith("/")) return `<span class="lnk sandbox" title="Hotel bookings run in liteAPI's sandbox inside the local app">${esc(l.label)} · sandbox, in the app</span>`;
+    return `<a class="lnk" href="${esc(l.url)}" target="_blank" rel="noreferrer">${esc(l.label)} ↗</a>`;
+  };
+  let day = 0;
+  function renderPlan() {
+    const d = P.days[day];
+    $("#it").innerHTML = `
+      <h3>${esc(P.title)}</h3>
+      <p class="summary">${esc(P.summary)}</p>
+      <div class="trade"><div class="ttl">How this balances the group</div><ul>${P.tradeoffs.map((t) => `<li><span>${esc(t)}</span></li>`).join("")}</ul></div>
+      <div class="tabs">${P.days.map((x, k) => `<button class="tab${k === day ? " on" : ""}" data-k="${k}">Day ${x.day} · ${esc(x.city)}</button>`).join("")}</div>
+      <div class="daymeta">${pretty(d.date)}${d.headline ? " · " + esc(d.headline) : ""}</div>
+      <ol class="items">${d.items.map((it) => `<li class="item">
+          <div class="tm"><div class="t">${esc(it.time)}</div><div class="ic">${ICON[it.type] ?? "◎"}</div></div>
+          <div class="bd">
+            <div class="hd"><b>${esc(it.title)}</b>${forChip(it.for)}</div>
+            ${it.detail ? `<p class="dt">${esc(it.detail)}</p>` : ""}
+            ${it.why ? `<p class="why">${esc(it.why)}</p>` : ""}
+            ${it.link || it.estimated ? `<div class="acts">${linkBtn(it.link)}${it.estimated ? '<span class="chip warn">times estimated</span>' : ""}</div>` : ""}
+          </div></li>`).join("")}</ol>
+      ${P.hotels.length ? `<div class="hotels"><h4>Where you sleep</h4>${P.hotels.map((h) => `<div class="hotel">
+          <div class="hd"><div><b>${esc(h.name)}</b><div class="m">${esc(h.city)} · ${pretty(h.checkin)} → ${pretty(h.checkout)}${h.room ? " · " + esc(h.room) : ""}</div></div>${h.perNightUSD ? `<div class="price">$${h.perNightUSD}/night</div>` : ""}</div>
+          ${h.why ? `<p class="why">${esc(h.why)}</p>` : ""}
+          <span class="book" title="Books through liteAPI's sandbox inside the local app">Book${h.totalUSD ? ` · $${h.totalUSD} total` : ""}<span class="sb">sandbox</span></span>
+        </div>`).join("")}</div>` : ""}
+      ${P.notes && P.notes.length ? `<div class="notes">${P.notes.map((n) => `<p>${esc(n)}</p>`).join("")}</div>` : ""}`;
+    $("#it").querySelectorAll(".tab").forEach((b) => (b.onclick = () => { day = +b.dataset.k; renderPlan(); const sc = $("#it").closest(".screen"); const tabs = $("#it .tabs"); sc.scrollTo({ top: tabs.offsetTop - 8, behavior: "smooth" }); }));
+  }
+  renderPlan();
+})();
+</script>
+</body>
+</html>

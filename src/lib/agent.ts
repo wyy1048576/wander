@@ -280,7 +280,15 @@ export async function buildPlan(roomId: string): Promise<void> {
             });
             continue;
           }
-          // Some turns stringify nested fields; unwrap them before validating.
+          // Some turns wrap everything in { plan: {...} }; some stringify nested fields. Unwrap before validating.
+          if (args.plan && typeof args.plan === "object" && !args.days) args = args.plan as Record<string, unknown>;
+          else if (typeof args.plan === "string") {
+            try {
+              args = JSON.parse(args.plan);
+            } catch {
+              /* schema will report */
+            }
+          }
           for (const k of ["days", "hotels", "tradeoffs", "notes"]) {
             if (typeof args[k] === "string") {
               try {

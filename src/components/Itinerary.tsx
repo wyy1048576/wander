@@ -83,6 +83,15 @@ export default function Itinerary({ plan, members, code }: { plan: Plan; members
                     <Chip tone={f.tone}>{f.label}</Chip>
                   </div>
                   {it.detail && <p className="text-sm mt-1">{it.detail}</p>}
+                  {it.how && (
+                    <p className="mt-2 flex gap-1.5 text-xs leading-snug text-foreground/80 rounded-xl bg-background border border-line px-2.5 py-1.5">
+                      <span aria-hidden>↳</span>
+                      <span>
+                        <span className="font-medium">Getting there: </span>
+                        {it.how}
+                      </span>
+                    </p>
+                  )}
                   {it.why && <p className="text-xs text-muted mt-1.5 italic">{it.why}</p>}
                   <div className="mt-2 flex items-center gap-2 flex-wrap">
                     {it.link && (
@@ -95,6 +104,7 @@ export default function Itinerary({ plan, members, code }: { plan: Plan; members
                         {it.link.label}
                       </a>
                     )}
+                    {it.cost && <Chip tone="neutral">{it.cost}</Chip>}
                     {it.estimated && <Chip tone="warn">times estimated</Chip>}
                   </div>
                 </div>

@@ -11,6 +11,11 @@ export const ItemSchema = z.object({
   why: z.string().optional().describe("One short sentence tying it to a swipe or a compromise"),
   link: LinkSchema.optional().describe("Book / map / tickets link"),
   estimated: z.boolean().optional().describe("true when times come from general knowledge, not live data"),
+  how: z
+    .string()
+    .optional()
+    .describe("Getting there from the previous item: mode, line, platform or exit, times, fare. Under 170 characters."),
+  cost: z.string().optional().describe("Out-of-pocket cost for this item, e.g. '¥2,570 pp' or 'free'"),
 });
 
 export const DaySchema = z.object({
@@ -134,6 +139,12 @@ export const PLAN_JSON_SCHEMA = {
                   properties: { label: { type: "string" }, url: { type: "string" } },
                 },
                 estimated: { type: "boolean", description: "true if times are not from live data" },
+                how: {
+                  type: "string",
+                  description:
+                    "REQUIRED on every item after the first of the day, and on the first item if it is a journey. How to get here from the previous item: walk/taxi/line name, platform or station exit, depart→arrive times, fare, IC card or ticket. Under 170 characters. e.g. 'JR Yamanote from Akihabara pf 2 to Harajuku, 15:02→15:27, ¥210 IC, exit Omotesando'",
+                },
+                cost: { type: "string", description: "Out-of-pocket cost, e.g. '¥2,570 pp', '¥600 entry', 'free'" },
               },
             },
           },

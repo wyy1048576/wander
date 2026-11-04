@@ -141,6 +141,8 @@
   .item .hd b { font-size: 14px; line-height: 1.25; }
   .item .dt { font-size: 13px; margin: 4px 0 0; }
   .item .why { font-size: 12px; color: var(--muted); font-style: italic; margin: 5px 0 0; }
+  .item .how { margin: 7px 0 0; display: flex; gap: 6px; font-size: 12px; line-height: 1.4; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 6px 9px; }
+  .item .how b { font-weight: 600; }
   .item .acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
   .lnk { display: inline-flex; align-items: center; height: 28px; padding: 0 11px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 12px; font-weight: 600; text-decoration: none; }
   .lnk.sandbox { background: var(--card); color: var(--muted); border: 1px dashed var(--line); cursor: help; }
@@ -298,8 +300,8 @@
   </section>
 
   <section id="precise">
-    <h2>Not a list of places. A plan you can execute.</h2>
-    <p class="sub">Most AI trip planners stop at "visit Kinkaku-ji". Wander connects the places: which train, from which station, at what time, what to order when you get there, and the chores that have to happen first. Three real items from the plan above.</p>
+    <h2>Autopilot, not copilot.</h2>
+    <p class="sub">Most AI trip planners stop at "visit Kinkaku-ji" and leave you to work out the rest. Wander writes the plan the way a travel agent would: which terminal, which train from which platform, the fare, the station exit, what to order, and the chores that have to happen before you fly. Three real items from the plan above.</p>
     <div class="precise" id="precise-cards"></div>
   </section>
 
@@ -506,8 +508,9 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
           <div class="bd">
             <div class="hd"><b>${esc(it.title)}</b>${forChip(it.for)}</div>
             ${it.detail ? `<p class="dt">${esc(it.detail)}</p>` : ""}
+            ${it.how ? `<p class="how"><span aria-hidden>↳</span><span><b>Getting there:</b> ${esc(it.how)}</span></p>` : ""}
             ${it.why ? `<p class="why">${esc(it.why)}</p>` : ""}
-            ${it.link || it.estimated ? `<div class="acts">${linkBtn(it.link)}${it.estimated ? '<span class="chip warn">times estimated</span>' : ""}</div>` : ""}
+            ${it.link || it.estimated || it.cost ? `<div class="acts">${linkBtn(it.link)}${it.cost ? `<span class="chip neutral">${esc(it.cost)}</span>` : ""}${it.estimated ? '<span class="chip warn">times estimated</span>' : ""}</div>` : ""}
           </div></li>`).join("")}</ol>
       ${P.hotels.length ? `<div class="hotels"><h4>Where you sleep</h4>${P.hotels.map((h) => `<div class="hotel">
           <div class="hd"><div><b>${esc(h.name)}</b><div class="m">${esc(h.city)} · ${pretty(h.checkin)} → ${pretty(h.checkout)}${h.room ? " · " + esc(h.room) : ""}</div></div>${h.perNightUSD ? `<div class="price">$${h.perNightUSD}/night</div>` : ""}</div>
@@ -544,7 +547,7 @@ npx tsx scripts/golden-room.ts import   <span class="c"># or load this exact dem
   const transit = allItems.find((it) => it.type === "transit" && /shinkansen|nozomi|hikari/i.test(it.title + " " + (it.detail ?? ""))) || allItems.find((it) => it.type === "transit");
   const meal = allItems.find((it) => it.type === "meal" && it.detail && /order|try|get the|set|omakase|course/i.test(it.detail)) || allItems.find((it) => it.type === "meal" && it.detail);
   const task = (P.tasks || []).find((t) => /yen|jpy|cash|exchange|atm/i.test(t.title + " " + (t.detail ?? ""))) || (P.tasks || [])[0];
-  const ex = (it) => it ? `<div class="ex"><div class="t">Day ${it.day} \u00b7 ${esc(it.time)}</div><b>${esc(it.title)}</b><div class="d">${esc(it.detail ?? "")}</div>${it.why ? `<div class="w">${esc(it.why)}</div>` : ""}</div>` : "";
+  const ex = (it) => it ? `<div class="ex"><div class="t">Day ${it.day} \u00b7 ${esc(it.time)}</div><b>${esc(it.title)}</b><div class="d">${esc(it.detail ?? "")}</div>${it.how ? `<div class="d" style="margin-top:6px"><b>Getting there:</b> ${esc(it.how)}</div>` : ""}${it.why ? `<div class="w">${esc(it.why)}</div>` : ""}</div>` : "";
   $("#precise-cards").innerHTML = `
     <div class="pcard"><div class="lbl">The train, not "take a train"</div>${ex(transit)}<p>Service, stations, departure and arrival, and the ticket to buy. The next item starts where this one ends.${transit && transit.estimated ? " Times are estimated for Japan, where Google has no transit API data, and labelled as such." : ""}</p></div>
     <div class="pcard"><div class="lbl">The dish, not "eat local food"</div>${ex(meal)}<p>Every meal is a real restaurant from Google Places, chosen near where you already are, with what to order.</p></div>

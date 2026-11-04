@@ -10,12 +10,17 @@ Built for the Meta Global AI Developer Hackathon 2026 (Oct 26 – Nov 4). Everyt
 
 Planning a trip with friends is a negotiation nobody wins. One person wants temples, another wants nightlife, and the group chat dies under 200 messages and three half-finished spreadsheets.
 
+## Two ideas
+
+1. **Swipe to reconcile.** Preferences are collected by pairwise swipes, not a chat thread, and the plan opens by saying who got what and where each person gave way.
+2. **Autopilot, not copilot.** The plan is written the way a travel agent would write it: the terminal and the train from the airport, the platform, the fare, the station exit, what to order, the tickets to buy in advance, and a task list for the chores before you fly. You should never have to look anything up.
+
 ## What Wander does
 
 1. **Pick a destination, start a trip, share a 4-letter code.** Tokyo, Kyoto & Osaka, Nara, Kyushu, or the whole Japan grand tour. Friends join from their phones.
 2. **Everyone swipes.** Each person sees the same 12 to 14 pairs of place cards from that destination's deck and picks one from each pair. Pairwise choices give a much stronger preference signal than like/dislike.
 3. **See where you disagree.** Before planning, the app shows each person's lean ("leans temples + nature, skips nightlife") and the clashes between them.
-4. **The agent builds one plan.** Muse Spark reads everyone's picks and runs a tool loop against live data: real trains, real hotels with live prices, real restaurants. It returns a day-by-day itinerary where every item says whose pick it was, why, and has a Book button.
+4. **The agent builds one plan.** Muse Spark reads everyone's picks and runs a tool loop against live data: real hotels with live prices, real restaurants, transit routes. It returns a day-by-day itinerary where every item says whose pick it was, why, how to get there from the previous item (line, platform, times, fare), what it costs, and has a Book button. A "Before you go" task list covers cash, IC card, seat reservations and timed tickets.
 5. **Book.** Hotels book through liteAPI's sandbox (real inventory, simulated payment). Trains link to the operator. Flights link to a search.
 
 The itinerary opens with a "How this balances the group" banner, which is the point of the product: a plan that is visibly fair.

@@ -2,6 +2,7 @@ import { db } from "./db";
 import { sparkChat, type ChatMessage, type Tool } from "./muse";
 import { computePreferences, describePrefs, memberSwipes, tensions, type Preferences, deckFor } from "./game";
 import { destination } from "./destinations";
+import { flightLink } from "./tools/flights";
 import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan } from "./plan-schema";
 import { getTransitRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
@@ -31,6 +32,10 @@ function completenessIssues(plan: Plan, room: { nights: number }): string | null
   if (nightsCovered < room.nights) problems.push(`hotels cover ${nightsCovered} of ${room.nights} nights`);
   if (!plan.days.some((d) => d.items.some((i) => i.type === "meal"))) problems.push("no meals listed");
   if ((plan.tasks?.length ?? 0) < 4) problems.push(`only ${plan.tasks?.length ?? 0} tasks listed; include 6-10 logistics tasks (money, IC card, seat reservations, advance tickets)`);
+  const eligible = plan.days.flatMap((d) => d.items.slice(1));
+  const withHow = eligible.filter((i) => (i.how ?? "").trim().length >= 20).length;
+  if (eligible.length && withHow / eligible.length < 0.7)
+    problems.push(`only ${withHow} of ${eligible.length} items say how to get there; every item after the first of a day needs "how" (line, platform/exit, times, fare)`);
   return problems.length ? problems.join("; ") + "." : null;
 }
 
@@ -58,10 +63,6 @@ function addDays(date: string, n: number) {
   return d.toISOString().slice(0, 10);
 }
 
-export function flightLink(origin: string, destCity: string, date: string) {
-  const q = `Flights from ${origin} to ${destCity} on ${date}`;
-  return `https://www.google.com/travel/flights?q=${encodeURIComponent(q)}`;
-}
 
 const TOOLS: Tool[] = [
   {
@@ -120,14 +121,17 @@ const TOOLS: Tool[] = [
     function: {
       name: "flight_link",
       description:
-        "Returns a Google Flights search link (no live prices). Use once for the arrival day if the origin city is outside Japan (Tokyo for Tokyo trips, Osaka for Kansai and Nara, Fukuoka for Kyushu), and for a domestic hop when flying beats the train.",
+        "Returns the airline's OFFICIAL booking link for a specific flight you name (no live prices). Decide the best flight yourself from what you know of the route (airline, flight number, scheduled departure and arrival), then call this with airline_code and flight_number. Use once for the arrival day if the origin city is outside Japan (Tokyo for Tokyo trips, Osaka for Kansai and Nara, Fukuoka for Kyushu), and for a domestic hop when flying beats the train.",
       parameters: {
         type: "object",
-        required: ["origin", "destination_city", "date"],
+        required: ["origin", "destination_city", "date", "airline_code", "flight_number"],
         properties: {
-          origin: { type: "string" },
+          origin: { type: "string", description: "City or IATA code, e.g. 'Singapore' or 'SFO'" },
           destination_city: { type: "string", enum: ["Tokyo", "Osaka", "Fukuoka"] },
           date: { type: "string", description: "YYYY-MM-DD" },
+          airline_code: { type: "string", description: "IATA airline code, e.g. SQ, NH, JL, UA, DL" },
+          flight_number: { type: "string", description: "e.g. SQ638" },
+          adults: { type: "integer", default: 2 },
         },
       },
     },
@@ -157,14 +161,19 @@ How to work:
 
 Rules for the plan:
 - Be specific: train line and departure time, hotel name and price, restaurant name and what to order.
-- Transit items must be executable: name the service (e.g. "Nozomi 21"), the platform station, departure and arrival times, and the ticket to buy. Day items should chain: the item after a transit leg starts where that leg ends.
+- AUTOPILOT, not copilot. The traveller must never have to look anything up. Every item after the first of a day carries "how": exactly how to get there from the previous item (walk with minutes and landmark, or line name, platform number or station exit, depart→arrive times, fare, IC card vs paper ticket). Transit items also put service name, platform and times in "detail".
+- The arrival flight is a specific flight: airline, flight number, scheduled departure and arrival (from your knowledge, estimated: true), terminal on arrival, in "detail". Its link is the flight_link result (the airline's official booking page). In "how", say where to check in and the recommended time at the airport.
+- Arrival day opens with the airport-to-hotel journey as its own transit item: terminal, the specific train or bus (e.g. Narita Express platform 1 at 11:15 → Tokyo 12:10, ¥3,070, buy at the JR East counter in arrivals; or Keisei Skyliner; or Haruka from Kansai), then the last hop to the hotel's nearest station and exit. Hotel check-in item: nearest station, exit, and where to leave bags before check-in.
+- Give the fare or entry price in "cost" wherever it is known. Timed-entry places: say where to buy the ticket. Restaurants: what to order and whether to queue or reserve.
+- Car rental only where it genuinely beats trains (e.g. Takachiho, Yufuin countryside): name the company and counter location, pick-up and return times, estimated cost, and a search link.
+- Day items chain: the item after a journey starts where that journey ends. Times must be consistent with the stated durations.
 - Every item gets a "for" value: a member's name when it is clearly their pick, or ["both"] for shared items. Aim for each person to have roughly equal "wins", and say so in tradeoffs.
 - "why" must reference their actual swipes ("Sam picked Golden Gai over Skytree") or an explicit compromise.
 - Use the exact links tools return. Never invent URLs. Hotels: copy bookUrl verbatim into hotels[].bookUrl and into the day item link.
 - If a transit result says liveSchedule is false, set estimated: true on that item and keep the mapsUrl link.
 - Include a hotel check-in item on arrival days and the Shinkansen move as a transit item with its SmartEX link.
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
-- Keep finalize_plan compact: "detail" under 100 characters, "why" under 80, no more than 6 items per day. Cover EVERY day of the trip and every night with a hotel.
+- Keep finalize_plan compact: "detail" under 100 characters, "how" under 170, "why" under 80, no more than 6 items per day. Cover EVERY day of the trip and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
 - tasks: 6-10 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
 Write in plain, warm English. No emojis.`;
@@ -210,9 +219,21 @@ async function runTool(roomId: string, name: string, args: Record<string, unknow
       return h.map(offerForModel);
     }
     case "flight_link": {
-      const url = flightLink(String(args.origin), String(args.destination_city), String(args.date));
-      logEvent(roomId, "tool", `${args.origin} → ${args.destination_city} on ${args.date}: search link`, name);
-      return { url, label: "Search flights", note: "Search link, not a live fare." };
+      const f = flightLink({
+        origin: String(args.origin),
+        destination_city: String(args.destination_city),
+        date: String(args.date),
+        airline_code: args.airline_code ? String(args.airline_code) : undefined,
+        flight_number: args.flight_number ? String(args.flight_number) : undefined,
+        adults: Number(args.adults ?? 2),
+      });
+      logEvent(
+        roomId,
+        "tool",
+        `${f.flightNumber ?? "flight"} ${f.from} → ${f.to} on ${f.date}: ${f.official ? `official ${f.airline} booking link` : "search link"}`,
+        name,
+      );
+      return { url: f.bookUrl, label: f.bookLabel, official: f.official, compareUrl: f.compareUrl, note: f.note };
     }
     default:
       return { error: `unknown tool ${name}` };

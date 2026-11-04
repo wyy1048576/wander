@@ -31,6 +31,27 @@ export async function GET(req: Request) {
       out.models = { status: err.status ?? null, message: String(err.message ?? e).slice(0, 200) };
     }
   }
+  if (new URL(req.url).searchParams.get("net") === "1") {
+    // Where do outbound calls come from, and what does Meta's API say to a bare request?
+    try {
+      const ip = await fetch("https://ipinfo.io/json", { headers: { Accept: "application/json" } }).then((r) => r.json());
+      out.egress = { ip: ip.ip, city: ip.city, country: ip.country, org: ip.org };
+    } catch (e) {
+      out.egress = String(e).slice(0, 120);
+    }
+    try {
+      const r = await fetch(`${process.env.META_API_BASE ?? "https://api.meta.ai/v1"}/models`, {
+        headers: { Authorization: `Bearer ${process.env.META_API_KEY}` },
+      });
+      const hdr: Record<string, string> = {};
+      r.headers.forEach((v, k) => {
+        if (!/cookie|set-cookie/i.test(k)) hdr[k] = v.slice(0, 80);
+      });
+      out.rawModels = { status: r.status, body: (await r.text()).slice(0, 300), headers: hdr };
+    } catch (e) {
+      out.rawModels = String(e).slice(0, 120);
+    }
+  }
   if (probe) {
     try {
       const r = await meta().chat.completions.create({

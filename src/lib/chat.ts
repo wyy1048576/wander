@@ -11,7 +11,7 @@ import { RESEARCH_TOOL_NAMES, TOOLS as PLAN_TOOLS, runTool } from "./agent";
 
 export type ChatMsg = {
   id: number;
-  memberId: string | null; // null = Wander
+  memberId: string | null; // null = Muse, the agent
   memberName: string;
   text: string;
   photoIds: string[];
@@ -47,7 +47,7 @@ export function listMessages(roomId: string, afterId = 0): ChatMsg[] {
   return rows.map((r) => ({
     id: Number(r.id),
     memberId: (r.member_id as string | null) ?? null,
-    memberName: r.member_id ? (names.get(String(r.member_id)) ?? "?") : "Wander",
+    memberName: r.member_id ? (names.get(String(r.member_id)) ?? "?") : "Muse",
     text: String(r.text),
     photoIds: r.photo_ids ? (JSON.parse(String(r.photo_ids)) as string[]) : [],
     actions: r.actions ? (JSON.parse(String(r.actions)) as string[]) : [],
@@ -182,7 +182,7 @@ export async function runChatTurn(roomId: string, code: string): Promise<void> {
   const actions: string[] = [];
   const attach: string[] = [];
 
-  const system = `You are Wander, the trip agent, and you are a member of this group chat for the trip "${room.destination}" (${room.start_date}, ${room.nights} nights).
+  const system = `You are Muse, the trip agent (the app is called Wander), and you are a member of this group chat for the trip "${room.destination}" (${room.start_date}, ${room.nights} nights).
 Members: ${members.map((m) => `${m.name} (id ${m.id})`).join(", ")}. Room code ${code}.
 You can edit the itinerary (update_plan_item / add_plan_item / remove_plan_item), fix or add expenses (update_expense / add_expense / delete_expense) and show photos from the shared album (show_photos). You also have the research tools: search_restaurants for any new restaurant (never invent one; use its real name and Maps link), get_walking_route for any new walk (write how from its real steps), search_hotels and get_transit_route. Research first, then make the change with an edit tool, then reply.
 Style: a helpful friend in the chat, 1-3 short sentences, no headers or bullet lists, no emojis. Confirm exactly what you changed. When you edit an item, keep the plan's standard: specific trains/platforms/exits, walking steps, costs. If a message is just members talking to each other and nothing is asked of you, reply with exactly: SILENT

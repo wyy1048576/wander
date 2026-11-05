@@ -285,6 +285,23 @@ function Gallery({ code, memberId, data, reload }: { code: string; memberId: str
 }
 
 
+const PALETTE = ["#d9542b", "#2f7d4f", "#2b5fd9", "#8a3fb3", "#b36b00", "#0f8a8a"];
+function Avatar({ name, agent, size = 28 }: { name: string; agent?: boolean; size?: number }) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const bg = agent ? "var(--accent)" : PALETTE[h % PALETTE.length];
+  return (
+    <span
+      aria-hidden
+      title={name}
+      className="inline-flex shrink-0 items-center justify-center rounded-full text-white font-semibold"
+      style={{ width: size, height: size, background: bg, fontSize: Math.round(size * 0.42) }}
+    >
+      {agent ? "✦" : name.trim().charAt(0).toUpperCase()}
+    </span>
+  );
+}
+
 function Chat({ code, memberId }: { code: string; memberId: string }) {
   const [msgs, setMsgs] = useState<ChatMsg[]>([]);
   const [text, setText] = useState("");
@@ -345,9 +362,9 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
         {msgs.length === 0 && (
           <div className="rounded-2xl bg-accent-soft p-4 text-sm">
             <div className="flex items-center gap-2 font-medium">
-              <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent" /> Wander is in this chat
+              <Avatar name="Muse" agent size={22} /> Muse is in this chat
             </div>
-            <p className="mt-1 text-muted">Ask it to change the plan, fix an expense, or pull up photos. Talk to each other too; it stays quiet unless you need it.</p>
+            <p className="mt-1 text-muted">Ask Muse to change the plan, fix an expense, or pull up photos. Talk to each other too; it stays quiet unless you need it.</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {suggestions.map((sg) => (
                 <button key={sg} onClick={() => setText(sg)} className="rounded-full border border-line bg-card px-3 py-1 text-xs">
@@ -361,14 +378,10 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
           const mine = m.memberId === memberId;
           const agent = !m.memberId;
           return (
-            <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${mine ? "bg-foreground text-background" : agent ? "bg-accent-soft" : "bg-card border border-line"}`}>
-                {!mine && (
-                  <div className={`text-[11px] font-medium mb-0.5 flex items-center gap-1.5 ${agent ? "text-accent" : "text-muted"}`}>
-                    {agent && <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />}
-                    {m.memberName}
-                  </div>
-                )}
+            <div key={m.id} className={`flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
+              {!mine && <Avatar name={m.memberName} agent={agent} />}
+              <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${mine ? "bg-foreground text-background" : agent ? "bg-accent-soft" : "bg-card border border-line"}`}>
+                {!mine && <div className={`text-[11px] font-medium mb-0.5 ${agent ? "text-accent" : "text-muted"}`}>{m.memberName}</div>}
                 <div className="whitespace-pre-wrap leading-snug">{m.text}</div>
                 {m.photoIds.length > 0 && (
                   <div className="mt-2 grid grid-cols-3 gap-1">
@@ -393,10 +406,11 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
           );
         })}
         {pending && (
-          <div className="flex justify-start">
+          <div className="flex items-end gap-2 justify-start">
+            <Avatar name="Muse" agent />
             <div className="rounded-2xl bg-accent-soft px-3.5 py-2.5 text-xs text-accent flex items-center gap-2">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent pulse-dot" />
-              {since < 8 ? "Wander is reading the plan" : since < 25 ? "Wander is checking places and routes" : "Wander is writing the change"}
+              {since < 8 ? "Muse is reading the plan" : since < 25 ? "Muse is checking places and routes" : "Muse is writing the change"}
               <span className="text-accent/60">{since}s</span>
             </div>
           </div>
@@ -413,7 +427,7 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Message the group, or ask Wander…"
+          placeholder="Message the group, or ask Muse…"
           className="flex-1 h-11 rounded-full border border-line bg-card px-4 text-sm outline-none focus:border-accent"
         />
         <button type="submit" disabled={!text.trim()} className="h-11 px-4 rounded-full bg-accent text-accent-ink text-sm font-medium disabled:opacity-40">

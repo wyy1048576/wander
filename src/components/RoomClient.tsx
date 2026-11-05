@@ -69,7 +69,16 @@ export default function RoomClient({ code }: { code: string }) {
     <Phone>
       <header className="flex items-center justify-between">
         <Brand />
-        <span className="font-mono text-sm tracking-[0.25em] text-muted">{room.code}</span>
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-sm tracking-[0.25em] text-muted">{room.code}</span>
+          <a
+            href="/"
+            title="Start a new trip or join another one. This trip stays open at its code."
+            className="inline-flex h-8 items-center rounded-full border border-line bg-card px-3 text-xs font-medium hover:bg-accent-soft"
+          >
+            ＋ New trip
+          </a>
+        </div>
       </header>
       {room.status === "swiping" && !me.done && state.nextPair && (
         <Swiper code={code} memberId={memberId} state={state} onUpdate={setState} />

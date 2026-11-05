@@ -6,9 +6,9 @@ import type { Expense, PhotoMeta } from "@/lib/trip";
 import Itinerary from "./Itinerary";
 import { Chip } from "./ui";
 
-type TripData = { expenses: Expense[]; photos: PhotoMeta[]; members: { id: string; name: string }[] };
+type TripData = { expenses: Expense[]; photos: PhotoMeta[]; members: { id: string; name: string; avatar: number | null }[] };
 type Tab = "chat" | "plan" | "expenses" | "photos";
-type ChatMsg = { id: number; memberId: string | null; memberName: string; text: string; photoIds: string[]; actions: string[]; createdAt: string };
+type ChatMsg = { id: number; memberId: string | null; memberName: string; avatar: number | null; text: string; photoIds: string[]; actions: string[]; createdAt: string };
 const CATS = ["food", "transport", "lodging", "tickets", "shopping", "other"];
 const inputCls = "h-8 rounded-lg border border-line bg-background px-2 text-sm outline-none focus:border-accent";
 
@@ -317,7 +317,7 @@ function Gallery({ code, memberId, data, reload }: { code: string; memberId: str
 
 const AVATARS = 6;
 /** Member icon: one of six Muse Image portraits, picked by name so it stays stable. Muse gets the accent mark. */
-function Avatar({ name, agent, size = 28 }: { name: string; agent?: boolean; size?: number }) {
+function Avatar({ name, agent, chosen, size = 28 }: { name: string; agent?: boolean; chosen?: number | null; size?: number }) {
   if (agent) {
     return (
       <span aria-hidden title="Muse" className="inline-flex shrink-0 items-center justify-center rounded-full bg-accent text-white font-semibold" style={{ width: size, height: size, fontSize: Math.round(size * 0.42) }}>
@@ -329,7 +329,7 @@ function Avatar({ name, agent, size = 28 }: { name: string; agent?: boolean; siz
   for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={`/avatars/${(h % AVATARS) + 1}.webp`} alt={name} title={name} className="shrink-0 rounded-full object-cover ring-1 ring-black/5" style={{ width: size, height: size }} />
+    <img src={`/avatars/${chosen ?? (h % AVATARS) + 1}.webp`} alt={name} title={name} className="shrink-0 rounded-full object-cover ring-1 ring-black/5" style={{ width: size, height: size }} />
   );
 }
 
@@ -428,7 +428,7 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
           const agent = !m.memberId;
           return (
             <div key={m.id} className={`group flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
-              {!mine && <Avatar name={m.memberName} agent={agent} />}
+              {!mine && <Avatar name={m.memberName} agent={agent} chosen={m.avatar} />}
               {mine && (
                 <button onClick={() => removeMsg(m.id)} aria-label="Delete message" className="self-center h-6 w-6 rounded-full text-muted opacity-40 hover:opacity-100 hover:bg-line/60 text-xs">
                   ×
@@ -440,7 +440,7 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
                     ×
                   </button>
                 )}
-                {!mine && <div className={`text-[11px] font-medium mb-0.5 ${agent ? "text-accent" : "text-muted"}`}>{m.memberName}</div>}
+                <div className={`text-[11px] font-medium mb-0.5 ${mine ? "text-background/70" : agent ? "text-accent" : "text-muted"}`}>{mine ? `${m.memberName} (you)` : m.memberName}</div>
                 <div className="whitespace-pre-wrap leading-snug">{m.text}</div>
                 {m.photoIds.length > 0 && (
                   <div className="mt-2 grid grid-cols-3 gap-1">
@@ -461,6 +461,7 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
                 )}
                 <div className={`mt-1 text-[10px] ${mine ? "text-background/60" : "text-muted"}`}>{localTime(m.createdAt)}</div>
               </div>
+              {mine && <Avatar name={m.memberName} chosen={m.avatar} />}
             </div>
           );
         })}

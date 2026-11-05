@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Brand, Button, Field, inputCls } from "@/components/ui";
+import { AvatarPicker, Brand, Button, Field, inputCls } from "@/components/ui";
 import { DESTINATIONS, DEFAULT_DESTINATION } from "@/lib/destinations";
 import cardsJson from "@/data/cards.json";
 
@@ -120,6 +120,7 @@ export default function Home() {
   const [mode, setMode] = useState<"start" | "join">("start");
   const [dest, setDest] = useState(DEFAULT_DESTINATION);
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState(1);
   const [origin, setOrigin] = useState("");
   const [date, setDate] = useState(plusDays(14));
   const [nights, setNights] = useState(4);
@@ -133,7 +134,7 @@ export default function Home() {
     const r = await fetch("/api/rooms", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ hostName: name, originCity: origin, startDate: date, nights, destination: dest }),
+      body: JSON.stringify({ hostName: name, originCity: origin, startDate: date, nights, destination: dest, avatar }),
     });
     const j = await r.json().catch(() => ({}));
     setBusy(false);
@@ -149,7 +150,7 @@ export default function Home() {
     const r = await fetch(`/api/rooms/${c}/join`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, avatar }),
     });
     const j = await r.json().catch(() => ({}));
     setBusy(false);
@@ -201,6 +202,7 @@ export default function Home() {
         <Field label="Your name">
           <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} placeholder="Alex" required />
         </Field>
+        <AvatarPicker value={avatar} onChange={setAvatar} />
         {mode === "start" ? (
           <>
             <Field label="Flying from">

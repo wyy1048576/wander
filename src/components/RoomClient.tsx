@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomState } from "@/lib/rooms";
 import type { Card } from "@/lib/game";
-import { Brand, Button, Chip, Field, Phone, inputCls } from "./ui";
+import { Brand, Button, Chip, Field, Phone, inputCls, AvatarPicker } from "./ui";
 import Trip from "./Trip";
 
 type State = RoomState;
@@ -86,6 +86,7 @@ export default function RoomClient({ code }: { code: string }) {
 
 function JoinInline({ code, onJoined }: { code: string; onJoined: (id: string) => void }) {
   const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState(1);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   async function join() {
@@ -93,7 +94,7 @@ function JoinInline({ code, onJoined }: { code: string; onJoined: (id: string) =
     const r = await fetch(`/api/rooms/${code}/join`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, avatar }),
     });
     const j = await r.json();
     setBusy(false);
@@ -115,6 +116,7 @@ function JoinInline({ code, onJoined }: { code: string; onJoined: (id: string) =
         <Field label="Your name">
           <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} placeholder="Sam" required />
         </Field>
+        <AvatarPicker value={avatar} onChange={setAvatar} />
         {err && <p className="text-sm text-accent">{err}</p>}
         <Button type="submit" full disabled={busy}>
           Join

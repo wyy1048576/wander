@@ -13,6 +13,7 @@ export type ChatMsg = {
   id: number;
   memberId: string | null; // null = Muse, the agent
   memberName: string;
+  avatar: number | null;
   text: string;
   photoIds: string[];
   actions: string[];
@@ -38,9 +39,14 @@ function ensure() {
 
 export function listMessages(roomId: string, afterId = 0): ChatMsg[] {
   ensure();
-  const names = new Map(
-    (db().prepare("SELECT id, name FROM members WHERE room_id = ?").all(roomId) as { id: string; name: string }[]).map((m) => [m.id, m.name]),
-  );
+  try {
+    db().exec("ALTER TABLE members ADD COLUMN avatar INTEGER");
+  } catch {
+    /* exists */
+  }
+  const rowsM = db().prepare("SELECT id, name, avatar FROM members WHERE room_id = ?").all(roomId) as { id: string; name: string; avatar: number | null }[];
+  const names = new Map(rowsM.map((m) => [m.id, m.name]));
+  const avatars = new Map(rowsM.map((m) => [m.id, m.avatar ?? null]));
   const rows = db()
     .prepare("SELECT id, member_id, text, photo_ids, actions, created_at FROM messages WHERE room_id = ? AND id > ? ORDER BY id LIMIT 200")
     .all(roomId, afterId) as Record<string, unknown>[];
@@ -48,6 +54,7 @@ export function listMessages(roomId: string, afterId = 0): ChatMsg[] {
     id: Number(r.id),
     memberId: (r.member_id as string | null) ?? null,
     memberName: r.member_id ? (names.get(String(r.member_id)) ?? "?") : "Muse",
+    avatar: r.member_id ? (avatars.get(String(r.member_id)) ?? null) : null,
     text: String(r.text),
     photoIds: r.photo_ids ? (JSON.parse(String(r.photo_ids)) as string[]) : [],
     actions: r.actions ? (JSON.parse(String(r.actions)) as string[]) : [],

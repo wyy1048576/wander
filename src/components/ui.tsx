@@ -70,3 +70,29 @@ export function Brand() {
     </div>
   );
 }
+
+
+export const AVATAR_COUNT = 5;
+/** Five Muse Image portraits to pick from when you start or join a trip. */
+export function AvatarPicker({ value, onChange }: { value: number; onChange: (n: number) => void }) {
+  return (
+    <div>
+      <span className="block text-xs uppercase tracking-wide text-muted mb-1">Your icon</span>
+      <div className="flex gap-2">
+        {Array.from({ length: AVATAR_COUNT }, (_, i) => i + 1).map((n) => (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onChange(n)}
+            aria-label={`Icon ${n}`}
+            aria-pressed={value === n}
+            className={`h-12 w-12 rounded-full overflow-hidden transition ring-2 ring-offset-2 ring-offset-background ${value === n ? "ring-accent scale-105" : "ring-transparent opacity-80 hover:opacity-100"}`}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/avatars/${n}.webp`} alt="" className="h-full w-full object-cover" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}

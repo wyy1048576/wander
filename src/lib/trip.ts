@@ -1,6 +1,7 @@
 import { db, newId } from "./db";
 import { meta, SPARK_MODEL } from "./muse";
 import { spend } from "./budget";
+import type { Plan } from "./plan-schema";
 
 /** During-the-trip companion: shared expenses (from receipts or by hand) and a shared photo gallery. */
 
@@ -175,4 +176,65 @@ export async function readReceipt(mime: string, bytes: Uint8Array, hint?: { date
   } catch {
     return null;
   }
+}
+
+
+/** "¥3,070 pp" -> 3070 JPY per person; "$568 total" -> 568 USD; "SGD 600-800 rtn est" -> 600 SGD; "free" -> null. */
+export function parseCost(text: string | undefined): { amount: number; currency: string; perPerson: boolean } | null {
+  if (!text) return null;
+  const t = text.trim();
+  if (/^(free|none|included|incl\.?)$/i.test(t) || (/\bfree\b/i.test(t) && !/\d/.test(t))) return null;
+  const m = t.match(/(?:([¥$€£])|\b(JPY|USD|SGD|EUR|GBP|KRW|TWD|AUD|HKD|CNY|THB|MYR)\b)?\s*(\d[\d,]*(?:\.\d+)?)/i);
+  if (!m) return null;
+  const amount = Number(m[3].replace(/,/g, ""));
+  if (!Number.isFinite(amount) || amount <= 0) return null;
+  const sym = m[1];
+  const code = (m[2] ?? (sym === "¥" ? "JPY" : sym === "$" ? "USD" : sym === "€" ? "EUR" : sym === "£" ? "GBP" : "JPY")).toUpperCase();
+  return { amount, currency: code, perPerson: /\bpp\b|per person|\beach\b|\/person/i.test(t) };
+}
+
+const TYPE_CATEGORY: Record<string, string> = { hotel: "lodging", flight: "transport", transit: "transport", meal: "food", place: "tickets", free: "other" };
+
+/** Pre-fill the expense table with what the plan already prices: hotels, flight, fares, tickets, meals. Runs once per room. */
+export function seedExpensesFromPlan(roomId: string, plan: Plan): number {
+  ensure();
+  const existing = (db().prepare("SELECT COUNT(*) c FROM expenses WHERE room_id = ?").get(roomId) as { c: number }).c;
+  if (existing > 0) return 0;
+  const members = db().prepare("SELECT id, is_host FROM members WHERE room_id = ? ORDER BY is_host DESC, created_at").all(roomId) as { id: string; is_host: number }[];
+  if (!members.length) return 0;
+  const payer = members[0].id;
+  const n = members.length;
+  let added = 0;
+  for (const h of plan.hotels) {
+    const amount = h.totalUSD ?? (h.perNightUSD ? h.perNightUSD * Math.max(1, Math.round((Date.parse(h.checkout) - Date.parse(h.checkin)) / 86400e3)) : 0);
+    if (!amount) continue;
+    addExpense(roomId, { memberId: payer, at: `${h.checkin}T15:00`, title: `Hotel: ${h.name}`, category: "lodging", amount, currency: "USD", note: `From the plan: ${h.city}, ${h.checkin} to ${h.checkout}${h.room ? `, ${h.room}` : ""}. Sandbox rate.`, photoId: null });
+    added++;
+  }
+  for (const d of plan.days) {
+    for (const it of d.items) {
+      if (it.type === "hotel") continue; // hotels are added once above
+      const c = parseCost(it.cost);
+      if (!c && it.type === "flight") {
+        const time = (it.time.match(/\d{1,2}:\d{2}/)?.[0] ?? "08:00").padStart(5, "0");
+        addExpense(roomId, { memberId: payer, at: `${d.date}T${time}`, title: it.title, category: "transport", amount: 0, currency: "USD", note: "From the plan: fare not fixed yet, book on the airline site and enter the amount.", photoId: null });
+        added++;
+        continue;
+      }
+      if (!c) continue;
+      const time = (it.time.match(/\d{1,2}:\d{2}/)?.[0] ?? "12:00").padStart(5, "0");
+      addExpense(roomId, {
+        memberId: payer,
+        at: `${d.date}T${time}`,
+        title: it.title,
+        category: TYPE_CATEGORY[it.type] ?? "other",
+        amount: c.perPerson ? c.amount * n : c.amount,
+        currency: c.currency,
+        note: `From the plan: ${it.cost}${c.perPerson ? ` × ${n}` : ""}${it.estimated ? " (estimated)" : ""}`,
+        photoId: null,
+      });
+      added++;
+    }
+  }
+  return added;
 }

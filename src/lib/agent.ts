@@ -3,6 +3,7 @@ import { sparkChat, type ChatMessage, type Tool } from "./muse";
 import { computePreferences, describePrefs, memberSwipes, tensions, type Preferences, deckFor } from "./game";
 import { destination } from "./destinations";
 import { flightLink } from "./tools/flights";
+import { seedExpensesFromPlan } from "./trip";
 import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan, DaySchema, type PlanDay } from "./plan-schema";
 import { getTransitRoute, getWalkingRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
@@ -483,6 +484,12 @@ export async function buildPlan(roomId: string): Promise<void> {
           JSON.stringify(finalized),
         );
         d.prepare("UPDATE rooms SET status = 'done' WHERE id = ?").run(roomId);
+        try {
+          const seeded = seedExpensesFromPlan(roomId, finalized);
+          if (seeded) logEvent(roomId, "thought", `Expense table pre-filled with ${seeded} planned costs`);
+        } catch (e) {
+          logEvent(roomId, "thought", `Could not pre-fill expenses: ${String((e as Error).message ?? e).slice(0, 120)}`);
+        }
         logEvent(roomId, "done", `Plan ready: ${finalized.days.length} days, ${finalized.hotels.length} hotels`);
         return;
       }

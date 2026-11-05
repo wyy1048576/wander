@@ -166,16 +166,25 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
       {msg && <p className="mt-2 text-xs text-ok">{msg}</p>}
 
       <div className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
-        <table className="min-w-[640px] w-full border-separate border-spacing-0 text-sm">
+        <table className="table-fixed w-[860px] border-separate border-spacing-0 text-sm">
+          <colgroup>
+            <col style={{ width: 100 }} />
+            <col style={{ width: 250 }} />
+            <col style={{ width: 120 }} />
+            <col style={{ width: 70 }} />
+            <col style={{ width: 120 }} />
+            <col style={{ width: 130 }} />
+            <col style={{ width: 70 }} />
+          </colgroup>
           <thead>
-            <tr className="text-[11px] uppercase tracking-wide text-muted">
-              <th className="text-left font-medium pb-2 pr-2 w-[84px]">Time</th>
+            <tr className="text-[11px] uppercase tracking-wide text-muted whitespace-nowrap">
+              <th className="text-left font-medium pb-2 pr-2">Time</th>
               <th className="text-left font-medium pb-2 pr-2">Item</th>
-              <th className="text-right font-medium pb-2 pr-2 w-[104px]">Amount</th>
-              <th className="text-left font-medium pb-2 pr-2 w-[58px]">Cur</th>
-              <th className="text-left font-medium pb-2 pr-2 w-[104px]">Category</th>
-              <th className="text-left font-medium pb-2 pr-2 w-[120px]">Paid by</th>
-              <th className="pb-2 w-[64px]"></th>
+              <th className="text-right font-medium pb-2 pr-2">Amount</th>
+              <th className="text-left font-medium pb-2 pr-2">Cur</th>
+              <th className="text-left font-medium pb-2 pr-2">Category</th>
+              <th className="text-left font-medium pb-2 pr-2">Paid by</th>
+              <th className="pb-2"></th>
             </tr>
           </thead>
           <tbody>
@@ -195,8 +204,8 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
                       <input type="time" defaultValue={e.at.slice(11, 16)} onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })} className={`${inputCls} w-full font-mono text-xs`} />
                     </td>
                     <td className="border-y border-line p-1.5">
-                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} w-full min-w-[160px] font-medium`} />
-                      {e.note && <div className="mt-0.5 text-[11px] text-muted truncate max-w-[280px]" title={e.note}>{e.note}</div>}
+                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} w-full font-medium`} />
+                      {e.note && <div className="mt-0.5 text-[11px] text-muted truncate" title={e.note}>{e.note}</div>}
                     </td>
                     <td className="border-y border-line p-1.5">
                       <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={`${inputCls} w-full text-right tabular-nums`} />

@@ -7,7 +7,8 @@ import Itinerary from "./Itinerary";
 import { Chip } from "./ui";
 
 type TripData = { expenses: Expense[]; photos: PhotoMeta[]; members: { id: string; name: string }[] };
-type Tab = "plan" | "expenses" | "photos";
+type Tab = "chat" | "plan" | "expenses" | "photos";
+type ChatMsg = { id: number; memberId: string | null; memberName: string; text: string; photoIds: string[]; actions: string[]; createdAt: string };
 const CATS = ["food", "transport", "lodging", "tickets", "shopping", "other"];
 const inputCls = "h-8 rounded-lg border border-line bg-background px-2 text-sm outline-none focus:border-accent";
 
@@ -36,14 +37,14 @@ async function shrink(file: File): Promise<Blob> {
 }
 
 export default function Trip({ code, memberId, plan, members }: { code: string; memberId: string; plan: Plan; members: { name: string }[] }) {
-  const [tab, setTab] = useState<Tab>("plan");
+  const [tab, setTab] = useState<Tab>("chat");
   const [data, setData] = useState<TripData | null>(null);
   const load = useCallback(async () => {
     const r = await fetch(`/api/rooms/${code}/trip`, { cache: "no-store" });
     if (r.ok) setData(await r.json());
   }, [code]);
   useEffect(() => {
-    if (tab === "plan") return;
+    if (tab === "plan" || tab === "chat") return;
     // load() fetches, then sets state in its callback (not synchronously).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
@@ -54,16 +55,17 @@ export default function Trip({ code, memberId, plan, members }: { code: string; 
   return (
     <div>
       <div className="mt-2 flex gap-1 rounded-full bg-line/50 p-1">
-        {(["plan", "expenses", "photos"] as Tab[]).map((t) => (
+        {(["chat", "plan", "expenses", "photos"] as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`flex-1 h-9 rounded-full text-sm font-medium transition first-letter:uppercase ${tab === t ? "bg-card shadow-sm" : "text-muted"}`}
           >
-            {t === "plan" ? "Plan" : t === "expenses" ? "Expenses" : "Photos"}
+            {t === "chat" ? "Chat" : t === "plan" ? "Plan" : t === "expenses" ? "Expenses" : "Photos"}
           </button>
         ))}
       </div>
+      {tab === "chat" && <Chat code={code} memberId={memberId} />}
       {tab === "plan" && <Itinerary plan={plan} members={members} code={code} />}
       {tab === "expenses" && <Expenses code={code} memberId={memberId} data={data} reload={load} />}
       {tab === "photos" && <Gallery code={code} memberId={memberId} data={data} reload={load} />}
@@ -278,6 +280,133 @@ function Gallery({ code, memberId, data, reload }: { code: string; memberId: str
         ))}
       </div>
       {data && photos.length === 0 && <p className="mt-6 text-center text-sm text-muted">No photos yet.</p>}
+    </section>
+  );
+}
+
+
+function Chat({ code, memberId }: { code: string; memberId: string }) {
+  const [msgs, setMsgs] = useState<ChatMsg[]>([]);
+  const [text, setText] = useState("");
+  const [waiting, setWaiting] = useState<number | null>(null); // timestamp of our last send awaiting a reply
+  const bottom = useRef<HTMLDivElement>(null);
+  const lastId = msgs.length ? msgs[msgs.length - 1].id : 0;
+
+  const poll = useCallback(async () => {
+    const r = await fetch(`/api/rooms/${code}/chat?after=${lastId}`, { cache: "no-store" });
+    if (!r.ok) return;
+    const j = (await r.json()) as { messages: ChatMsg[] };
+    if (j.messages.length) {
+      setMsgs((m) => [...m, ...j.messages.filter((x) => !m.some((y) => y.id === x.id))]);
+      if (j.messages.some((x) => !x.memberId)) setWaiting(null);
+    }
+  }, [code, lastId]);
+  useEffect(() => {
+    // poll() fetches and sets state in its callback, not synchronously.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    poll();
+    const t = setInterval(poll, 2500);
+    return () => clearInterval(t);
+  }, [poll]);
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ block: "end" });
+  }, [msgs.length, waiting]);
+  useEffect(() => {
+    if (waiting == null) return;
+    const t = setTimeout(() => setWaiting(null), 120000);
+    return () => clearTimeout(t);
+  }, [waiting]);
+
+  async function send() {
+    const t = text.trim();
+    if (!t) return;
+    setText("");
+    setWaiting(Date.now());
+    await fetch(`/api/rooms/${code}/chat`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId, text: t }) });
+    await poll();
+  }
+
+  const suggestions = ["Move tomorrow's dinner to 19:30", "Show me the photos from today", "Fix the last receipt: it was 10,095 yen", "What's the plan for Day 2?"];
+
+  return (
+    <section className="mt-3 rise flex flex-col" style={{ minHeight: "60dvh" }}>
+      <div className="flex-1 space-y-2">
+        {msgs.length === 0 && (
+          <div className="rounded-2xl bg-accent-soft p-4 text-sm">
+            <div className="flex items-center gap-2 font-medium">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-accent" /> Wander is in this chat
+            </div>
+            <p className="mt-1 text-muted">Ask it to change the plan, fix an expense, or pull up photos. Talk to each other too; it stays quiet unless you need it.</p>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {suggestions.map((sg) => (
+                <button key={sg} onClick={() => setText(sg)} className="rounded-full border border-line bg-card px-3 py-1 text-xs">
+                  {sg}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {msgs.map((m) => {
+          const mine = m.memberId === memberId;
+          const agent = !m.memberId;
+          return (
+            <div key={m.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm ${mine ? "bg-foreground text-background" : agent ? "bg-accent-soft" : "bg-card border border-line"}`}>
+                {!mine && (
+                  <div className={`text-[11px] font-medium mb-0.5 flex items-center gap-1.5 ${agent ? "text-accent" : "text-muted"}`}>
+                    {agent && <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />}
+                    {m.memberName}
+                  </div>
+                )}
+                <div className="whitespace-pre-wrap leading-snug">{m.text}</div>
+                {m.photoIds.length > 0 && (
+                  <div className="mt-2 grid grid-cols-3 gap-1">
+                    {m.photoIds.map((id) => (
+                      <a key={id} href={`/api/photos/${id}`} target="_blank" rel="noreferrer" className="aspect-square rounded-lg overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/api/photos/${id}`} alt="" className="h-full w-full object-cover" />
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {m.actions.length > 0 && (
+                  <div className="mt-1.5 text-[11px] text-muted">
+                    {m.actions.map((a, i) => (
+                      <div key={i}>✓ {a}</div>
+                    ))}
+                  </div>
+                )}
+                <div className={`mt-1 text-[10px] ${mine ? "text-background/60" : "text-muted"}`}>{m.createdAt.slice(11, 16)}</div>
+              </div>
+            </div>
+          );
+        })}
+        {waiting != null && (
+          <div className="flex justify-start">
+            <div className="rounded-2xl bg-accent-soft px-3.5 py-2.5 text-xs text-accent flex items-center gap-2">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent pulse-dot" /> Wander is working on it
+            </div>
+          </div>
+        )}
+        <div ref={bottom} />
+      </div>
+      <form
+        className="sticky bottom-0 mt-3 flex gap-2 bg-background py-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          send();
+        }}
+      >
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Message the group, or ask Wander…"
+          className="flex-1 h-11 rounded-full border border-line bg-card px-4 text-sm outline-none focus:border-accent"
+        />
+        <button type="submit" disabled={!text.trim()} className="h-11 px-4 rounded-full bg-accent text-accent-ink text-sm font-medium disabled:opacity-40">
+          Send
+        </button>
+      </form>
     </section>
   );
 }

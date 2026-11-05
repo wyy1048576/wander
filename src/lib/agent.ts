@@ -76,7 +76,9 @@ const FINALIZE_JSON_SCHEMA = {
   },
 };
 
-const TOOLS: Tool[] = [
+export const RESEARCH_TOOL_NAMES = ["get_walking_route", "search_restaurants", "search_hotels", "get_transit_route"] as const;
+
+export const TOOLS: Tool[] = [
   {
     type: "function",
     function: {
@@ -231,7 +233,7 @@ function prefsBlock(prefs: Preferences[]) {
   return `${lines.join("\n")}\n\nClashes to resolve: ${t.length ? t.join("; ") : "none obvious; look for subtler ones in the picks."}`;
 }
 
-async function runTool(roomId: string, name: string, args: Record<string, unknown>) {
+export async function runTool(roomId: string, name: string, args: Record<string, unknown>) {
   switch (name) {
     case "get_transit_route": {
       const r = await getTransitRoute(args as { origin: string; destination: string; departure_time?: string });

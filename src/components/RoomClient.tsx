@@ -5,6 +5,7 @@ import type { RoomState } from "@/lib/rooms";
 import type { Card } from "@/lib/game";
 import { Brand, Button, Chip, Field, Phone, inputCls, AvatarPicker } from "./ui";
 import Trip from "./Trip";
+import Link from "next/link";
 
 type State = RoomState;
 
@@ -71,13 +72,13 @@ export default function RoomClient({ code }: { code: string }) {
         <Brand />
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm tracking-[0.25em] text-muted">{room.code}</span>
-          <a
+          <Link
             href="/"
             title="Start a new trip or join another one. This trip stays open at its code."
             className="inline-flex h-8 items-center rounded-full border border-line bg-card px-3 text-xs font-medium hover:bg-accent-soft"
           >
             ＋ New trip
-          </a>
+          </Link>
         </div>
       </header>
       {room.status === "swiping" && !me.done && state.nextPair && (

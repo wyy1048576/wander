@@ -138,7 +138,7 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
           type="file"
           accept="image/*"
           capture="environment"
-          className="hidden"
+          style={{ display: "none" }}
           onChange={(e) => {
             const f = e.target.files?.[0];
             if (f) scan(f);
@@ -186,28 +186,28 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
                     ×
                   </button>
                 </div>
-                <div className="mt-2 flex items-center gap-2">
+                <div className="mt-2 flex flex-wrap items-center gap-2">
                   <input
                     type="number"
                     step="0.01"
                     defaultValue={e.amount}
                     onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })}
-                    className={`${inputCls} w-[108px] text-right tabular-nums`}
+                    className={`${inputCls} w-[96px] text-right tabular-nums`}
                   />
                   <input
                     defaultValue={e.currency}
                     maxLength={3}
                     onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })}
-                    className={`${inputCls} w-[58px] uppercase text-xs`}
+                    className={`${inputCls} w-[54px] uppercase text-xs`}
                   />
-                  <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} text-xs`}>
+                  <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} text-xs w-[92px]`}>
                     {CATS.map((c) => (
                       <option key={c} value={c}>
                         {c}
                       </option>
                     ))}
                   </select>
-                  <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} text-xs flex-1 min-w-0`}>
+                  <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} text-xs flex-1 min-w-[110px]`}>
                     {(data?.members ?? []).map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.name} paid
@@ -264,7 +264,7 @@ function Gallery({ code, memberId, data, reload }: { code: string; memberId: str
         </div>
         <Chip tone="neutral">{photos.length}</Chip>
       </div>
-      <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => e.target.files && upload(e.target.files)} />
+      <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={(e) => e.target.files && upload(e.target.files)} />
       <button onClick={() => fileRef.current?.click()} disabled={!!busy} className="mt-3 w-full h-11 rounded-full bg-accent text-accent-ink font-medium text-sm disabled:opacity-50">
         {busy ?? "＋ Add photos"}
       </button>

@@ -356,6 +356,17 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
     return () => clearTimeout(t);
   }, [waiting]);
 
+  async function removeMsg(id: number) {
+    await fetch(`/api/rooms/${code}/chat?memberId=${memberId}&id=${id}`, { method: "DELETE" });
+    setMsgs((m) => m.filter((x) => x.id !== id));
+  }
+  async function clearChat() {
+    if (!window.confirm("Delete the whole chat for everyone in this trip?")) return;
+    await fetch(`/api/rooms/${code}/chat?memberId=${memberId}`, { method: "DELETE" });
+    setMsgs([]);
+    setWaiting(null);
+  }
+
   async function send() {
     const t = text.trim();
     if (!t) return;
@@ -380,6 +391,13 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
 
   return (
     <section className="mt-3 rise flex flex-col" style={{ minHeight: "60dvh" }}>
+      {msgs.length > 0 && (
+        <div className="flex justify-end">
+          <button onClick={clearChat} className="text-[11px] text-muted hover:text-accent">
+            Clear chat
+          </button>
+        </div>
+      )}
       <div className="flex-1 space-y-2">
         {msgs.length === 0 && (
           <div className="rounded-2xl bg-accent-soft p-4 text-sm">
@@ -400,9 +418,19 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
           const mine = m.memberId === memberId;
           const agent = !m.memberId;
           return (
-            <div key={m.id} className={`flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
+            <div key={m.id} className={`group flex items-end gap-2 ${mine ? "justify-end" : "justify-start"}`}>
               {!mine && <Avatar name={m.memberName} agent={agent} />}
-              <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${mine ? "bg-foreground text-background" : agent ? "bg-accent-soft" : "bg-card border border-line"}`}>
+              {mine && (
+                <button onClick={() => removeMsg(m.id)} aria-label="Delete message" className="self-center h-6 w-6 rounded-full text-muted opacity-40 hover:opacity-100 hover:bg-line/60 text-xs">
+                  ×
+                </button>
+              )}
+              <div className={`relative max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${mine ? "bg-foreground text-background" : agent ? "bg-accent-soft" : "bg-card border border-line"}`}>
+                {agent && (
+                  <button onClick={() => removeMsg(m.id)} aria-label="Delete message" className="absolute right-1.5 top-1 h-5 w-5 rounded-full text-accent/60 hover:text-accent hover:bg-white/60 text-xs">
+                    ×
+                  </button>
+                )}
                 {!mine && <div className={`text-[11px] font-medium mb-0.5 ${agent ? "text-accent" : "text-muted"}`}>{m.memberName}</div>}
                 <div className="whitespace-pre-wrap leading-snug">{m.text}</div>
                 {m.photoIds.length > 0 && (

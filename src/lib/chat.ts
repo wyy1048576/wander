@@ -301,3 +301,14 @@ function applyTool(roomId: string, name: string, a: Record<string, unknown>, act
       return { error: `unknown tool ${name}` };
   }
 }
+
+
+/** Delete one message (yours or Muse's) or, with no id, the whole chat of the room. Returns rows removed. */
+export function deleteMessages(roomId: string, memberId: string, id?: number): number {
+  ensure();
+  if (id != null) {
+    const r = db().prepare("DELETE FROM messages WHERE room_id = ? AND id = ? AND (member_id = ? OR member_id IS NULL)").run(roomId, id, memberId);
+    return Number(r.changes);
+  }
+  return Number(db().prepare("DELETE FROM messages WHERE room_id = ?").run(roomId).changes);
+}

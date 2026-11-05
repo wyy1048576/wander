@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { getRoom, members } from "@/lib/rooms";
-import { addMessage, listMessages, runChatTurn } from "@/lib/chat";
+import { addMessage, deleteMessages, listMessages, runChatTurn } from "@/lib/chat";
 
 export const dynamic = "force-dynamic";
 
@@ -31,4 +31,17 @@ export async function POST(req: Request, ctx: { params: Promise<{ code: string }
     }
   });
   return Response.json({ id });
+}
+
+/** DELETE ?memberId=…&id=… removes one message (yours or Muse's); without id, clears the room's chat. */
+export async function DELETE(req: Request, ctx: { params: Promise<{ code: string }> }) {
+  const { code } = await ctx.params;
+  const room = getRoom(code);
+  if (!room) return Response.json({ error: "no such trip" }, { status: 404 });
+  const u = new URL(req.url);
+  const memberId = String(u.searchParams.get("memberId") ?? "");
+  if (!memberId || !members(room.id).some((m) => m.id === memberId)) return Response.json({ error: "not a member" }, { status: 403 });
+  const idRaw = u.searchParams.get("id");
+  const removed = deleteMessages(room.id, memberId, idRaw ? Number(idRaw) : undefined);
+  return Response.json({ removed });
 }

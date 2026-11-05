@@ -11,6 +11,8 @@ type Tab = "chat" | "plan" | "expenses" | "photos";
 type ChatMsg = { id: number; memberId: string | null; memberName: string; avatar: number | null; text: string; photoIds: string[]; actions: string[]; createdAt: string };
 const CATS = ["food", "transport", "lodging", "tickets", "shopping", "other"];
 const inputCls = "h-8 rounded-lg border border-line bg-background px-2 text-sm outline-none focus:border-accent";
+/** Spreadsheet cell: flat, borderless, fills the cell, highlights on focus. */
+const cell = "h-9 w-full bg-transparent px-2 text-[13px] outline-none focus:bg-accent-soft/60 focus:ring-2 focus:ring-inset focus:ring-accent";
 
 /** Shrink a photo in the browser before upload: max 1280px, JPEG. Keeps the SQLite file small. */
 async function shrink(file: File): Promise<Blob> {
@@ -127,7 +129,6 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
 
   const totals = new Map<string, number>();
   for (const e of data?.expenses ?? []) totals.set(e.currency, (totals.get(e.currency) ?? 0) + e.amount);
-  const rows = (data?.expenses ?? []).map((e, i, arr) => ({ e, showDay: i === 0 || arr[i - 1].at.slice(0, 10) !== e.at.slice(0, 10) }));
 
   return (
     <section className="mt-4 rise">
@@ -176,97 +177,95 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
       {msg && <p className="mt-2 text-xs text-ok">{msg}</p>}
 
       <div ref={topRef} onScroll={() => sync(topRef.current, bodyRef.current)} className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar" aria-hidden>
-        <div style={{ width: 900, height: 1 }} />
+        <div style={{ width: 1184, height: 1 }} />
       </div>
       <div ref={bodyRef} onScroll={() => sync(bodyRef.current, topRef.current)} className="-mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
-        <table style={{ tableLayout: "fixed", width: 900, minWidth: 900 }} className="border-separate border-spacing-0 text-sm">
+        <table style={{ tableLayout: "fixed", width: 1184, minWidth: 1184, borderCollapse: "collapse" }} className="text-[13px] bg-card">
           <colgroup>
-            <col style={{ width: 104 }} />
+            <col style={{ width: 112 }} />
+            <col style={{ width: 92 }} />
+            <col style={{ width: 240 }} />
             <col style={{ width: 260 }} />
-            <col style={{ width: 128 }} />
-            <col style={{ width: 72 }} />
-            <col style={{ width: 128 }} />
-            <col style={{ width: 136 }} />
-            <col style={{ width: 72 }} />
+            <col style={{ width: 112 }} />
+            <col style={{ width: 64 }} />
+            <col style={{ width: 116 }} />
+            <col style={{ width: 124 }} />
+            <col style={{ width: 64 }} />
           </colgroup>
           <thead>
-            <tr className="text-[11px] uppercase tracking-wide text-muted whitespace-nowrap">
-              <th className="text-left font-medium pb-2 pr-2">Time</th>
-              <th className="text-left font-medium pb-2 pr-2">Item</th>
-              <th className="text-right font-medium pb-2 pr-2">Amount</th>
-              <th className="text-left font-medium pb-2 pr-2">Cur</th>
-              <th className="text-left font-medium pb-2 pr-2">Category</th>
-              <th className="text-left font-medium pb-2 pr-2">Paid by</th>
-              <th className="pb-2"></th>
+            <tr className="bg-line/50 text-[11px] font-semibold uppercase tracking-wide text-muted">
+              {["Date", "Time", "Item", "Note", "Amount", "Cur", "Category", "Paid by", ""].map((h, i) => (
+                <th key={i} className={`border border-line px-2 py-1.5 ${i === 4 ? "text-right" : "text-left"}`}>
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ e, showDay }) => {
+            {(data?.expenses ?? []).map((e) => {
               const day = e.at.slice(0, 10);
+              const time = e.at.slice(11, 16);
               return (
-                <Fragment key={e.id}>
-                  {showDay && (
-                    <tr>
-                      <td colSpan={7} className="pt-3 pb-1 text-[11px] uppercase tracking-wide text-muted">
-                        {new Date(day + "T00:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
-                      </td>
-                    </tr>
-                  )}
-                  <tr className="bg-card">
-                    <td className="border-y border-l border-line rounded-l-xl p-2.5">
-                      <input type="time" defaultValue={e.at.slice(11, 16)} onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })} className={`${inputCls} h-10 w-full font-mono text-xs`} />
-                    </td>
-                    <td className="border-y border-line p-2.5">
-                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} h-10 w-full font-medium`} />
-                      {e.note && <div className="mt-0.5 text-[11px] text-muted truncate" title={e.note}>{e.note}</div>}
-                    </td>
-                    <td className="border-y border-line p-2.5">
-                      <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={`${inputCls} h-10 w-full text-right tabular-nums`} />
-                    </td>
-                    <td className="border-y border-line p-2.5">
-                      <input defaultValue={e.currency} maxLength={3} onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })} className={`${inputCls} h-10 w-full uppercase text-xs`} />
-                    </td>
-                    <td className="border-y border-line p-2.5">
-                      <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} h-10 w-full text-xs`}>
-                        {CATS.map((c) => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border-y border-line p-2.5">
-                      <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} h-10 w-full text-xs`}>
-                        {(data?.members ?? []).map((m) => (
-                          <option key={m.id} value={m.id}>
-                            {m.name}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="border-y border-r border-line rounded-r-xl p-2.5 whitespace-nowrap">
-                      {e.photoId && (
-                        <a href={`/api/photos/${e.photoId}`} target="_blank" rel="noreferrer" className="inline-block align-middle mr-1">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={`/api/photos/${e.photoId}`} alt="receipt" className="h-7 w-7 rounded-md object-cover border border-line" />
-                        </a>
-                      )}
-                      <button onClick={() => remove(e.id)} aria-label="Delete" className="h-7 w-7 rounded-md text-muted hover:bg-background align-middle">
-                        ×
-                      </button>
-                    </td>
-                  </tr>
-                </Fragment>
+                <tr key={e.id} className="hover:bg-accent-soft/30">
+                  <td className="border border-line p-0">
+                    <input type="date" defaultValue={day} onBlur={(ev) => ev.target.value && ev.target.value !== day && patch(e.id, { at: `${ev.target.value}T${time}` })} className={cell + " font-mono"} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <input type="time" defaultValue={time} onBlur={(ev) => ev.target.value && ev.target.value !== time && patch(e.id, { at: `${day}T${ev.target.value}` })} className={cell + " font-mono"} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={cell + " font-medium"} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <input defaultValue={e.note ?? ""} placeholder="" onBlur={(ev) => ev.target.value !== (e.note ?? "") && patch(e.id, { note: ev.target.value })} className={cell + " text-muted"} title={e.note ?? ""} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={cell + " text-right tabular-nums"} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <input defaultValue={e.currency} maxLength={3} onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })} className={cell + " uppercase"} />
+                  </td>
+                  <td className="border border-line p-0">
+                    <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={cell}>
+                      {CATS.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="border border-line p-0">
+                    <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={cell}>
+                      {(data?.members ?? []).map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="border border-line px-1 text-center whitespace-nowrap">
+                    {e.photoId && (
+                      <a href={`/api/photos/${e.photoId}`} target="_blank" rel="noreferrer" title="Receipt" className="inline-block align-middle mr-1 text-muted hover:text-accent">
+                        🧾
+                      </a>
+                    )}
+                    <button onClick={() => remove(e.id)} aria-label="Delete row" className="align-middle h-7 w-7 rounded text-muted hover:text-accent hover:bg-line/50">
+                      ×
+                    </button>
+                  </td>
+                </tr>
               );
             })}
           </tbody>
           {totals.size > 0 && (
             <tfoot>
-              <tr>
-                <td colSpan={2} className="pt-3 text-right text-xs uppercase tracking-wide text-muted pr-2">Total</td>
-                <td colSpan={5} className="pt-3 font-semibold tabular-nums">
+              <tr className="bg-line/40 font-semibold">
+                <td colSpan={4} className="border border-line px-2 py-1.5 text-right text-[11px] uppercase tracking-wide text-muted">
+                  Total
+                </td>
+                <td colSpan={5} className="border border-line px-2 py-1.5 tabular-nums">
                   {[...totals.entries()].map(([cur, n]) => (
-                    <span key={cur} className="mr-3">
+                    <span key={cur} className="mr-4">
                       {fmt(n)} <span className="text-muted font-normal">{cur}</span>
                     </span>
                   ))}

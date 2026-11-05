@@ -285,20 +285,21 @@ function Gallery({ code, memberId, data, reload }: { code: string; memberId: str
 }
 
 
-const PALETTE = ["#d9542b", "#2f7d4f", "#2b5fd9", "#8a3fb3", "#b36b00", "#0f8a8a"];
+const AVATARS = 6;
+/** Member icon: one of six Muse Image portraits, picked by name so it stays stable. Muse gets the accent mark. */
 function Avatar({ name, agent, size = 28 }: { name: string; agent?: boolean; size?: number }) {
+  if (agent) {
+    return (
+      <span aria-hidden title="Muse" className="inline-flex shrink-0 items-center justify-center rounded-full bg-accent text-white font-semibold" style={{ width: size, height: size, fontSize: Math.round(size * 0.42) }}>
+        ✦
+      </span>
+    );
+  }
   let h = 0;
   for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const bg = agent ? "var(--accent)" : PALETTE[h % PALETTE.length];
   return (
-    <span
-      aria-hidden
-      title={name}
-      className="inline-flex shrink-0 items-center justify-center rounded-full text-white font-semibold"
-      style={{ width: size, height: size, background: bg, fontSize: Math.round(size * 0.42) }}
-    >
-      {agent ? "✦" : name.trim().charAt(0).toUpperCase()}
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={`/avatars/${(h % AVATARS) + 1}.webp`} alt={name} title={name} className="shrink-0 rounded-full object-cover ring-1 ring-black/5" style={{ width: size, height: size }} />
   );
 }
 

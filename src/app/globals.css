@@ -96,3 +96,19 @@ body {
 .fan-in {
   animation: fan-in 480ms ease-out both;
 }
+
+/* Visible but slim scrollbar for horizontal strips (day tabs, wide tables). */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cdbfb2 transparent;
+}
+.thin-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #cdbfb2;
+  border-radius: 6px;
+}
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

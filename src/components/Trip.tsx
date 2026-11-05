@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import type { Plan } from "@/lib/plan-schema";
 import type { Expense, PhotoMeta } from "@/lib/trip";
 import Itinerary from "./Itinerary";
@@ -165,74 +165,95 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
       )}
       {msg && <p className="mt-2 text-xs text-ok">{msg}</p>}
 
-      <ol className="mt-4 space-y-2">
-        {rows.map(({ e, showDay }) => {
-          const day = e.at.slice(0, 10);
-          return (
-            <li key={e.id}>
-              {showDay && <div className="text-xs uppercase tracking-wide text-muted mt-3 mb-1">{new Date(day + "T00:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}</div>}
-              <div className="rounded-2xl bg-card border border-line p-3">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="time"
-                    defaultValue={e.at.slice(11, 16)}
-                    onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })}
-                    className={`${inputCls} w-[86px] font-mono text-xs`}
-                  />
-                  <input
-                    defaultValue={e.title}
-                    onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })}
-                    className={`${inputCls} flex-1 min-w-0 font-medium`}
-                  />
-                  <button onClick={() => remove(e.id)} aria-label="Delete" className="h-8 w-8 rounded-lg text-muted hover:bg-background">
-                    ×
-                  </button>
-                </div>
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <input
-                    type="number"
-                    step="0.01"
-                    defaultValue={e.amount}
-                    onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })}
-                    className={`${inputCls} w-[96px] text-right tabular-nums`}
-                  />
-                  <input
-                    defaultValue={e.currency}
-                    maxLength={3}
-                    onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })}
-                    className={`${inputCls} w-[54px] uppercase text-xs`}
-                  />
-                  <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} text-xs w-[92px]`}>
-                    {CATS.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                  <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} text-xs flex-1 min-w-[110px]`}>
-                    {(data?.members ?? []).map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.name} paid
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {(e.note || e.photoId) && (
-                  <div className="mt-2 flex items-center gap-2">
-                    {e.photoId && (
-                      <a href={`/api/photos/${e.photoId}`} target="_blank" rel="noreferrer" className="shrink-0">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={`/api/photos/${e.photoId}`} alt="receipt" className="h-10 w-10 rounded-lg object-cover border border-line" />
-                      </a>
-                    )}
-                    {e.note && <p className="text-xs text-muted truncate">{e.note}</p>}
-                  </div>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <div className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
+        <table className="min-w-[640px] w-full border-separate border-spacing-0 text-sm">
+          <thead>
+            <tr className="text-[11px] uppercase tracking-wide text-muted">
+              <th className="text-left font-medium pb-2 pr-2 w-[84px]">Time</th>
+              <th className="text-left font-medium pb-2 pr-2">Item</th>
+              <th className="text-right font-medium pb-2 pr-2 w-[104px]">Amount</th>
+              <th className="text-left font-medium pb-2 pr-2 w-[58px]">Cur</th>
+              <th className="text-left font-medium pb-2 pr-2 w-[104px]">Category</th>
+              <th className="text-left font-medium pb-2 pr-2 w-[120px]">Paid by</th>
+              <th className="pb-2 w-[64px]"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ e, showDay }) => {
+              const day = e.at.slice(0, 10);
+              return (
+                <Fragment key={e.id}>
+                  {showDay && (
+                    <tr>
+                      <td colSpan={7} className="pt-3 pb-1 text-[11px] uppercase tracking-wide text-muted">
+                        {new Date(day + "T00:00:00").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" })}
+                      </td>
+                    </tr>
+                  )}
+                  <tr className="bg-card">
+                    <td className="border-y border-l border-line rounded-l-xl p-1.5">
+                      <input type="time" defaultValue={e.at.slice(11, 16)} onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })} className={`${inputCls} w-full font-mono text-xs`} />
+                    </td>
+                    <td className="border-y border-line p-1.5">
+                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} w-full min-w-[160px] font-medium`} />
+                      {e.note && <div className="mt-0.5 text-[11px] text-muted truncate max-w-[280px]" title={e.note}>{e.note}</div>}
+                    </td>
+                    <td className="border-y border-line p-1.5">
+                      <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={`${inputCls} w-full text-right tabular-nums`} />
+                    </td>
+                    <td className="border-y border-line p-1.5">
+                      <input defaultValue={e.currency} maxLength={3} onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })} className={`${inputCls} w-full uppercase text-xs`} />
+                    </td>
+                    <td className="border-y border-line p-1.5">
+                      <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} w-full text-xs`}>
+                        {CATS.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="border-y border-line p-1.5">
+                      <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} w-full text-xs`}>
+                        {(data?.members ?? []).map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="border-y border-r border-line rounded-r-xl p-1.5 whitespace-nowrap">
+                      {e.photoId && (
+                        <a href={`/api/photos/${e.photoId}`} target="_blank" rel="noreferrer" className="inline-block align-middle mr-1">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={`/api/photos/${e.photoId}`} alt="receipt" className="h-7 w-7 rounded-md object-cover border border-line" />
+                        </a>
+                      )}
+                      <button onClick={() => remove(e.id)} aria-label="Delete" className="h-7 w-7 rounded-md text-muted hover:bg-background align-middle">
+                        ×
+                      </button>
+                    </td>
+                  </tr>
+                </Fragment>
+              );
+            })}
+          </tbody>
+          {totals.size > 0 && (
+            <tfoot>
+              <tr>
+                <td colSpan={2} className="pt-3 text-right text-xs uppercase tracking-wide text-muted pr-2">Total</td>
+                <td colSpan={5} className="pt-3 font-semibold tabular-nums">
+                  {[...totals.entries()].map(([cur, n]) => (
+                    <span key={cur} className="mr-3">
+                      {fmt(n)} <span className="text-muted font-normal">{cur}</span>
+                    </span>
+                  ))}
+                </td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
+      </div>
       {data && data.expenses.length === 0 && (
         <p className="mt-6 text-center text-sm text-muted">No expenses yet. Scan the first receipt or add one by hand.</p>
       )}

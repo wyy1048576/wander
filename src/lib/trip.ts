@@ -198,7 +198,7 @@ const TYPE_CATEGORY: Record<string, string> = { hotel: "lodging", flight: "trans
 /** Pre-fill the expense table with what the plan already prices: hotels, flight, fares, tickets, meals. Runs once per room. */
 export function seedExpensesFromPlan(roomId: string, plan: Plan): number {
   ensure();
-  const existing = (db().prepare("SELECT COUNT(*) c FROM expenses WHERE room_id = ?").get(roomId) as { c: number }).c;
+  const existing = (db().prepare("SELECT COUNT(*) c FROM expenses WHERE room_id = ? AND note LIKE 'From the plan%'").get(roomId) as { c: number }).c;
   if (existing > 0) return 0;
   const members = db().prepare("SELECT id, is_host FROM members WHERE room_id = ? ORDER BY is_host DESC, created_at").all(roomId) as { id: string; is_host: number }[];
   if (!members.length) return 0;

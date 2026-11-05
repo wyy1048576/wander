@@ -39,6 +39,7 @@ The agent loop lives in [`src/lib/agent.ts`](src/lib/agent.ts). The Meta client 
 
 | Tool | Source |
 |---|---|
+| `get_walking_route` | Google Routes API, walking mode. Real turn-by-turn steps with street names and landmarks, called for every walked hop so "Getting there" is never invented. |
 | `get_transit_route` | Google Routes API, transit mode. Real train/bus legs with departure and arrival times and the operator's site where Google has transit data. Shinkansen legs link to SmartEX. |
 | `search_restaurants` | Google Places API (New) text search. Real restaurants with rating, review count, price level and a Maps link. |
 | `search_hotels` | liteAPI (Nuitée) sandbox. Real hotels with live rates; `/book` runs prebook → book with liteAPI's simulated payment. |

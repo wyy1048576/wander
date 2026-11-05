@@ -177,3 +177,67 @@ export async function getTransitRoute(args: {
     };
   });
 }
+
+/** Google Routes API, walking mode: real turn-by-turn steps. Works in Japan (only transit is missing there). */
+export type WalkRoute = {
+  origin: string;
+  destination: string;
+  meters: number;
+  minutes: number;
+  steps: string[];
+  mapsUrl: string;
+  unavailable?: string;
+};
+
+export async function getWalkingRoute(args: { origin: string; destination: string }): Promise<WalkRoute> {
+  const key = process.env.GOOGLE_MAPS_API_KEY;
+  if (!key) throw new Error("GOOGLE_MAPS_API_KEY is not set");
+  const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(args.origin)}&destination=${encodeURIComponent(args.destination)}&travelmode=walking`;
+  return cached(cacheKey("walk", args), 7 * 86400, async () => {
+    spend("google");
+    const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": key,
+        "X-Goog-FieldMask":
+          "routes.distanceMeters,routes.duration,routes.legs.steps.distanceMeters,routes.legs.steps.staticDuration,routes.legs.steps.navigationInstruction",
+      },
+      body: JSON.stringify({
+        origin: { address: args.origin },
+        destination: { address: args.destination },
+        travelMode: "WALK",
+        computeAlternativeRoutes: false,
+        languageCode: "en",
+        units: "METRIC",
+      }),
+    });
+    if (!res.ok) {
+      const body = (await res.text()).slice(0, 200);
+      if (res.status === 403 || res.status === 429) {
+        return { origin: args.origin, destination: args.destination, meters: 0, minutes: 0, steps: [], mapsUrl, unavailable: `Routes API ${res.status}: ${body}` };
+      }
+      throw new Error(`Routes API ${res.status}: ${body}`);
+    }
+    const j = await res.json();
+    const route = j.routes?.[0];
+    if (!route) return { origin: args.origin, destination: args.destination, meters: 0, minutes: 0, steps: [], mapsUrl, unavailable: "No walking route found; describe the walk from general knowledge and mark it estimated." };
+    const steps: string[] = [];
+    for (const leg of route.legs ?? []) {
+      for (const s of leg.steps ?? []) {
+        const text = String(s.navigationInstruction?.instructions ?? "").replace(/\s+/g, " ").trim();
+        if (!text) continue;
+        const m = Number(s.distanceMeters ?? 0);
+        steps.push(m >= 30 ? `${text} (${m} m)` : text);
+      }
+    }
+    return {
+      origin: args.origin,
+      destination: args.destination,
+      meters: Number(route.distanceMeters ?? 0),
+      minutes: Math.round((parseInt(String(route.duration ?? "0s"), 10) || 0) / 60),
+      steps: steps.slice(0, 10),
+      mapsUrl,
+    };
+  });
+}

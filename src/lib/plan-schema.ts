@@ -14,7 +14,7 @@ export const ItemSchema = z.object({
   how: z
     .string()
     .optional()
-    .describe("Getting there from the previous item: mode, line, platform or exit, times, fare. Under 120 characters."),
+    .describe("Getting there from the previous item: real walking steps or line/platform/exit details. Under 200 characters."),
   cost: z.string().optional().describe("Out-of-pocket cost for this item, e.g. '¥2,570 pp' or 'free'"),
 });
 
@@ -142,7 +142,7 @@ export const PLAN_JSON_SCHEMA = {
                 how: {
                   type: "string",
                   description:
-                    "REQUIRED on every item after the first of the day, and on the first item if it is a journey. How to get here from the previous item: walk/taxi/line name, platform or station exit, depart→arrive times, fare, IC card or ticket. Under 120 characters. e.g. 'JR Yamanote from Akihabara pf 2, 15:02→15:27, ¥210 IC, Omotesando exit'",
+                    "REQUIRED on every item after the first of the day, and on the first item if it is a journey. How to get here from the previous item: walk/taxi/line name, platform or station exit, depart→arrive times, fare, IC card or ticket. Under 200 characters, built from get_walking_route steps and real line/platform/exit details. e.g. 'Yamanote pf 2 toward Shinagawa, 5 stops to Harajuku (¥210 IC), Omotesando exit, then 6 min: right on Omotesando, left at Meiji-dori'",
                 },
                 cost: { type: "string", description: "Out-of-pocket cost, e.g. '¥2,570 pp', '¥600 entry', 'free'" },
               },

@@ -4,7 +4,7 @@ import { computePreferences, describePrefs, memberSwipes, tensions, type Prefere
 import { destination } from "./destinations";
 import { flightLink } from "./tools/flights";
 import { PlanSchema, PLAN_JSON_SCHEMA, normalizePlan, type Plan, DaySchema, type PlanDay } from "./plan-schema";
-import { getTransitRoute, routeForModel } from "./tools/routes";
+import { getTransitRoute, getWalkingRoute, routeForModel } from "./tools/routes";
 import { searchPlaces } from "./tools/places";
 import { searchHotels, offerForModel } from "./tools/liteapi";
 import { BudgetExceeded } from "./budget";
@@ -97,6 +97,22 @@ const TOOLS: Tool[] = [
   {
     type: "function",
     function: {
+      name: "get_walking_route",
+      description:
+        "Real turn-by-turn walking directions between two places (Google Routes, works everywhere in Japan). Returns metres, minutes and the street-level steps with landmarks. Call it for EVERY hop between consecutive items that is walked (hotel to station, station exit to restaurant, sight to sight), and build the item's \"how\" from the steps. Use specific names or addresses as returned by the other tools.",
+      parameters: {
+        type: "object",
+        required: ["origin", "destination"],
+        properties: {
+          origin: { type: "string", description: "e.g. 'THE TOURIST HOTEL & Cafe AKIHABARA, Tokyo' or 'Akihabara Station Electric Town exit'" },
+          destination: { type: "string", description: "e.g. 'Torarenbo, Akihabara, Tokyo'" },
+        },
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
       name: "search_restaurants",
       description:
         "Google Places text search. Returns real restaurants with rating, review count, price level and a Google Maps link. Query like 'izakaya near Pontocho Kyoto' or 'best okonomiyaki Dotonbori Osaka'.",
@@ -177,13 +193,17 @@ Trip: ${room.destination}. Arriving from ${room.origin_city}. Start date ${room.
 How to work:
 1. Read each person's preferences. Identify where they agree and where they clash.
 2. Decide the city split. ${destination(room.dest_key).brief}
-3. Use tools for everything factual. Call get_transit_route for each intercity move and the big hops. Call search_hotels once per sleeping city with exact dates. Call search_restaurants for every meal you list (one query per meal, specific to neighbourhood and cuisine). Call flight_link once for arrival if origin is outside Japan, and for a domestic hop (e.g. Tokyo to Fukuoka) when flying beats the train.
+3. Use tools for everything factual. Call get_walking_route for every walked hop between consecutive items (there will be many; that is the point). Call get_transit_route for each intercity move and the big hops. Call search_hotels once per sleeping city with exact dates. Call search_restaurants for every meal you list (one query per meal, specific to neighbourhood and cuisine). Call flight_link once for arrival if origin is outside Japan, and for a domestic hop (e.g. Tokyo to Fukuoka) when flying beats the train.
 4. Submit the itinerary one day at a time with add_day: day 1 first, one call per turn, 4-5 items each. Short strings; each call must be quick.
 5. Then call finalize_plan once with title, summary, tradeoffs, hotels, tasks and notes (no days).
 
 Rules for the plan:
 - Be specific: train line and departure time, hotel name and price, restaurant name and what to order.
-- AUTOPILOT, not copilot. The traveller must never have to look anything up. Every item after the first of a day carries "how": exactly how to get there from the previous item (walk with minutes and landmark, or line name, platform number or station exit, depart→arrive times, fare, IC card vs paper ticket). Transit items also put service name, platform and times in "detail".
+- AUTOPILOT, not copilot. The traveller must never have to look anything up. Every item after the first of a day carries "how": exactly how to get there from the previous item.
+  * Walked hops: call get_walking_route(previous place, this place) and write "how" from the REAL steps: distance, minutes, the 2-3 decisive turns with street names or landmarks, e.g. "11 min, 730 m: out of the hotel head south, left after Futaba, right onto Showa-dori, right after Aisan Denki past BicCamera". Never invent a walk.
+  * Train or metro hops: station, line, direction (toward ...), platform number, number of stops, fare, IC card vs ticket, arrival station exit number, THEN the walk from that exit (call get_walking_route from "<station> <exit>" to the place). e.g. "Hibiya line pf 3 toward Naka-Meguro, 4 stops to Ginza (¥180 IC), exit A2, then 4 min: right on Chuo-dori, left at Matsuya".
+  * Taxi only when it saves 20+ minutes; say the fare.
+  Transit items also put service name, platform and times in "detail".
 - The arrival flight is a specific flight: airline, flight number, scheduled departure and arrival (from your knowledge, estimated: true), terminal on arrival, in "detail". Its link is the flight_link result (the airline's official booking page). In "how", say where to check in and the recommended time at the airport.
 - Arrival day opens with the airport-to-hotel journey as its own transit item: terminal, the specific train or bus (e.g. Narita Express platform 1 at 11:15 → Tokyo 12:10, ¥3,070, buy at the JR East counter in arrivals; or Keisei Skyliner; or Haruka from Kansai), then the last hop to the hotel's nearest station and exit. Hotel check-in item: nearest station, exit, and where to leave bags before check-in.
 - Give the fare or entry price in "cost" wherever it is known. Timed-entry places: say where to buy the ticket. Restaurants: what to order and whether to queue or reserve.
@@ -195,7 +215,7 @@ Rules for the plan:
 - If a transit result says liveSchedule is false, set estimated: true on that item and keep the mapsUrl link.
 - Include a hotel check-in item on arrival days and the Shinkansen move as a transit item with its SmartEX link.
 - Keep days realistic: 3 to 5 activities, one lunch, one dinner, travel time respected.
-- Keep every call compact: at most 5 items per day, "detail" under 80 characters, "how" under 120, "why" under 60, 6-8 tasks. Cover EVERY day of the trip (one add_day per day) and every night with a hotel.
+- Keep every call compact: at most 5 items per day, "detail" under 80 characters, "how" under 200, "why" under 60, 6-8 tasks. Cover EVERY day of the trip (one add_day per day) and every night with a hotel.
 - notes: mention that flight links are search links and hotel bookings run in a sandbox.
 - tasks: 6-8 logistics tasks that make THIS plan executable, each with a "when" and a concrete "detail": roughly how much cash to carry and where to get yen (airport counter vs 7-Eleven / Japan Post ATMs), Welcome Suica or Suica on phone, reserve the Shinkansen seats on SmartEX (give the date), timed-entry tickets (teamLab, Ghibli, USJ) with the booking window, luggage forwarding between hotels, eSIM, dinner reservations where needed. Tie each task to a day or item in the plan.
 Write in plain, warm English. No emojis.`;
@@ -228,6 +248,11 @@ async function runTool(roomId: string, name: string, args: Record<string, unknow
       const p = await searchPlaces({ query: String(args.query), max: Number(args.max ?? 4) });
       logEvent(roomId, "tool", `"${args.query}" → ${p.map((x) => x.name).slice(0, 3).join(", ")}`, name);
       return p.map((x) => ({ name: x.name, rating: x.rating, reviews: x.reviews, price: x.priceLevel, type: x.type, mapsUrl: x.mapsUrl }));
+    }
+    case "get_walking_route": {
+      const w = await getWalkingRoute({ origin: String(args.origin), destination: String(args.destination) });
+      logEvent(roomId, "tool", `${w.origin} → ${w.destination}: ${w.unavailable ? "no walking route" : `${w.meters} m, ${w.minutes} min, ${w.steps.length} steps`}`, name);
+      return w;
     }
     case "search_hotels": {
       const h = await searchHotels({

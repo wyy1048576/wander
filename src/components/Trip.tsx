@@ -81,6 +81,16 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  // Two horizontal scrollbars (above and below the table) kept in step.
+  const topRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const syncing = useRef(false);
+  const sync = (from: HTMLDivElement | null, to: HTMLDivElement | null) => {
+    if (!from || !to || syncing.current) return;
+    syncing.current = true;
+    to.scrollLeft = from.scrollLeft;
+    requestAnimationFrame(() => (syncing.current = false));
+  };
 
   async function scan(file: File) {
     setBusy("Reading receipt with Muse Spark…");
@@ -165,16 +175,19 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
       )}
       {msg && <p className="mt-2 text-xs text-ok">{msg}</p>}
 
-      <div className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
-        <table className="table-fixed w-[860px] border-separate border-spacing-0 text-sm">
+      <div ref={topRef} onScroll={() => sync(topRef.current, bodyRef.current)} className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar" aria-hidden>
+        <div style={{ width: 900, height: 1 }} />
+      </div>
+      <div ref={bodyRef} onScroll={() => sync(bodyRef.current, topRef.current)} className="-mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
+        <table style={{ tableLayout: "fixed", width: 900, minWidth: 900 }} className="border-separate border-spacing-0 text-sm">
           <colgroup>
-            <col style={{ width: 100 }} />
-            <col style={{ width: 250 }} />
-            <col style={{ width: 120 }} />
-            <col style={{ width: 70 }} />
-            <col style={{ width: 120 }} />
-            <col style={{ width: 130 }} />
-            <col style={{ width: 70 }} />
+            <col style={{ width: 104 }} />
+            <col style={{ width: 260 }} />
+            <col style={{ width: 128 }} />
+            <col style={{ width: 72 }} />
+            <col style={{ width: 128 }} />
+            <col style={{ width: 136 }} />
+            <col style={{ width: 72 }} />
           </colgroup>
           <thead>
             <tr className="text-[11px] uppercase tracking-wide text-muted whitespace-nowrap">
@@ -200,21 +213,21 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
                     </tr>
                   )}
                   <tr className="bg-card">
-                    <td className="border-y border-l border-line rounded-l-xl p-1.5">
-                      <input type="time" defaultValue={e.at.slice(11, 16)} onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })} className={`${inputCls} w-full font-mono text-xs`} />
+                    <td className="border-y border-l border-line rounded-l-xl p-2.5">
+                      <input type="time" defaultValue={e.at.slice(11, 16)} onBlur={(ev) => ev.target.value && ev.target.value !== e.at.slice(11, 16) && patch(e.id, { at: `${day}T${ev.target.value}` })} className={`${inputCls} h-10 w-full font-mono text-xs`} />
                     </td>
-                    <td className="border-y border-line p-1.5">
-                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} w-full font-medium`} />
+                    <td className="border-y border-line p-2.5">
+                      <input defaultValue={e.title} onBlur={(ev) => ev.target.value !== e.title && patch(e.id, { title: ev.target.value })} className={`${inputCls} h-10 w-full font-medium`} />
                       {e.note && <div className="mt-0.5 text-[11px] text-muted truncate" title={e.note}>{e.note}</div>}
                     </td>
-                    <td className="border-y border-line p-1.5">
-                      <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={`${inputCls} w-full text-right tabular-nums`} />
+                    <td className="border-y border-line p-2.5">
+                      <input type="number" step="0.01" defaultValue={e.amount} onBlur={(ev) => Number(ev.target.value) !== e.amount && patch(e.id, { amount: Number(ev.target.value) })} className={`${inputCls} h-10 w-full text-right tabular-nums`} />
                     </td>
-                    <td className="border-y border-line p-1.5">
-                      <input defaultValue={e.currency} maxLength={3} onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })} className={`${inputCls} w-full uppercase text-xs`} />
+                    <td className="border-y border-line p-2.5">
+                      <input defaultValue={e.currency} maxLength={3} onBlur={(ev) => ev.target.value.toUpperCase() !== e.currency && patch(e.id, { currency: ev.target.value })} className={`${inputCls} h-10 w-full uppercase text-xs`} />
                     </td>
-                    <td className="border-y border-line p-1.5">
-                      <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} w-full text-xs`}>
+                    <td className="border-y border-line p-2.5">
+                      <select value={e.category} onChange={(ev) => patch(e.id, { category: ev.target.value })} className={`${inputCls} h-10 w-full text-xs`}>
                         {CATS.map((c) => (
                           <option key={c} value={c}>
                             {c}
@@ -222,8 +235,8 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
                         ))}
                       </select>
                     </td>
-                    <td className="border-y border-line p-1.5">
-                      <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} w-full text-xs`}>
+                    <td className="border-y border-line p-2.5">
+                      <select value={e.memberId} onChange={(ev) => patch(e.id, { memberId: ev.target.value })} className={`${inputCls} h-10 w-full text-xs`}>
                         {(data?.members ?? []).map((m) => (
                           <option key={m.id} value={m.id}>
                             {m.name}
@@ -231,7 +244,7 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
                         ))}
                       </select>
                     </td>
-                    <td className="border-y border-r border-line rounded-r-xl p-1.5 whitespace-nowrap">
+                    <td className="border-y border-r border-line rounded-r-xl p-2.5 whitespace-nowrap">
                       {e.photoId && (
                         <a href={`/api/photos/${e.photoId}`} target="_blank" rel="noreferrer" className="inline-block align-middle mr-1">
                           {/* eslint-disable-next-line @next/next/no-img-element */}

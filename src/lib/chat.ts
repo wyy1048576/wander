@@ -1,7 +1,7 @@
 import { db, newId } from "./db";
 import { sparkChat, type ChatMessage, type Tool } from "./muse";
 import { normalizePlan, PlanSchema, type Plan, type PlanItem } from "./plan-schema";
-import { addExpense, listTrip, updateExpense, deleteExpense } from "./trip";
+import { addExpense, captionMissing, listTrip, updateExpense, deleteExpense } from "./trip";
 import { RESEARCH_TOOL_NAMES, TOOLS as PLAN_TOOLS, runTool } from "./agent";
 
 /**
@@ -178,6 +178,7 @@ export async function runChatTurn(roomId: string, code: string): Promise<void> {
   const members = db().prepare("SELECT id, name, is_host FROM members WHERE room_id = ? ORDER BY created_at").all(roomId) as { id: string; name: string; is_host: number }[];
   const history = listMessages(roomId).slice(-30);
   const plan = loadPlan(roomId);
+  await captionMissing(roomId); // so photos can be picked by what they show
   const trip = listTrip(roomId);
   const actions: string[] = [];
   const attach: string[] = [];
@@ -193,7 +194,7 @@ ${plan ? planForModel(plan) : "(no plan yet)"}
 EXPENSES (id · when · title · amount currency · category · paid by):
 ${trip.expenses.map((e) => `${e.id} · ${e.at} · ${e.title} · ${e.amount} ${e.currency} · ${e.category} · ${e.memberName}`).join("\n") || "(none)"}
 
-PHOTOS in the album (id · by · when · caption · kind):
+PHOTOS in the album (id · by · when · what it shows · kind). Pick photos by what they show; attach only the ones that match the request:
 ${trip.photos.map((p) => `${p.id} · ${p.memberName} · ${p.createdAt} · ${p.caption ?? ""} · ${p.kind}`).join("\n") || "(none)"}`;
 
   const messages: ChatMessage[] = [

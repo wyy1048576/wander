@@ -238,3 +238,42 @@ export function seedExpensesFromPlan(roomId: string, plan: Plan): number {
   }
   return added;
 }
+
+
+/** One short line describing a photo, so the chat agent can pick the right one ("the shrine", "the globe"). */
+export async function describePhoto(mime: string, bytes: Uint8Array): Promise<string | null> {
+  spend("meta");
+  const b64 = Buffer.from(bytes).toString("base64");
+  const r = await meta().chat.completions.create({
+    model: SPARK_MODEL,
+    max_tokens: 6000,
+    temperature: 0,
+    messages: [
+      { role: "system", content: "Describe the photo for a travel album index in at most 12 words: the place or subject, no people names, no preamble." },
+      { role: "user", content: [{ type: "text", text: "Describe this photo." }, { type: "image_url", image_url: { url: `data:${mime};base64,${b64}` } }] },
+    ],
+  });
+  const t = (r.choices[0]?.message?.content ?? "").trim().replace(/^"|"$/g, "");
+  return t ? t.slice(0, 120) : null;
+}
+
+/** Caption gallery photos that have none yet (up to `max`), so the album is searchable by content. */
+export async function captionMissing(roomId: string, max = 6): Promise<number> {
+  ensure();
+  const rows = db()
+    .prepare("SELECT id, mime, bytes FROM photos WHERE room_id = ? AND kind = 'gallery' AND (caption IS NULL OR caption = '') ORDER BY created_at DESC LIMIT ?")
+    .all(roomId, max) as { id: string; mime: string; bytes: Uint8Array }[];
+  let n = 0;
+  for (const r of rows) {
+    try {
+      const c = await describePhoto(r.mime, r.bytes);
+      if (c) {
+        db().prepare("UPDATE photos SET caption = ? WHERE id = ?").run(c, r.id);
+        n++;
+      }
+    } catch {
+      /* leave uncaptioned */
+    }
+  }
+  return n;
+}

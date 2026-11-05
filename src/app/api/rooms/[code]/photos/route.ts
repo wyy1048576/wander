@@ -1,5 +1,5 @@
 import { getRoom } from "@/lib/rooms";
-import { addExpense, addPhoto, readReceipt } from "@/lib/trip";
+import { addExpense, addPhoto, describePhoto, readReceipt } from "@/lib/trip";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,18 @@ export async function POST(req: Request, ctx: { params: Promise<{ code: string }
   const bytes = new Uint8Array(await file.arrayBuffer());
   const photoId = addPhoto(room.id, memberId, kind, file.type, bytes, caption);
 
-  if (kind !== "receipt") return Response.json({ photoId });
+  if (kind !== "receipt") {
+    // Describe the photo so the chat can find it later ("the shrine photo"). The user's own caption wins.
+    if (!caption) {
+      try {
+        const c = await describePhoto(file.type, bytes);
+        if (c) (await import("@/lib/db")).db().prepare("UPDATE photos SET caption = ? WHERE id = ?").run(c, photoId);
+      } catch {
+        /* uncaptioned is fine */
+      }
+    }
+    return Response.json({ photoId });
+  }
 
   let read = null;
   let parseError: string | undefined;

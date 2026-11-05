@@ -177,12 +177,12 @@ function Expenses({ code, memberId, data, reload }: { code: string; memberId: st
       {msg && <p className="mt-2 text-xs text-ok">{msg}</p>}
 
       <div ref={topRef} onScroll={() => sync(topRef.current, bodyRef.current)} className="mt-4 -mx-4 px-4 overflow-x-auto thin-scrollbar" aria-hidden>
-        <div style={{ width: 1184, height: 1 }} />
+        <div style={{ width: 1212, height: 1 }} />
       </div>
       <div ref={bodyRef} onScroll={() => sync(bodyRef.current, topRef.current)} className="-mx-4 px-4 overflow-x-auto thin-scrollbar pb-2">
-        <table style={{ tableLayout: "fixed", width: 1184, minWidth: 1184, borderCollapse: "collapse" }} className="text-[13px] bg-card">
+        <table style={{ tableLayout: "fixed", width: 1212, minWidth: 1212, borderCollapse: "collapse" }} className="text-[13px] bg-card">
           <colgroup>
-            <col style={{ width: 112 }} />
+            <col style={{ width: 140 }} />
             <col style={{ width: 92 }} />
             <col style={{ width: 240 }} />
             <col style={{ width: 260 }} />

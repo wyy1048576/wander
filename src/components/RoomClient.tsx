@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomState } from "@/lib/rooms";
 import type { Card } from "@/lib/game";
 import { Brand, Button, Chip, Field, Phone, inputCls } from "./ui";
-import Itinerary from "./Itinerary";
+import Trip from "./Trip";
 
 type State = RoomState;
 
@@ -78,7 +78,7 @@ export default function RoomClient({ code }: { code: string }) {
         <Waiting code={code} memberId={memberId} state={state} onUpdate={setState} />
       )}
       {room.status === "planning" && <Planning state={state} />}
-      {room.status === "done" && state.plan && <Itinerary plan={state.plan} members={state.members} code={code} />}
+      {room.status === "done" && state.plan && <Trip code={code} memberId={memberId} plan={state.plan} members={state.members} />}
       {room.status === "error" && <Failed code={code} memberId={memberId} state={state} onUpdate={setState} />}
     </Phone>
   );

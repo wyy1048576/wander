@@ -21,7 +21,8 @@ Planning a trip with friends is a negotiation nobody wins. One person wants temp
 2. **Everyone swipes.** Each person sees the same 12 to 14 pairs of place cards from that destination's deck and picks one from each pair. Pairwise choices give a much stronger preference signal than like/dislike.
 3. **See where you disagree.** Before planning, the app shows each person's lean ("leans temples + nature, skips nightlife") and the clashes between them.
 4. **The agent builds one plan.** Muse Spark reads everyone's picks and runs a tool loop against live data: real hotels with live prices, real restaurants, transit routes. It returns a day-by-day itinerary where every item says whose pick it was, why, how to get there from the previous item (line, platform, times, fare), what it costs, and has a Book button. A "Before you go" task list covers cash, IC card, seat reservations and timed tickets.
-5. **Book.** Hotels book through liteAPI's sandbox (real inventory, simulated payment). Trains link to the operator. Flights link to a search.
+5. **Book.** Hotels book through liteAPI's sandbox (real inventory, simulated payment). Trains link to the operator. The arrival flight links to the airline's own booking page.
+6. **During the trip.** The finished room becomes the group's companion: photograph a receipt and Muse Spark turns it into an expense row (merchant, time, total, currency, items), everyone edits one shared chronological expense table, and there is one shared photo album for the trip.
 
 The itinerary opens with a "How this balances the group" banner, which is the point of the product: a plan that is visibly fair.
 
@@ -29,7 +30,7 @@ The itinerary opens with a "How this balances the group" banner, which is the po
 
 | Model | Role |
 |---|---|
-| **Muse Spark 1.3** (Meta Model API, chat completions with function calling) | The planning agent. It reads both travellers' swipe histories, decides the city split, calls `get_transit_route`, `search_hotels`, `search_restaurants` and `flight_link`, then calls `finalize_plan` with a structured itinerary. ~15–20 tool calls per plan, about two minutes end to end. |
+| **Muse Spark 1.3** (Meta Model API, chat completions with function calling, image input) | Reads receipt photos into expense rows during the trip. The planning agent. It reads both travellers' swipe histories, decides the city split, calls `get_transit_route`, `search_hotels`, `search_restaurants` and `flight_link`, then calls `finalize_plan` with a structured itinerary. ~15–20 tool calls per plan, about two minutes end to end. |
 | **Muse Image 1.0** (Meta Model API, image generation) | All 40 swipe cards in `public/cards/` were generated with Muse Image from the prompts in `src/data/cards.json`. This keeps the app free of third-party photo rights. |
 
 The agent loop lives in [`src/lib/agent.ts`](src/lib/agent.ts). The Meta client is [`src/lib/muse.ts`](src/lib/muse.ts).

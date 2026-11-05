@@ -75,7 +75,9 @@
   .sub { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 62ch; }
 
   .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  .steps.steps5 { grid-template-columns: repeat(5, 1fr); }
+  @media (max-width: 1000px) { .steps.steps5 { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 860px) { .steps, .steps.steps5 { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
   .step { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
   .step .n { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 13px; margin-bottom: 10px; }
@@ -264,11 +266,12 @@
   <section id="how">
     <h2>How it works</h2>
     <p class="sub">Four steps from "where should we go" to "book it". Everything after the swipes is the agent's job.</p>
-    <div class="steps">
+    <div class="steps steps5">
       <div class="step"><div class="n">1</div><b>Pick a destination, share a code</b><p>Tokyo, Kyoto &amp; Osaka, Nara, Kyushu or the whole grand tour. One person starts a room, friends join from their phones with a four-letter code. No accounts.</p></div>
       <div class="step"><div class="n">2</div><b>Everyone swipes the same pairs</b><p>Twelve pairs of place cards, pick one from each. Pairwise choices give a far stronger signal than like / dislike.</p></div>
       <div class="step"><div class="n">3</div><b>See where you clash</b><p>Before planning, each person's lean is spelled out, and so are the clashes. Nobody is surprised by the plan.</p></div>
       <div class="step"><div class="n">4</div><b>The agent reconciles, connects, books</b><p>Muse Spark runs a tool loop over live data and returns one itinerary: every item says whose pick it was and why, trains have times, and a task list covers the chores.</p></div>
+      <div class="step"><div class="n">5</div><b>On the road, it keeps the books</b><p>Photograph a receipt and Muse Spark turns it into an expense row. One shared, editable expense table in time order, and one shared photo album for the trip.</p></div>
     </div>
   </section>
 

@@ -68,6 +68,29 @@ function open(): DatabaseSync {
       value TEXT NOT NULL,
       expires_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS photos (
+      id TEXT PRIMARY KEY,
+      room_id TEXT NOT NULL REFERENCES rooms(id),
+      member_id TEXT NOT NULL,
+      kind TEXT NOT NULL DEFAULT 'gallery',
+      mime TEXT NOT NULL,
+      bytes BLOB NOT NULL,
+      caption TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE TABLE IF NOT EXISTS expenses (
+      id TEXT PRIMARY KEY,
+      room_id TEXT NOT NULL REFERENCES rooms(id),
+      member_id TEXT NOT NULL,
+      at TEXT NOT NULL,
+      title TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT 'other',
+      amount REAL NOT NULL DEFAULT 0,
+      currency TEXT NOT NULL DEFAULT 'JPY',
+      note TEXT,
+      photo_id TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
     CREATE TABLE IF NOT EXISTS bookings (
       id TEXT PRIMARY KEY,
       room_id TEXT,

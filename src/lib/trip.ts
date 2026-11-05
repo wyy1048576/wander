@@ -139,12 +139,16 @@ export type ReceiptRead = {
 
 /** Ask Muse Spark to read a receipt photo. Returns null if the model cannot read it. */
 export async function readReceipt(mime: string, bytes: Uint8Array, hint?: { date?: string; city?: string }): Promise<ReceiptRead | null> {
-  spend("meta");
   const b64 = Buffer.from(bytes).toString("base64");
-  const r = await meta().chat.completions.create({
-    model: SPARK_MODEL,
-    max_tokens: 1500,
-    temperature: 0,
+  // Muse Spark reasons for ~1,500-2,500 hidden tokens on a real receipt before answering; give it room,
+  // and try once more with a bigger budget if the answer is still cut off.
+  let text = "";
+  for (const maxTokens of [6000, 12000]) {
+    spend("meta");
+    const r = await meta().chat.completions.create({
+      model: SPARK_MODEL,
+      max_tokens: maxTokens,
+      temperature: 0,
     response_format: { type: "json_object" },
     messages: [
       {
@@ -160,8 +164,10 @@ export async function readReceipt(mime: string, bytes: Uint8Array, hint?: { date
         ],
       },
     ],
-  });
-  const text = r.choices[0]?.message?.content ?? "";
+    });
+    text = r.choices[0]?.message?.content ?? "";
+    if (text || r.choices[0]?.finish_reason !== "length") break;
+  }
   const m = text.match(/\{[\s\S]*\}/);
   if (!m) return null;
   try {

@@ -327,6 +327,17 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
   }
 
   const suggestions = ["Move tomorrow's dinner to 19:30", "Show me the photos from today", "Fix the last receipt: it was 10,095 yen", "What's the plan for Day 2?"];
+  // Wander is "typing" whenever the newest message is from a person and recent. Everyone sees it, reloads included.
+  const last = msgs[msgs.length - 1];
+  const utc = (t: string) => new Date(t.replace(" ", "T") + (t.endsWith("Z") ? "" : "Z"));
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const pending = waiting != null || (!!last && !!last.memberId && now - utc(last.createdAt).getTime() < 150000);
+  const since = last && last.memberId ? Math.max(0, Math.round((now - utc(last.createdAt).getTime()) / 1000)) : 0;
+  const localTime = (t: string) => utc(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   return (
     <section className="mt-3 rise flex flex-col" style={{ minHeight: "60dvh" }}>
@@ -376,15 +387,17 @@ function Chat({ code, memberId }: { code: string; memberId: string }) {
                     ))}
                   </div>
                 )}
-                <div className={`mt-1 text-[10px] ${mine ? "text-background/60" : "text-muted"}`}>{m.createdAt.slice(11, 16)}</div>
+                <div className={`mt-1 text-[10px] ${mine ? "text-background/60" : "text-muted"}`}>{localTime(m.createdAt)}</div>
               </div>
             </div>
           );
         })}
-        {waiting != null && (
+        {pending && (
           <div className="flex justify-start">
             <div className="rounded-2xl bg-accent-soft px-3.5 py-2.5 text-xs text-accent flex items-center gap-2">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent pulse-dot" /> Wander is working on it
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent pulse-dot" />
+              {since < 8 ? "Wander is reading the plan" : since < 25 ? "Wander is checking places and routes" : "Wander is writing the change"}
+              <span className="text-accent/60">{since}s</span>
             </div>
           </div>
         )}
